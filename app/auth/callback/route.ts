@@ -21,15 +21,25 @@ export async function GET(request: Request) {
 
   if (code && url && key) {
     const cookieStore = await cookies();
+
     const supabase = createServerClient(url, key, {
       cookies: {
         getAll: () => cookieStore.getAll(),
-        setAll: (toSet) =>
-          toSet.forEach(({ name, value, options }) =>
-            cookieStore.set(name, value, options)
-          ),
+
+        setAll: (
+          toSet: {
+            name: string;
+            value: string;
+            options?: any;
+          }[]
+        ) => {
+          toSet.forEach(({ name, value, options }) => {
+            cookieStore.set(name, value, options);
+          });
+        },
       },
     });
+
     await supabase.auth.exchangeCodeForSession(code);
   }
 
