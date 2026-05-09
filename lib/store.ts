@@ -153,14 +153,16 @@ export const useStore = create<FocusFlowState>()(
       sessionsToday: 0,
       totalSessions: 0,
       totalMinutes: 0,
-      streakDays: 12,
-      xp: 2340,
-      level: 8,
+      // Start everyone at zero — real data builds as the user uses the app.
+      streakDays: 0,
+      xp: 0,
+      level: 1,
       currentSubject: "",
       lastSessionDate: "",
 
       theme: "aurora",
-      tasks: DEMO_TASKS,
+      // Start with no tasks — empty state is welcoming and honest.
+      tasks: [],
       history: [],
       ambience: DEFAULT_AMBIENCE,
       settings: DEFAULT_SETTINGS,
