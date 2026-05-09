@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { supabase, isSupabaseConfigured } from "./supabase";
 
 /* ============================================================
    Types
@@ -10,7 +11,7 @@ export interface User {
   name: string;
   email: string;
   signedInAt: number;
-  /** Where the account came from. Useful when you migrate to Supabase. */
+  /** Where the account came from. */
   provider: "demo" | "email" | "google";
 }
 
@@ -18,29 +19,51 @@ const STORAGE_KEY = "focusflow.user";
 
 /* ============================================================
    Hook — read the current user from anywhere in the app
-   ============================================================ */
+   ============================================================
+   Switches automatically: subscribes to Supabase auth state when
+   configured, falls back to localStorage in demo mode.
+*/
 
-/**
- * Returns the currently signed-in user, or `null` if signed out.
- * Re-renders on sign in / sign out automatically. Works across browser tabs.
- *
- * Usage:
- *   const user = useUser();
- *   if (!user) return <SignInPrompt />
- */
 export function useUser(): User | null {
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
+    /* ---- Real Supabase mode ---- */
+    if (isSupabaseConfigured && supabase) {
+      const mapSession = (session: any): User | null => {
+        if (!session?.user) return null;
+        const u = session.user;
+        return {
+          name: u.user_metadata?.name ?? u.email?.split("@")[0] ?? "Friend",
+          email: u.email ?? "",
+          signedInAt: Date.parse(u.created_at) || Date.now(),
+          provider: (u.app_metadata?.provider as User["provider"]) ?? "email",
+        };
+      };
+
+      // Initial load
+      supabase.auth.getSession().then(({ data }) => {
+        setUser(mapSession(data.session));
+      });
+
+      // Subscribe to changes (sign in / out / token refresh)
+      const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
+        setUser(mapSession(session));
+      });
+
+      return () => sub.subscription.unsubscribe();
+    }
+
+    /* ---- Demo mode (localStorage) ---- */
     const load = () => {
       const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) {
-        try {
-          setUser(JSON.parse(raw));
-        } catch {
-          setUser(null);
-        }
-      } else {
+      if (!raw) {
+        setUser(null);
+        return;
+      }
+      try {
+        setUser(JSON.parse(raw));
+      } catch {
         setUser(null);
       }
     };
@@ -49,7 +72,6 @@ export function useUser(): User | null {
       if (e.key === STORAGE_KEY) load();
     };
     window.addEventListener("storage", onStorage);
-    // Custom event for same-tab updates
     window.addEventListener("focusflow:auth", load);
     return () => {
       window.removeEventListener("storage", onStorage);
@@ -61,40 +83,38 @@ export function useUser(): User | null {
 }
 
 /* ============================================================
-   Auth actions — REPLACE THESE BODIES WHEN YOU WIRE SUPABASE
+   Auth actions
    ============================================================
-   Each function returns { ok, error } so the UI can show errors
-   uniformly. The demo versions here just validate + write to
-   localStorage. The Supabase versions look almost identical from
-   the caller's side — just different inside.
-   ============================================================ */
+   Each function detects whether Supabase is configured and routes
+   to the appropriate backend. Same shape either way, so the UI
+   never has to know.
+*/
 
 export async function signIn(
   email: string,
   password: string
 ): Promise<{ ok: boolean; error?: string }> {
-  // ── DEMO MODE ─────────────────────────────────────────────
-  // Replace this body with:
-  //   const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-  //   if (error) return { ok: false, error: error.message };
-  //   return { ok: true };
-  // ──────────────────────────────────────────────────────────
   if (!email.trim() || !email.includes("@")) {
     return { ok: false, error: "Enter a valid email address." };
   }
   if (password.length < 6) {
     return { ok: false, error: "Password must be at least 6 characters." };
   }
-  // Simulate network latency for realistic UX
-  await wait(700);
 
-  const user: User = {
+  if (isSupabaseConfigured && supabase) {
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) return { ok: false, error: error.message };
+    return { ok: true };
+  }
+
+  // Demo mode
+  await wait(700);
+  setStoredUser({
     name: email.split("@")[0],
     email: email.toLowerCase().trim(),
     signedInAt: Date.now(),
     provider: "demo",
-  };
-  setStoredUser(user);
+  });
   return { ok: true };
 }
 
@@ -103,43 +123,45 @@ export async function signUp(
   email: string,
   password: string
 ): Promise<{ ok: boolean; error?: string }> {
-  // ── DEMO MODE ─────────────────────────────────────────────
-  // Replace this body with:
-  //   const { data, error } = await supabase.auth.signUp({
-  //     email, password,
-  //     options: { data: { name } }
-  //   });
-  //   if (error) return { ok: false, error: error.message };
-  //   return { ok: true };
-  // ──────────────────────────────────────────────────────────
   if (!name.trim()) return { ok: false, error: "Please enter your name." };
   if (!email.trim() || !email.includes("@"))
     return { ok: false, error: "Enter a valid email address." };
   if (password.length < 6)
     return { ok: false, error: "Password must be at least 6 characters." };
 
-  await wait(900);
+  if (isSupabaseConfigured && supabase) {
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: { name: name.trim() },
+        emailRedirectTo: `${window.location.origin}/auth/callback`,
+      },
+    });
+    if (error) return { ok: false, error: error.message };
+    return { ok: true };
+  }
 
-  const user: User = {
+  // Demo mode
+  await wait(900);
+  setStoredUser({
     name: name.trim(),
     email: email.toLowerCase().trim(),
     signedInAt: Date.now(),
     provider: "demo",
-  };
-  setStoredUser(user);
+  });
   return { ok: true };
 }
 
 export async function signInWithGoogle(): Promise<{ ok: boolean; error?: string }> {
-  // ── DEMO MODE ─────────────────────────────────────────────
-  // Replace this body with:
-  //   const { error } = await supabase.auth.signInWithOAuth({
-  //     provider: "google",
-  //     options: { redirectTo: `${location.origin}/auth/callback` },
-  //   });
-  //   if (error) return { ok: false, error: error.message };
-  //   return { ok: true };
-  // ──────────────────────────────────────────────────────────
+  if (isSupabaseConfigured && supabase) {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: `${window.location.origin}/auth/callback` },
+    });
+    if (error) return { ok: false, error: error.message };
+    return { ok: true };
+  }
   return {
     ok: false,
     error: "Google sign-in requires Supabase setup. See AUTH_SETUP.md.",
@@ -147,16 +169,16 @@ export async function signInWithGoogle(): Promise<{ ok: boolean; error?: string 
 }
 
 export async function signOut(): Promise<void> {
-  // ── DEMO MODE ─────────────────────────────────────────────
-  // Replace with: await supabase.auth.signOut();
-  // ──────────────────────────────────────────────────────────
-  setStoredUser(null);
-  // Send the user back to the landing page on sign out.
+  if (isSupabaseConfigured && supabase) {
+    await supabase.auth.signOut();
+  } else {
+    setStoredUser(null);
+  }
   window.location.href = "/";
 }
 
 /* ============================================================
-   Helpers
+   Helpers (demo mode only)
    ============================================================ */
 
 function setStoredUser(user: User | null) {
@@ -165,7 +187,6 @@ function setStoredUser(user: User | null) {
   } else {
     localStorage.removeItem(STORAGE_KEY);
   }
-  // Notify same-tab listeners (the `storage` event only fires across tabs).
   window.dispatchEvent(new Event("focusflow:auth"));
 }
 
