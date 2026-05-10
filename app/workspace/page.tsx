@@ -24,8 +24,30 @@ type WorkspaceTask = {
   created_at: string;
 };
 
+const COLLAB_SCHEMA_SETUP_MESSAGE =
+  "Collaborative workspaces are not set up in Supabase yet. Run supabase/collaborative-workspaces.sql in the Supabase SQL Editor, then refresh this page.";
+
 function inviteCode() {
   return Math.random().toString(36).slice(2, 8).toUpperCase();
+}
+
+function getWorkspaceErrorMessage(error: { code?: string; message?: string }) {
+  const message = error.message ?? "Something went wrong.";
+  const normalized = message.toLowerCase();
+  const referencesCollabSchema =
+    normalized.includes("collab_workspaces") ||
+    normalized.includes("collab_workspace_members") ||
+    normalized.includes("collab_workspace_tasks") ||
+    normalized.includes("create_collab_workspace") ||
+    normalized.includes("join_workspace_by_invite");
+  const looksMissing =
+    error.code === "PGRST205" ||
+    normalized.includes("schema cache") ||
+    normalized.includes("does not exist") ||
+    normalized.includes("could not find the table") ||
+    normalized.includes("could not find the function");
+
+  return referencesCollabSchema && looksMissing ? COLLAB_SCHEMA_SETUP_MESSAGE : message;
 }
 
 export default function WorkspacePage() {
@@ -53,7 +75,7 @@ export default function WorkspacePage() {
       .eq("user_id", user.id);
 
     if (membershipError) {
-      setError(membershipError.message);
+      setError(getWorkspaceErrorMessage(membershipError));
       return;
     }
 
@@ -71,7 +93,7 @@ export default function WorkspacePage() {
       .order("created_at", { ascending: false });
 
     if (workspaceError) {
-      setError(workspaceError.message);
+      setError(getWorkspaceErrorMessage(workspaceError));
       return;
     }
 
@@ -89,7 +111,7 @@ export default function WorkspacePage() {
       .order("created_at", { ascending: false });
 
     if (taskError) {
-      setError(taskError.message);
+      setError(getWorkspaceErrorMessage(taskError));
       return;
     }
 
@@ -139,7 +161,7 @@ export default function WorkspacePage() {
     });
 
     if (createError) {
-      setError(createError.message);
+      setError(getWorkspaceErrorMessage(createError));
       setBusy("");
       return;
     }
@@ -160,7 +182,7 @@ export default function WorkspacePage() {
     });
 
     if (joinError) {
-      setError(joinError.message);
+      setError(getWorkspaceErrorMessage(joinError));
       setBusy("");
       return;
     }
@@ -182,7 +204,7 @@ export default function WorkspacePage() {
       text: taskText.trim(),
     });
 
-    if (taskError) setError(taskError.message);
+    if (taskError) setError(getWorkspaceErrorMessage(taskError));
 
     setTaskText("");
     setBusy("");
