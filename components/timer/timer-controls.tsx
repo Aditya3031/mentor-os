@@ -20,14 +20,27 @@ export function TimerControls() {
   const pause = useStore((s) => s.pause);
   const reset = useStore((s) => s.reset);
   const tick = useStore((s) => s.tick);
-  const mode = useStore((s) => s.mode);
+  const syncTimer = useStore((s) => s.syncTimer);
   const completeSession = useStore((s) => s.completeSession);
 
   useEffect(() => {
+    syncTimer();
     if (!running) return;
     const id = setInterval(() => tick(), 1000);
     return () => clearInterval(id);
-  }, [running, tick]);
+  }, [running, tick, syncTimer]);
+
+  useEffect(() => {
+    const sync = () => syncTimer();
+    window.addEventListener("focus", sync);
+    window.addEventListener("pageshow", sync);
+    document.addEventListener("visibilitychange", sync);
+    return () => {
+      window.removeEventListener("focus", sync);
+      window.removeEventListener("pageshow", sync);
+      document.removeEventListener("visibilitychange", sync);
+    };
+  }, [syncTimer]);
 
   // Keyboard shortcuts
   useEffect(() => {

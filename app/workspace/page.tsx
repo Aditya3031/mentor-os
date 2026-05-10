@@ -105,20 +105,38 @@ export default function WorkspacePage() {
     if (activeId) void loadTasks(activeId);
   }, [activeId]);
 
+  useEffect(() => {
+    if (!supabase || !activeId) return;
+    const client = supabase;
+
+    const channel = client
+      .channel(`workspace-tasks:${activeId}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "collab_workspace_tasks",
+          filter: `workspace_id=eq.${activeId}`,
+        },
+        () => void loadTasks(activeId)
+      )
+      .subscribe();
+
+    return () => {
+      void client.removeChannel(channel);
+    };
+  }, [activeId]);
+
   const createWorkspace = async () => {
     if (!supabase || !user?.id || !workspaceName.trim()) return;
     setBusy("create");
     setError("");
 
-    const { data, error: createError } = await supabase
-      .from("collab_workspaces")
-      .insert({
-        name: workspaceName.trim(),
-        owner_id: user.id,
-        invite_code: inviteCode(),
-      })
-      .select("id,name,invite_code,owner_id")
-      .single();
+    const { data, error: createError } = await supabase.rpc("create_collab_workspace", {
+      workspace_name: workspaceName.trim(),
+      code: inviteCode(),
+    });
 
     if (createError) {
       setError(createError.message);
@@ -126,18 +144,10 @@ export default function WorkspacePage() {
       return;
     }
 
-    const { error: memberError } = await supabase.from("collab_workspace_members").insert({
-      workspace_id: data.id,
-      user_id: user.id,
-      role: "owner",
-    });
-
-    if (memberError) setError(memberError.message);
-
     setWorkspaceName("");
     setBusy("");
     await loadWorkspaces();
-    setActiveId(data.id);
+    if (data?.id) setActiveId(data.id);
   };
 
   const joinWorkspace = async () => {
@@ -191,11 +201,11 @@ export default function WorkspacePage() {
   };
 
   return (
-    <div className="relative flex h-screen flex-col overflow-hidden">
+    <div className="relative flex h-dvh flex-col overflow-hidden">
       <BackgroundStage />
       <TopBar />
 
-      <main className="relative z-[5] mx-auto w-full max-w-5xl flex-1 overflow-y-auto px-7 pb-28">
+      <main className="relative z-[5] mx-auto w-full max-w-5xl flex-1 overflow-y-auto px-4 pb-28 sm:px-7">
         <header className="mb-8 mt-2">
           <p className="text-xs uppercase tracking-[0.2em] text-text-dim">Collaborative workspace</p>
           <h1 className="mt-2 text-balance text-3xl font-light tracking-tight">

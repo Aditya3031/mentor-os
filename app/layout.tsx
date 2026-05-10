@@ -4,6 +4,7 @@ import { ThemeProvider } from "@/components/providers/theme-provider";
 import { SyncProvider } from "@/components/providers/sync-provider";
 import { AudioEngine } from "@/components/audio-engine";
 import { ReflectionModal } from "@/components/reflection-modal";
+import { PWARegister } from "@/components/pwa-register";
 import { Toaster } from "sonner";
 import "./globals.css";
 
@@ -60,6 +61,7 @@ export default function RootLayout({
         <ThemeProvider>
           {children}
           <SyncProvider />
+          <PWARegister />
           {/* Mounted globally — drives ambience + tick sfx based on store state. */}
           <AudioEngine />
           {/* Pops up automatically after a focus session completes. */}

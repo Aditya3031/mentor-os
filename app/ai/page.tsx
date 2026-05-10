@@ -112,7 +112,7 @@ export default function AIPage() {
   };
 
   return (
-    <div className="relative flex h-screen flex-col overflow-hidden">
+    <div className="relative flex h-dvh flex-col overflow-hidden">
       <BackgroundStage />
       <TopBar />
 

@@ -13,6 +13,7 @@ import { GoogleGenerativeAI, Content } from "@google/generative-ai";
  */
 
 export const runtime = "nodejs";
+const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-2.5-flash";
 
 interface ChatMessage {
   role: "user" | "assistant";
@@ -88,7 +89,7 @@ ${subjectLine}`.trim();
   try {
     const genAI = new GoogleGenerativeAI(apiKey);
     const model = genAI.getGenerativeModel({
-      model: "gemini-1.5-flash-latest",
+      model: GEMINI_MODEL,
       systemInstruction: systemPrompt,
       generationConfig: {
         temperature: 0.7,
@@ -122,6 +123,6 @@ ${subjectLine}`.trim();
       },
     });
   } catch (e: any) {
-    return new Response(`Error: ${e?.message ?? e}`, { status: 500 });
+    return new Response(`Gemini error (${GEMINI_MODEL}): ${e?.message ?? e}`, { status: 500 });
   }
 }

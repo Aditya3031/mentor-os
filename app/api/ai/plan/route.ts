@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 
-// Valid Gemini model names: gemini-1.5-flash, gemini-1.5-pro, gemini-2.0-flash-exp.
-// `gemini-2.5-flash` doesn't exist — was the cause of "Gemini request failed".
-const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-1.5-flash-latest";
+// Google recommends stable model ids for production; `gemini-2.5-flash`
+// is the current price/performance default for text planning.
+const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-2.5-flash";
 
 export async function POST(request: Request) {
   // Accept either env var name (Google's own or Vercel AI SDK convention).

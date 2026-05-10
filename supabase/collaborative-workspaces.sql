@@ -40,6 +40,8 @@ drop policy if exists "members create tasks" on public.collab_workspace_tasks;
 drop policy if exists "members update tasks" on public.collab_workspace_tasks;
 drop policy if exists "members delete tasks" on public.collab_workspace_tasks;
 
+drop function if exists public.create_collab_workspace(text, text);
+
 create policy "members read workspaces"
   on public.collab_workspaces
   for select
@@ -129,6 +131,35 @@ create policy "members delete tasks"
     )
   );
 
+create or replace function public.create_collab_workspace(workspace_name text, code text)
+returns public.collab_workspaces
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  new_workspace public.collab_workspaces;
+begin
+  if auth.uid() is null then
+    raise exception 'You must be signed in to create a workspace';
+  end if;
+
+  if length(trim(workspace_name)) = 0 then
+    raise exception 'Workspace name is required';
+  end if;
+
+  insert into public.collab_workspaces (owner_id, name, invite_code)
+  values (auth.uid(), trim(workspace_name), upper(trim(code)))
+  returning * into new_workspace;
+
+  insert into public.collab_workspace_members (workspace_id, user_id, role)
+  values (new_workspace.id, auth.uid(), 'owner')
+  on conflict (workspace_id, user_id) do nothing;
+
+  return new_workspace;
+end;
+$$;
+
 create or replace function public.join_workspace_by_invite(code text)
 returns uuid
 language plpgsql
@@ -151,5 +182,17 @@ begin
   on conflict (workspace_id, user_id) do nothing;
 
   return target_workspace;
+end;
+$$;
+
+grant execute on function public.create_collab_workspace(text, text) to authenticated;
+grant execute on function public.join_workspace_by_invite(text) to authenticated;
+
+do $$
+begin
+  alter publication supabase_realtime add table public.collab_workspace_tasks;
+exception
+  when duplicate_object then null;
+  when undefined_object then null;
 end;
 $$;

@@ -2,6 +2,7 @@ import { BackgroundStage } from "@/components/bg/background-stage";
 import { TimerRing } from "@/components/timer/timer-ring";
 import { TimerControls } from "@/components/timer/timer-controls";
 import { ModeTabs } from "@/components/timer/mode-tabs";
+import { TimerDurationControl } from "@/components/timer/timer-duration-control";
 import { SubjectInput } from "@/components/subject-input";
 import { Dock } from "@/components/dock";
 import { TasksPanel } from "@/components/panels/tasks-panel";
@@ -22,7 +23,7 @@ import { Quote } from "@/components/quote";
  */
 export default function FocusPage() {
   return (
-    <div className="relative flex h-screen flex-col overflow-hidden">
+    <div className="relative flex h-dvh flex-col overflow-hidden">
       <BackgroundStage />
 
       <TopBar />
@@ -36,7 +37,7 @@ export default function FocusPage() {
         Each rail scrolls independently so short laptops (1366×768, 1280×800)
         don't push content under the dock.
       */}
-      <main className="relative z-[5] grid min-h-0 flex-1 grid-cols-1 gap-4 px-3 pb-20 sm:px-7 sm:pb-24 lg:grid-cols-[280px_minmax(0,1fr)] lg:gap-5 xl:grid-cols-[280px_minmax(0,1fr)_300px]">
+      <main className="relative z-[5] grid min-h-0 flex-1 grid-cols-1 gap-4 overflow-y-auto px-3 pb-24 sm:px-7 sm:pb-28 lg:grid-cols-[280px_minmax(0,1fr)] lg:gap-5 lg:overflow-hidden xl:grid-cols-[280px_minmax(0,1fr)_300px]">
         {/* Left rail */}
         <aside className="hidden min-h-0 flex-col gap-4 overflow-y-auto lg:flex">
           <GoalsPanel />
@@ -44,11 +45,14 @@ export default function FocusPage() {
         </aside>
 
         {/* Center: focus room — scrolls if content doesn't fit (e.g., on 768px-tall screens) */}
-        <section className="flex min-h-0 flex-col items-center justify-center overflow-y-auto py-2">
+        <section className="flex min-h-0 flex-col items-center justify-start py-2 sm:justify-center lg:overflow-y-auto">
           <Quote />
           <SubjectInput />
-          <div className="mb-5">
+          <div className="mb-3">
             <ModeTabs />
+          </div>
+          <div className="mb-5">
+            <TimerDurationControl />
           </div>
           <TimerRing />
           <div className="mt-6">

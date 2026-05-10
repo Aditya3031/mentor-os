@@ -53,7 +53,7 @@
 
   html,
   body {
-    @apply h-full overflow-hidden;
+    @apply min-h-full overflow-x-hidden;
   }
 
   body {

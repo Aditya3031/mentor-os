@@ -13,6 +13,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
  */
 
 export const runtime = "nodejs";
+const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-2.5-flash";
 
 export async function POST(req: Request) {
   // Accept either env var name (Vercel AI SDK convention or Google's own)
@@ -47,7 +48,7 @@ export async function POST(req: Request) {
   try {
     const genAI = new GoogleGenerativeAI(apiKey);
     const model = genAI.getGenerativeModel({
-      model: "gemini-1.5-flash-latest",
+      model: GEMINI_MODEL,
       generationConfig: {
         temperature: 0.7,
         maxOutputTokens: 80,
@@ -68,7 +69,7 @@ One-sentence summary:`;
     return NextResponse.json({ summary });
   } catch (e: any) {
     return NextResponse.json(
-      { error: e?.message || "Could not generate summary" },
+      { error: e?.message || `Could not generate summary with ${GEMINI_MODEL}` },
       { status: 500 }
     );
   }

@@ -14,22 +14,18 @@ const C = 2 * Math.PI * RADIUS;
  */
 export function TimerRing() {
   const remaining = useStore((s) => s.remaining);
-
-const settings = useStore((s) => s.settings);
-
-const cycleSession = useStore(
-  (s) => s.cycleSession
-
-);
-const mode = useStore((s) => s.mode);
+  const settings = useStore((s) => s.settings);
+  const cycleSession = useStore((s) => s.cycleSession);
+  const mode = useStore((s) => s.mode);
 
   const total = settings.durations[mode] * 60;
-  const offset = C * (1 - remaining / total);
+  const progress = total > 0 ? Math.max(0, Math.min(1, remaining / total)) : 0;
+  const dash = `${C * progress} ${C}`;
   const label =
     mode === "focus" ? "Focus" : mode === "short" ? "Short Break" : "Long Break";
 
   return (
-    <div className="relative grid aspect-square w-[min(380px,65vw,55vh)] place-items-center">
+    <div className="relative grid aspect-square w-[min(360px,76vw,46svh)] place-items-center">
       <div className="pointer-events-none absolute -inset-10 rounded-full bg-[radial-gradient(circle,hsl(var(--accent)/0.18),transparent_60%)] animate-glowpulse" />
       <svg
         viewBox={`0 0 ${SIZE} ${SIZE}`}
@@ -57,9 +53,9 @@ const mode = useStore((s) => s.mode);
           stroke="url(#timerGrad)"
           strokeWidth={8}
           strokeLinecap="round"
-          strokeDasharray={C}
+          strokeDasharray={dash}
           initial={false}
-          animate={{ strokeDashoffset: offset }}
+          animate={{ strokeDasharray: dash }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
           className="ring-glow"
         />

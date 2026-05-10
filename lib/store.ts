@@ -55,6 +55,7 @@ interface FocusFlowState {
   mode: TimerMode;
   remaining: number; // seconds
   running: boolean;
+  timerEndsAt: number | null;
   cycleSession: number; // 1..settings.durations.cycle
   sessionsToday: number;
   totalSessions: number;
@@ -81,10 +82,12 @@ interface FocusFlowState {
   /* Actions */
   setMode: (m: TimerMode) => void;
   setRemaining: (s: number) => void;
+  setDuration: (mode: TimerMode, minutes: number) => void;
   start: () => void;
   pause: () => void;
   reset: () => void;
   tick: () => void;
+  syncTimer: () => void;
   completeSession: () => void;
   setCurrentSubject: (s: string) => void;
 
@@ -135,6 +138,14 @@ function dateKey(d: Date): string {
   return `${y}-${m}-${day}`;
 }
 
+function clampNumber(value: number, min: number, max: number): number {
+  return Math.min(max, Math.max(min, value));
+}
+
+function secondsUntil(timestamp: number): number {
+  return Math.max(0, Math.ceil((timestamp - Date.now()) / 1000));
+}
+
 /* ============================================================
    Defaults
    ============================================================ */
@@ -179,6 +190,16 @@ function syncedSnapshot(s: FocusFlowState): SyncedFocusFlowState {
   };
 }
 
+function persistedSnapshot(s: FocusFlowState) {
+  return {
+    ...syncedSnapshot(s),
+    mode: s.mode,
+    remaining: s.remaining,
+    running: s.running,
+    timerEndsAt: s.timerEndsAt,
+  };
+}
+
 export function getSyncedStateSnapshot(): SyncedFocusFlowState {
   return syncedSnapshot(useStore.getState());
 }
@@ -193,6 +214,7 @@ export const useStore = create<FocusFlowState>()(
       mode: "focus",
       remaining: DEFAULT_SETTINGS.durations.focus * 60,
       running: false,
+      timerEndsAt: null,
       cycleSession: 1,
       sessionsToday: 0,
       totalSessions: 0,
@@ -215,22 +237,95 @@ export const useStore = create<FocusFlowState>()(
       /* Timer */
       setMode: (m) => {
         const { settings } = get();
-        set({ mode: m, remaining: settings.durations[m] * 60, running: false });
+        set({
+          mode: m,
+          remaining: settings.durations[m] * 60,
+          running: false,
+          timerEndsAt: null,
+        });
       },
-      setRemaining: (s) => set({ remaining: s }),
-      start: () => set({ running: true }),
-      pause: () => set({ running: false }),
+      setRemaining: (seconds) => {
+        const next = Math.max(0, Math.round(seconds));
+        set((s) => ({
+          remaining: next,
+          timerEndsAt: s.running ? Date.now() + next * 1000 : null,
+        }));
+      },
+      setDuration: (timerMode, minutes) =>
+        set((s) => {
+          const max = timerMode === "focus" ? 180 : timerMode === "short" ? 60 : 120;
+          const nextMinutes = clampNumber(Math.round(minutes), 1, max);
+          const nextSettings = {
+            ...s.settings,
+            durations: { ...s.settings.durations, [timerMode]: nextMinutes },
+          };
+
+          if (s.mode !== timerMode) {
+            return { settings: nextSettings };
+          }
+
+          const nextRemaining = nextMinutes * 60;
+          return {
+            settings: nextSettings,
+            remaining: nextRemaining,
+            timerEndsAt: s.running ? Date.now() + nextRemaining * 1000 : null,
+          };
+        }),
+      start: () => {
+        const s = get();
+        if (s.remaining <= 0) {
+          s.completeSession();
+          return;
+        }
+        set({ running: true, timerEndsAt: Date.now() + s.remaining * 1000 });
+      },
+      pause: () => {
+        const s = get();
+        if (s.running && s.timerEndsAt) {
+          const remaining = secondsUntil(s.timerEndsAt);
+          if (remaining <= 0) {
+            s.completeSession();
+            return;
+          }
+          set({ running: false, remaining, timerEndsAt: null });
+          return;
+        }
+        set({ running: false, timerEndsAt: null });
+      },
       reset: () => {
         const { mode, settings } = get();
-        set({ remaining: settings.durations[mode] * 60, running: false });
+        set({
+          remaining: settings.durations[mode] * 60,
+          running: false,
+          timerEndsAt: null,
+        });
       },
       tick: () => {
-        const { remaining, completeSession } = get();
-        if (remaining <= 1) {
+        const { remaining, running, timerEndsAt, completeSession } = get();
+        const nextRemaining =
+          running && timerEndsAt ? secondsUntil(timerEndsAt) : Math.max(0, remaining - 1);
+
+        if (nextRemaining <= 0) {
           completeSession();
           return;
         }
-        set({ remaining: remaining - 1 });
+        set({ remaining: nextRemaining });
+      },
+      syncTimer: () => {
+        const s = get();
+        if (!s.running) return;
+
+        if (!s.timerEndsAt) {
+          set({ timerEndsAt: Date.now() + s.remaining * 1000 });
+          return;
+        }
+
+        const remaining = secondsUntil(s.timerEndsAt);
+        if (remaining <= 0) {
+          s.completeSession();
+          return;
+        }
+        set({ remaining });
       },
       completeSession: () => {
         const s = get();
@@ -274,11 +369,14 @@ export const useStore = create<FocusFlowState>()(
           }
 
           const next = cycleSession >= settings.durations.cycle ? "long" : "short";
+          const nextRemaining = settings.durations[next] * 60;
+          const nextRunning = settings.autoStart;
           set({
             history: [newSession, ...s.history].slice(0, 200),
             mode: next,
-            remaining: settings.durations[next] * 60,
-            running: settings.autoStart,
+            remaining: nextRemaining,
+            running: nextRunning,
+            timerEndsAt: nextRunning ? Date.now() + nextRemaining * 1000 : null,
             sessionsToday: nextSessionsToday,
             totalSessions: s.totalSessions + 1,
             totalMinutes: s.totalMinutes + settings.durations.focus,
@@ -291,10 +389,13 @@ export const useStore = create<FocusFlowState>()(
             pendingReflectionSessionId: newSession.id,
           });
         } else {
+          const nextRemaining = settings.durations.focus * 60;
+          const nextRunning = settings.autoStart;
           set({
             mode: "focus",
-            remaining: settings.durations.focus * 60,
-            running: settings.autoStart,
+            remaining: nextRemaining,
+            running: nextRunning,
+            timerEndsAt: nextRunning ? Date.now() + nextRemaining * 1000 : null,
           });
         }
       },
@@ -349,7 +450,26 @@ export const useStore = create<FocusFlowState>()(
         })),
 
       updateSettings: (patch) =>
-        set((s) => ({ settings: { ...s.settings, ...patch } })),
+        set((s) => {
+          const settings = {
+            ...s.settings,
+            ...patch,
+            durations: {
+              ...s.settings.durations,
+              ...patch.durations,
+            },
+          };
+          const currentDurationChanged =
+            patch.durations?.[s.mode] !== undefined &&
+            patch.durations[s.mode] !== s.settings.durations[s.mode];
+
+          return {
+            settings,
+            ...(!s.running && currentDurationChanged
+              ? { remaining: settings.durations[s.mode] * 60, timerEndsAt: null }
+              : {}),
+          };
+        }),
 
       setSessionReflection: (id, userNote, aiSummary) =>
         set((s) => ({
@@ -388,6 +508,7 @@ export const useStore = create<FocusFlowState>()(
             currentSubject: state.currentSubject ?? s.currentSubject,
             lastSessionDate: state.lastSessionDate ?? s.lastSessionDate,
             running: false,
+            timerEndsAt: null,
             remaining: settings.durations[s.mode] * 60,
           };
         }),
@@ -395,8 +516,7 @@ export const useStore = create<FocusFlowState>()(
     {
       name: "focusflow.v1",
       storage: createJSONStorage(() => localStorage),
-      // Don't persist transient fields like `running`/`remaining`
-      partialize: syncedSnapshot,
+      partialize: persistedSnapshot,
     }
   )
 );

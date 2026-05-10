@@ -7,7 +7,7 @@ import { HeatmapPanel } from "@/components/panels/heatmap-panel";
 
 export default function DashboardPage() {
   return (
-    <div className="relative flex h-screen flex-col overflow-hidden">
+    <div className="relative flex h-dvh flex-col overflow-hidden">
       <BackgroundStage />
       <TopBar />
 
