@@ -76,9 +76,16 @@ export function LandingCTA() {
         </motion.div>
       </div>
 
-      <p className="relative mt-16 text-center text-xs text-white/[0.38]">
-        © {new Date().getFullYear()} FocusFlow. Built for deep work.
-      </p>
+      <footer className="relative mt-16 flex flex-col items-center justify-center gap-3 text-xs text-white/[0.38] sm:flex-row">
+        <span>© {new Date().getFullYear()} FocusFlow. Built for deep work.</span>
+        <span className="hidden h-3 w-px bg-white/[0.16] sm:block" />
+        <Link href="/privacy" className="transition-colors hover:text-white/[0.76]">
+          Privacy
+        </Link>
+        <Link href="/terms" className="transition-colors hover:text-white/[0.76]">
+          Terms
+        </Link>
+      </footer>
     </section>
   );
 }
