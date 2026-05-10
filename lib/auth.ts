@@ -14,7 +14,7 @@ export interface User {
   signedInAt: number;
   avatarUrl?: string;
   /** Where the account came from. */
-  provider: "demo" | "email" | "google";
+  provider: "demo" | "email" | "google" | "github";
 }
 
 const STORAGE_KEY = "focusflow.user";
@@ -162,9 +162,19 @@ export async function signUp(
 }
 
 export async function signInWithGoogle(): Promise<{ ok: boolean; error?: string }> {
+  return signInWithOAuthProvider("google");
+}
+
+export async function signInWithGithub(): Promise<{ ok: boolean; error?: string }> {
+  return signInWithOAuthProvider("github");
+}
+
+async function signInWithOAuthProvider(
+  provider: "google" | "github"
+): Promise<{ ok: boolean; error?: string }> {
   if (isSupabaseConfigured && supabase) {
     const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
+      provider,
       options: { redirectTo: `${window.location.origin}/auth/callback` },
     });
     if (error) return { ok: false, error: error.message };
@@ -172,7 +182,7 @@ export async function signInWithGoogle(): Promise<{ ok: boolean; error?: string 
   }
   return {
     ok: false,
-    error: "Google sign-in requires Supabase setup. See AUTH_SETUP.md.",
+    error: `${provider === "google" ? "Google" : "GitHub"} sign-in requires Supabase setup. See AUTH_SETUP.md.`,
   };
 }
 

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, Loader2, AlertCircle } from "lucide-react";
-import { signIn, signUp, signInWithGoogle } from "@/lib/auth";
+import { signIn, signUp, signInWithGithub, signInWithGoogle } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 
 type Mode = "signin" | "signup";
@@ -16,7 +16,7 @@ export default function LoginPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [busy, setBusy] = useState<"submit" | "google" | null>(null);
+  const [busy, setBusy] = useState<"submit" | "google" | "github" | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -45,6 +45,16 @@ export default function LoginPage() {
     setBusy(null);
     if (!result.ok) {
       setError(result.error ?? "Could not sign in with Google.");
+    }
+  };
+
+  const handleGithub = async () => {
+    setError(null);
+    setBusy("github");
+    const result = await signInWithGithub();
+    setBusy(null);
+    if (!result.ok) {
+      setError(result.error ?? "Could not sign in with GitHub.");
     }
   };
 
@@ -211,6 +221,19 @@ export default function LoginPage() {
             Continue with Google
           </button>
 
+          <button
+            onClick={handleGithub}
+            disabled={busy !== null}
+            className="mt-3 inline-flex w-full items-center justify-center gap-2.5 rounded-xl border border-white/[0.14] px-6 py-3 text-sm font-medium text-text transition-colors hover:bg-white/[0.04] disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {busy === "github" ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <GithubIcon />
+            )}
+            Continue with GitHub
+          </button>
+
           <p className="mt-6 text-center text-xs text-text-dim">
             {mode === "signin" ? (
               <>
@@ -313,6 +336,17 @@ function GoogleIcon() {
       <path
         fill="#EA4335"
         d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+      />
+    </svg>
+  );
+}
+
+function GithubIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-4 w-4" aria-hidden="true">
+      <path
+        fill="currentColor"
+        d="M12 .5A11.5 11.5 0 0 0 8.36 22.9c.58.1.79-.25.79-.56v-2.15c-3.23.7-3.91-1.38-3.91-1.38-.53-1.35-1.29-1.71-1.29-1.71-1.06-.72.08-.71.08-.71 1.17.08 1.79 1.2 1.79 1.2 1.04 1.78 2.73 1.27 3.4.97.1-.75.41-1.27.74-1.56-2.58-.29-5.29-1.29-5.29-5.73 0-1.27.45-2.3 1.2-3.11-.12-.29-.52-1.48.11-3.07 0 0 .98-.31 3.17 1.19A11.1 11.1 0 0 1 12 5.89c.98 0 1.96.13 2.88.39 2.2-1.5 3.17-1.19 3.17-1.19.63 1.59.23 2.78.11 3.07.75.81 1.2 1.84 1.2 3.11 0 4.45-2.72 5.43-5.3 5.72.42.36.8 1.08.8 2.18v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"
       />
     </svg>
   );
