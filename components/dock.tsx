@@ -52,11 +52,11 @@ export function Dock() {
       transition={{ delay: 0.2, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
       className={cn(
         // `zen-hide` so it fades out when zen mode is active
-        "zen-hide fixed bottom-3 left-1/2 z-50 flex -translate-x-1/2 items-center rounded-[18px] border border-white/[0.08] bg-bg-2/65 shadow-deep backdrop-blur-xl backdrop-saturate-150",
-        // Mobile: tight padding, small gap, allow horizontal scroll if it doesn't fit
-        "max-w-[calc(100vw-1rem)] gap-0.5 overflow-x-auto p-1.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
+        "zen-hide fixed bottom-3 left-0 right-0 z-50 mx-auto flex w-[calc(100vw-1rem)] max-w-[22rem] items-center justify-center rounded-[18px] border border-white/[0.08] bg-bg-2/65 shadow-deep backdrop-blur-xl backdrop-saturate-150",
+        // Mobile: fixed centered bar, no horizontal scrolling or drift
+        "gap-0 overflow-hidden p-1",
         // Desktop: original spacious feel
-        "sm:bottom-6 sm:gap-1 sm:p-2"
+        "sm:bottom-6 sm:w-fit sm:max-w-none sm:gap-1 sm:overflow-visible sm:p-2"
       )}
     >
       {ITEMS_LEFT.map((item) => (
@@ -78,14 +78,14 @@ function DockButton({ item, active }: { item: DockItem; active: boolean }) {
       aria-label={item.label}
       className={cn(
         // Mobile: smaller (36×36) so all 9 items fit on a 360px screen
-        "group relative grid h-9 w-9 flex-shrink-0 place-items-center rounded-lg text-text-dim transition-all duration-300 ease-elegant",
+        "group relative grid h-8 w-8 flex-shrink-0 place-items-center rounded-lg text-text-dim transition-all duration-300 ease-elegant",
         // Desktop: bigger (44×44) with rounded-xl
         "sm:h-11 sm:w-11 sm:rounded-xl",
         "hover:-translate-y-0.5 hover:bg-white/[0.06] hover:text-text",
         active && "bg-[hsl(var(--accent)/0.15)] text-[hsl(var(--accent))]"
       )}
     >
-      <Icon className="h-[17px] w-[17px] sm:h-[19px] sm:w-[19px]" />
+      <Icon className="h-4 w-4 sm:h-[19px] sm:w-[19px]" />
       {/* Tooltips only on devices with hover (i.e., not phones) */}
       <span className="pointer-events-none absolute bottom-full left-1/2 mb-2 hidden -translate-x-1/2 whitespace-nowrap rounded-md border border-white/[0.08] bg-bg-2 px-2 py-1 text-[11px] opacity-0 transition-opacity sm:block group-hover:opacity-100">
         {item.label}
