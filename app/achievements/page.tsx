@@ -20,7 +20,7 @@ export default function AchievementsPage() {
       <BackgroundStage />
       <TopBar />
 
-      <main className="relative z-[5] mx-auto w-full max-w-3xl flex-1 overflow-y-auto px-7 pb-28">
+      <main className="relative z-[5] mx-auto w-full max-w-3xl flex-1 overflow-y-auto px-4 pb-20 sm:px-7 sm:pb-28">
         <header className="mb-8 mt-2 flex items-end justify-between">
           <div>
             <p className="text-xs uppercase tracking-[0.2em] text-text-dim">

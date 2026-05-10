@@ -14,7 +14,7 @@ export function TopBar() {
   const initial = (user?.name || user?.email || "U").trim().charAt(0).toUpperCase();
 
   return (
-    <header className="relative z-10 flex items-center justify-between px-7 py-4">
+    <header className="relative z-10 flex items-center justify-between px-4 py-3 sm:px-7 sm:py-4">
       <Link href="/" className="flex items-center gap-2.5">
         <div className="grid h-[30px] w-[30px] place-items-center rounded-[9px] bg-[linear-gradient(135deg,hsl(var(--accent)),hsl(var(--accent-alt)))] shadow-glow">
           <svg viewBox="0 0 24 24" className="h-4 w-4 text-bg-0" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
@@ -27,17 +27,18 @@ export function TopBar() {
         </span>
       </Link>
 
-      <div className="flex items-center gap-2">
-        <button className="grid h-9 w-9 place-items-center rounded-[10px] text-text-dim transition-colors hover:bg-white/[0.04] hover:text-text">
+      <div className="flex items-center gap-1 sm:gap-2">
+        {/* Search and Bell hide on mobile to keep the bar uncluttered */}
+        <button aria-label="Search" className="hidden h-9 w-9 place-items-center rounded-[10px] text-text-dim transition-colors hover:bg-white/[0.04] hover:text-text sm:grid">
           <Search className="h-[18px] w-[18px]" />
         </button>
-        <button onClick={toggleZen} className="grid h-9 w-9 place-items-center rounded-[10px] text-text-dim transition-colors hover:bg-white/[0.04] hover:text-text">
+        <button onClick={toggleZen} aria-label="Zen mode" className="grid h-9 w-9 place-items-center rounded-[10px] text-text-dim transition-colors hover:bg-white/[0.04] hover:text-text">
           <Maximize2 className="h-[18px] w-[18px]" />
         </button>
-        <button className="grid h-9 w-9 place-items-center rounded-[10px] text-text-dim transition-colors hover:bg-white/[0.04] hover:text-text">
+        <button aria-label="Notifications" className="hidden h-9 w-9 place-items-center rounded-[10px] text-text-dim transition-colors hover:bg-white/[0.04] hover:text-text sm:grid">
           <Bell className="h-[18px] w-[18px]" />
         </button>
-        <span className="mx-1 h-5 w-px bg-white/[0.08]" />
+        <span className="mx-1 hidden h-5 w-px bg-white/[0.08] sm:block" />
         {user ? (
           <DropdownMenu.Root>
             <DropdownMenu.Trigger asChild>

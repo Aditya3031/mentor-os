@@ -27,28 +27,37 @@ export default function FocusPage() {
 
       <TopBar />
 
-      <main className="relative z-[5] grid min-h-0 flex-1 grid-cols-1 gap-5 px-7 pb-28 lg:grid-cols-[320px_1fr_340px]">
+      {/*
+        Responsive grid:
+        - default (mobile / narrow):  single column, side rails hidden
+        - lg  (≥1024px laptops):       2 columns — left rail + center
+        - xl  (≥1280px+ wider):        3 columns — all three rails
+
+        Each rail scrolls independently so short laptops (1366×768, 1280×800)
+        don't push content under the dock.
+      */}
+      <main className="relative z-[5] grid min-h-0 flex-1 grid-cols-1 gap-4 px-3 pb-20 sm:px-7 sm:pb-24 lg:grid-cols-[280px_minmax(0,1fr)] lg:gap-5 xl:grid-cols-[280px_minmax(0,1fr)_300px]">
         {/* Left rail */}
-        <aside className="hidden min-h-0 flex-col gap-4 lg:flex">
+        <aside className="hidden min-h-0 flex-col gap-4 overflow-y-auto lg:flex">
           <GoalsPanel />
           <TasksPanel />
         </aside>
 
-        {/* Center: focus room */}
-        <section className="flex flex-col items-center justify-center p-2.5">
+        {/* Center: focus room — scrolls if content doesn't fit (e.g., on 768px-tall screens) */}
+        <section className="flex min-h-0 flex-col items-center justify-center overflow-y-auto py-2">
           <Quote />
           <SubjectInput />
-          <div className="mb-8">
+          <div className="mb-5">
             <ModeTabs />
           </div>
           <TimerRing />
-          <div className="mt-8">
+          <div className="mt-6">
             <TimerControls />
           </div>
         </section>
 
-        {/* Right rail */}
-        <aside className="hidden min-h-0 flex-col gap-4 overflow-y-auto lg:flex">
+        {/* Right rail — only visible on xl+ screens to avoid squeezing the timer */}
+        <aside className="hidden min-h-0 flex-col gap-4 overflow-y-auto xl:flex">
           <SnapshotPanel />
           <HeatmapPanel />
           <AmbiencePanel />

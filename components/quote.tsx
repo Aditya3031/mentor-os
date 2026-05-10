@@ -32,7 +32,7 @@ export function Quote() {
       initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-      className="mb-7 max-w-md text-center text-sm text-text-dim"
+      className="mb-5 max-w-md text-center text-sm text-text-dim"
     >
       <span className="italic">{q.t}</span>
       <span className="mt-1.5 block text-[11px] uppercase tracking-widest text-text-faint">
