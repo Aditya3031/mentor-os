@@ -11,6 +11,8 @@ import {
   Trophy,
   Palette,
   Settings,
+  BrainCircuit,
+  UsersRound,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -25,6 +27,8 @@ const ITEMS_LEFT: DockItem[] = [
   { id: "focus", icon: Target, label: "Focus room", href: "/focus" },
   { id: "tasks", icon: CheckSquare, label: "Tasks", href: "/tasks" },
   { id: "stats", icon: BarChart3, label: "Analytics", href: "/dashboard" },
+  { id: "ai", icon: BrainCircuit, label: "AI coach", href: "/ai" },
+  { id: "workspace", icon: UsersRound, label: "Workspace", href: "/workspace" },
   { id: "history", icon: History, label: "History", href: "/history" },
   { id: "trophies", icon: Trophy, label: "Achievements", href: "/achievements" },
 ];

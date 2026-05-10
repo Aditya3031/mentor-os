@@ -1,7 +1,16 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { BarChart3, Cloud, Flame, Music, TimerReset, Trophy } from "lucide-react";
+import {
+  BarChart3,
+  BrainCircuit,
+  Cloud,
+  Flame,
+  Music,
+  TimerReset,
+  Trophy,
+  UsersRound,
+} from "lucide-react";
 
 const FEATURES = [
   {
@@ -21,6 +30,18 @@ const FEATURES = [
     title: "Real momentum data",
     desc: "Dashboard stats, heatmaps, best hours, and subject totals update from your actual completed sessions.",
     accent: "#7aa8ff",
+  },
+  {
+    icon: BrainCircuit,
+    title: "Integrated AI",
+    desc: "Turn goals into focused study plans, break big tasks into session-sized steps, and get smarter recommendations as you work.",
+    accent: "#c99cff",
+  },
+  {
+    icon: UsersRound,
+    title: "Collaborative workspace",
+    desc: "Create shared rooms for classmates, study groups, or project teams with aligned tasks, focus history, and room context.",
+    accent: "#66e3ff",
   },
   {
     icon: Trophy,
@@ -53,7 +74,7 @@ export function LandingFeatures() {
           </p>
         </motion.div>
 
-        <div className="grid gap-4 lg:grid-cols-4">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {FEATURES.map((feature, i) => {
             const Icon = feature.icon;
             return (

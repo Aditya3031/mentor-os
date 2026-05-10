@@ -1,33 +1,18 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { Search, Bell, Maximize2, LogOut, UserRound } from "lucide-react";
 import { signOut, useUser } from "@/lib/auth";
 
 /**
- * Glass top bar with brand, "studying now" pill, and quick actions.
- * The live count is a deliberately fake counter to evoke the "study together" feeling.
+ * Glass top bar with brand, sync status, and quick actions.
  */
 export function TopBar() {
-  const [count, setCount] = useState(14_827);
   const user = useUser();
-
-  useEffect(() => {
-    const id = setInterval(() => {
-      setCount((n) => {
-        const next = n + Math.floor(Math.random() * 11) - 4;
-        if (next < 14_000) return 14_000;
-        if (next > 16_000) return 16_000;
-        return next;
-      });
-    }, 2400);
-    return () => clearInterval(id);
-  }, []);
-
   const toggleZen = () => document.body.classList.toggle("zen");
   const initial = (user?.name || user?.email || "U").trim().charAt(0).toUpperCase();
+  const statusLabel = user ? "Cloud sync ready" : "Guest mode";
 
   return (
     <header className="relative z-10 flex items-center justify-between px-7 py-4">
@@ -45,9 +30,7 @@ export function TopBar() {
 
       <div className="flex items-center gap-2 rounded-full border border-[#7DE0B6]/[0.18] bg-[#7DE0B6]/[0.08] px-3 py-1.5 text-xs text-[#B6EFD3]">
         <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#7DE0B6] shadow-[0_0_12px_#7DE0B6]" />
-        <span>
-          <b>{count.toLocaleString()}</b> studying now
-        </span>
+        <span>{statusLabel}</span>
       </div>
 
       <div className="flex items-center gap-2">

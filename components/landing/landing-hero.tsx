@@ -247,7 +247,7 @@ function ProductPreview() {
         transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
       >
         <Play className="mr-2 h-4 w-4 text-[#86f7d0]" />
-        14,829 studying now
+        Personal focus room ready
       </motion.div>
     </motion.div>
   );
