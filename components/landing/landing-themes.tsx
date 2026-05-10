@@ -1,33 +1,82 @@
+"use client";
+
+import Link from "next/link";
+import { motion } from "framer-motion";
+import { ArrowRight } from "lucide-react";
 import { THEMES } from "@/lib/themes";
 
 export function LandingThemes() {
   return (
-    <section className="relative px-6 py-32">
-      <div className="mx-auto max-w-5xl">
-        <div className="mb-12 text-center">
-          <p className="text-xs uppercase tracking-[0.2em] text-text-dim">Choose your room</p>
-          <h2 className="mt-3 text-balance text-[clamp(28px,4vw,44px)] font-light leading-tight tracking-tight">
-            Seven curated environments.
-          </h2>
+    <section className="relative bg-[#07070b] px-5 py-24 sm:px-8 lg:px-10">
+      <div className="mx-auto max-w-6xl">
+        <div className="mb-12 flex flex-col justify-between gap-6 md:flex-row md:items-end">
+          <motion.div
+            initial={{ opacity: 0, y: 18 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-120px" }}
+            transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+            className="max-w-2xl"
+          >
+            <p className="text-xs font-semibold uppercase tracking-normal text-[#ffcb6b]">
+              Choose your atmosphere
+            </p>
+            <h2 className="mt-4 text-4xl font-semibold leading-tight tracking-normal text-white md:text-5xl">
+              Rooms with personality, not noise.
+            </h2>
+          </motion.div>
+          <Link
+            href="/themes"
+            className="inline-flex w-fit items-center gap-2 rounded-full border border-white/[0.12] bg-white/[0.05] px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-white/[0.1]"
+          >
+            Explore rooms
+            <ArrowRight className="h-4 w-4" />
+          </Link>
         </div>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {THEMES.map((t) => (
-            <div
-              key={t.id}
-              className="group relative aspect-[4/3] overflow-hidden rounded-2xl border border-white/[0.08] transition-all hover:-translate-y-1 hover:border-white/[0.18]"
+
+        <div className="grid gap-4 md:grid-cols-3">
+          {THEMES.slice(0, 6).map((theme, i) => (
+            <motion.div
+              key={theme.id}
+              initial={{ opacity: 0, y: 32 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ delay: i * 0.06, duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+              whileHover={{ y: -8, scale: 1.015 }}
+              className="group relative min-h-[260px] overflow-hidden rounded-2xl border border-white/[0.08] shadow-[0_24px_80px_rgba(0,0,0,0.28)]"
             >
-              <div className="absolute inset-0" style={{ background: t.gradient }} />
+              <motion.div
+                className="absolute inset-0"
+                style={{ background: theme.gradient }}
+                animate={{ scale: [1, 1.06, 1], filter: ["saturate(1)", "saturate(1.18)", "saturate(1)"] }}
+                transition={{ duration: 8 + i, repeat: Infinity, ease: "easeInOut" }}
+              />
               <div
-                className="absolute inset-0 mix-blend-screen"
+                className="absolute inset-0 opacity-70 mix-blend-screen"
                 style={{
-                  background: `radial-gradient(circle at 70% 30%, hsl(${t.accent} / 0.4), transparent 50%)`,
+                  background: `linear-gradient(135deg, hsl(${theme.accent} / 0.42), transparent 55%)`,
                 }}
               />
-              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-5">
-                <h3 className="text-base font-semibold">{t.name}</h3>
-                <p className="mt-0.5 text-xs opacity-80">{t.subtitle}</p>
+              <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.05),rgba(0,0,0,0.72))]" />
+              <div className="absolute inset-x-0 bottom-0 p-5">
+                <div className="mb-4 flex gap-1.5">
+                  {[0, 1, 2].map((dot) => (
+                    <motion.span
+                      key={dot}
+                      className="h-1.5 w-8 rounded-full bg-white/70"
+                      animate={{ opacity: [0.35, 1, 0.35] }}
+                      transition={{
+                        delay: dot * 0.25,
+                        duration: 2.2,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                      }}
+                    />
+                  ))}
+                </div>
+                <h3 className="text-xl font-semibold tracking-normal text-white">{theme.name}</h3>
+                <p className="mt-1 text-sm text-white/[0.72]">{theme.subtitle}</p>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>

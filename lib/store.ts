@@ -92,6 +92,24 @@ interface FocusFlowState {
 
   pushSession: (s: Omit<Session, "id">) => void;
   updateSettings: (patch: Partial<Settings>) => void;
+  hydrateFromSync: (state: Partial<SyncedFocusFlowState>) => void;
+}
+
+export interface SyncedFocusFlowState {
+  theme: ThemeId;
+  tasks: Task[];
+  history: Session[];
+  ambience: AmbienceTrack[];
+  settings: Settings;
+  sessionsToday: number;
+  totalSessions: number;
+  totalMinutes: number;
+  streakDays: number;
+  xp: number;
+  level: number;
+  cycleSession: number;
+  currentSubject: string;
+  lastSessionDate: string;
 }
 
 /* ============================================================
@@ -131,13 +149,28 @@ const DEFAULT_AMBIENCE: AmbienceTrack[] = [
   { id: "noise", enabled: false, volume: 0.3 },
 ];
 
-const DEMO_TASKS: Task[] = [
-  { id: "t1", text: "Review chapter 7 — derivatives", done: false, priority: "high", createdAt: Date.now() - 1000 },
-  { id: "t2", text: "Draft essay outline (1500 words)", done: false, priority: "med",  createdAt: Date.now() - 800 },
-  { id: "t3", text: "Anki — 50 vocab cards",            done: true,  priority: "low",  createdAt: Date.now() - 600 },
-  { id: "t4", text: "Solve practice set #3",            done: true,  priority: "med",  createdAt: Date.now() - 400 },
-  { id: "t5", text: "Schedule mock exam",               done: false, priority: "high", createdAt: Date.now() - 200 },
-];
+function syncedSnapshot(s: FocusFlowState): SyncedFocusFlowState {
+  return {
+    theme: s.theme,
+    tasks: s.tasks,
+    history: s.history,
+    ambience: s.ambience,
+    settings: s.settings,
+    sessionsToday: s.sessionsToday,
+    totalSessions: s.totalSessions,
+    totalMinutes: s.totalMinutes,
+    streakDays: s.streakDays,
+    xp: s.xp,
+    level: s.level,
+    cycleSession: s.cycleSession,
+    currentSubject: s.currentSubject,
+    lastSessionDate: s.lastSessionDate,
+  };
+}
+
+export function getSyncedStateSnapshot(): SyncedFocusFlowState {
+  return syncedSnapshot(useStore.getState());
+}
 
 /* ============================================================
    Store
@@ -303,27 +336,43 @@ export const useStore = create<FocusFlowState>()(
 
       updateSettings: (patch) =>
         set((s) => ({ settings: { ...s.settings, ...patch } })),
+
+      hydrateFromSync: (state) =>
+        set((s) => {
+          const settings = {
+            ...DEFAULT_SETTINGS,
+            ...state.settings,
+            durations: {
+              ...DEFAULT_SETTINGS.durations,
+              ...state.settings?.durations,
+            },
+          };
+
+          return {
+            theme: state.theme ?? s.theme,
+            tasks: state.tasks ?? s.tasks,
+            history: state.history ?? s.history,
+            ambience: state.ambience ?? s.ambience,
+            settings,
+            sessionsToday: state.sessionsToday ?? s.sessionsToday,
+            totalSessions: state.totalSessions ?? s.totalSessions,
+            totalMinutes: state.totalMinutes ?? s.totalMinutes,
+            streakDays: state.streakDays ?? s.streakDays,
+            xp: state.xp ?? s.xp,
+            level: state.level ?? s.level,
+            cycleSession: state.cycleSession ?? s.cycleSession,
+            currentSubject: state.currentSubject ?? s.currentSubject,
+            lastSessionDate: state.lastSessionDate ?? s.lastSessionDate,
+            running: false,
+            remaining: settings.durations[s.mode] * 60,
+          };
+        }),
     }),
     {
       name: "focusflow.v1",
       storage: createJSONStorage(() => localStorage),
       // Don't persist transient fields like `running`/`remaining`
-      partialize: (s) => ({
-        theme: s.theme,
-        tasks: s.tasks,
-        history: s.history,
-        ambience: s.ambience,
-        settings: s.settings,
-        sessionsToday: s.sessionsToday,
-        totalSessions: s.totalSessions,
-        totalMinutes: s.totalMinutes,
-        streakDays: s.streakDays,
-        xp: s.xp,
-        level: s.level,
-        cycleSession: s.cycleSession,
-        currentSubject: s.currentSubject,
-        lastSessionDate: s.lastSessionDate,
-      }),
+      partialize: syncedSnapshot,
     }
   )
 );

@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Instrument_Serif, JetBrains_Mono } from "next/font/google";
 import { ThemeProvider } from "@/components/providers/theme-provider";
+import { SyncProvider } from "@/components/providers/sync-provider";
 import { AudioEngine } from "@/components/audio-engine";
 import { Toaster } from "sonner";
 import "./globals.css";
@@ -57,6 +58,7 @@ export default function RootLayout({
       <body className="bg-bg-0 text-text antialiased">
         <ThemeProvider>
           {children}
+          <SyncProvider />
           {/* Mounted globally — drives ambience + tick sfx based on store state. */}
           <AudioEngine />
         </ThemeProvider>
