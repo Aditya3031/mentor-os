@@ -26,6 +26,10 @@ export interface Session {
   pomodoros: number;
   startedAt: number;
   endedAt: number;
+  /** What the user typed in the reflection modal after the session ended. */
+  userNote?: string;
+  /** AI-generated one-line summary of the session. */
+  aiSummary?: string;
 }
 
 export interface AmbienceTrack {
@@ -63,6 +67,9 @@ interface FocusFlowState {
   /** YYYY-MM-DD (local) of the most recent completed focus session.
    *  Used to detect day rollovers for streak + sessionsToday. */
   lastSessionDate: string;
+  /** Set when a focus session just completed and is awaiting reflection.
+   *  The ReflectionModal subscribes to this and shows itself. */
+  pendingReflectionSessionId: string | null;
 
   /* User */
   theme: ThemeId;
@@ -92,6 +99,10 @@ interface FocusFlowState {
 
   pushSession: (s: Omit<Session, "id">) => void;
   updateSettings: (patch: Partial<Settings>) => void;
+
+  /** Attach a reflection (note + AI summary) to an existing session in history. */
+  setSessionReflection: (id: string, userNote: string, aiSummary?: string) => void;
+  dismissReflection: () => void;
   hydrateFromSync: (state: Partial<SyncedFocusFlowState>) => void;
 }
 
@@ -192,6 +203,7 @@ export const useStore = create<FocusFlowState>()(
       level: 1,
       currentSubject: "",
       lastSessionDate: "",
+      pendingReflectionSessionId: null,
 
       theme: "aurora",
       // Start with no tasks — empty state is welcoming and honest.
@@ -275,6 +287,8 @@ export const useStore = create<FocusFlowState>()(
             xp: s.xp + 25,
             streakDays: nextStreak,
             lastSessionDate: todayKey,
+            // Trigger the reflection modal for this session
+            pendingReflectionSessionId: newSession.id,
           });
         } else {
           set({
@@ -336,6 +350,16 @@ export const useStore = create<FocusFlowState>()(
 
       updateSettings: (patch) =>
         set((s) => ({ settings: { ...s.settings, ...patch } })),
+
+      setSessionReflection: (id, userNote, aiSummary) =>
+        set((s) => ({
+          history: s.history.map((h) =>
+            h.id === id ? { ...h, userNote, aiSummary } : h
+          ),
+          pendingReflectionSessionId: null,
+        })),
+
+      dismissReflection: () => set({ pendingReflectionSessionId: null }),
 
       hydrateFromSync: (state) =>
         set((s) => {

@@ -12,7 +12,6 @@ export function TopBar() {
   const user = useUser();
   const toggleZen = () => document.body.classList.toggle("zen");
   const initial = (user?.name || user?.email || "U").trim().charAt(0).toUpperCase();
-  const statusLabel = user ? "Cloud sync ready" : "Guest mode";
 
   return (
     <header className="relative z-10 flex items-center justify-between px-7 py-4">
@@ -27,11 +26,6 @@ export function TopBar() {
           focus<span className="text-[hsl(var(--accent))]">.</span>flow
         </span>
       </Link>
-
-      <div className="flex items-center gap-2 rounded-full border border-[#7DE0B6]/[0.18] bg-[#7DE0B6]/[0.08] px-3 py-1.5 text-xs text-[#B6EFD3]">
-        <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#7DE0B6] shadow-[0_0_12px_#7DE0B6]" />
-        <span>{statusLabel}</span>
-      </div>
 
       <div className="flex items-center gap-2">
         <button className="grid h-9 w-9 place-items-center rounded-[10px] text-text-dim transition-colors hover:bg-white/[0.04] hover:text-text">

@@ -4,7 +4,7 @@ import { BackgroundStage } from "@/components/bg/background-stage";
 import { TopBar } from "@/components/top-bar";
 import { Dock } from "@/components/dock";
 import { useStore } from "@/lib/store";
-import { Clock } from "lucide-react";
+import { Clock, Sparkles } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 
 export default function HistoryPage() {
@@ -38,25 +38,33 @@ export default function HistoryPage() {
             {history.map((h) => (
               <div
                 key={h.id}
-                className="flex items-center gap-3.5 rounded-xl border border-white/[0.08] bg-white/[0.025] px-3.5 py-3"
+                className="flex items-start gap-3.5 rounded-xl border border-white/[0.08] bg-white/[0.025] px-3.5 py-3"
               >
-                <div className="grid h-9 w-9 place-items-center rounded-xl bg-[linear-gradient(135deg,hsl(var(--accent)/0.2),hsl(var(--accent-alt)/0.2))] text-[hsl(var(--accent))]">
+                <div className="mt-0.5 grid h-9 w-9 flex-shrink-0 place-items-center rounded-xl bg-[linear-gradient(135deg,hsl(var(--accent)/0.2),hsl(var(--accent-alt)/0.2))] text-[hsl(var(--accent))]">
                   <Clock className="h-4 w-4" />
                 </div>
-                <div className="flex-1">
-                  <div className="text-sm font-medium">
-                    {h.subject || "Focus session"}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-baseline justify-between gap-3">
+                    <div className="text-sm font-medium">
+                      {h.subject || "Focus session"}
+                    </div>
+                    <div className="text-xs tabular-nums text-text-dim flex-shrink-0">
+                      <b className="font-medium text-text">
+                        {Math.round(h.durationSec / 60)}
+                      </b>{" "}
+                      min
+                    </div>
                   </div>
                   <div className="mt-0.5 text-[11px] text-text-dim">
                     {formatDistanceToNow(h.endedAt, { addSuffix: true })} ·{" "}
                     {h.pomodoros} pomodoro{h.pomodoros > 1 ? "s" : ""}
                   </div>
-                </div>
-                <div className="text-xs tabular-nums text-text-dim">
-                  <b className="font-medium text-text">
-                    {Math.round(h.durationSec / 60)}
-                  </b>{" "}
-                  min
+                  {h.aiSummary && (
+                    <div className="mt-2 flex items-start gap-1.5 rounded-lg border border-[hsl(var(--accent))]/15 bg-[hsl(var(--accent))]/[0.04] px-2.5 py-2 text-[12px] leading-relaxed text-text">
+                      <Sparkles className="mt-0.5 h-3 w-3 flex-shrink-0 text-[hsl(var(--accent))]" />
+                      <span>{h.aiSummary}</span>
+                    </div>
+                  )}
                 </div>
               </div>
             ))}
