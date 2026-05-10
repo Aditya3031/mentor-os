@@ -8,9 +8,11 @@ import { supabase, isSupabaseConfigured } from "./supabase";
    ============================================================ */
 
 export interface User {
+  id?: string;
   name: string;
   email: string;
   signedInAt: number;
+  avatarUrl?: string;
   /** Where the account came from. */
   provider: "demo" | "email" | "google";
 }
@@ -34,9 +36,15 @@ export function useUser(): User | null {
         if (!session?.user) return null;
         const u = session.user;
         return {
-          name: u.user_metadata?.name ?? u.email?.split("@")[0] ?? "Friend",
+          id: u.id,
+          name:
+            u.user_metadata?.name ??
+            u.user_metadata?.full_name ??
+            u.email?.split("@")[0] ??
+            "Friend",
           email: u.email ?? "",
           signedInAt: Date.parse(u.created_at) || Date.now(),
+          avatarUrl: u.user_metadata?.avatar_url ?? u.user_metadata?.picture,
           provider: (u.app_metadata?.provider as User["provider"]) ?? "email",
         };
       };

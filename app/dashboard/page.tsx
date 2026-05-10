@@ -2,6 +2,7 @@ import { BackgroundStage } from "@/components/bg/background-stage";
 import { TopBar } from "@/components/top-bar";
 import { Dock } from "@/components/dock";
 import { DashboardCharts } from "@/components/dashboard/dashboard-charts";
+import { DashboardStats } from "@/components/dashboard/dashboard-stats";
 import { HeatmapPanel } from "@/components/panels/heatmap-panel";
 
 export default function DashboardPage() {
@@ -18,12 +19,7 @@ export default function DashboardPage() {
           </h1>
         </header>
 
-        <div className="mb-5 grid grid-cols-2 gap-3 md:grid-cols-4">
-          <Stat label="Total hours" value="142h" sub="All time" />
-          <Stat label="Best day" value="6.4h" sub="May 4" />
-          <Stat label="Avg / day" value="2.6h" sub="Last 30 days" />
-          <Stat label="Top subject" value="Calculus" sub="42h total" />
-        </div>
+        <DashboardStats />
 
         <DashboardCharts />
 
@@ -33,16 +29,6 @@ export default function DashboardPage() {
       </main>
 
       <Dock />
-    </div>
-  );
-}
-
-function Stat({ label, value, sub }: { label: string; value: string; sub: string }) {
-  return (
-    <div className="panel">
-      <div className="text-[11px] uppercase tracking-wide text-text-dim">{label}</div>
-      <div className="mt-1.5 text-2xl font-medium tracking-tight">{value}</div>
-      <div className="mt-0.5 text-[11px] text-text-faint">{sub}</div>
     </div>
   );
 }
