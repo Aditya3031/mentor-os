@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import Link from "next/link";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { Search, Bell, Maximize2, LogOut, UserRound } from "lucide-react";
@@ -10,8 +11,47 @@ import { signOut, useUser } from "@/lib/auth";
  */
 export function TopBar() {
   const user = useUser();
-  const toggleZen = () => document.body.classList.toggle("zen");
   const initial = (user?.name || user?.email || "U").trim().charAt(0).toUpperCase();
+
+  /**
+   * Zen mode = hide UI chrome + request real browser fullscreen.
+   * The CSS class `zen` on <body> drives the fade-out (see globals.css).
+   * Browser fullscreen API gives true edge-to-edge immersion.
+   */
+  const toggleZen = async () => {
+    const enteringZen = !document.body.classList.contains("zen");
+    document.body.classList.toggle("zen");
+
+    try {
+      if (enteringZen) {
+        if (!document.fullscreenElement) {
+          await document.documentElement.requestFullscreen();
+        }
+      } else {
+        if (document.fullscreenElement) {
+          await document.exitFullscreen();
+        }
+      }
+    } catch {
+      // Some browsers (or insecure contexts) reject fullscreen — that's OK,
+      // the CSS class still applies and hides chrome.
+    }
+  };
+
+  /**
+   * Keep the `zen` body class in sync with browser fullscreen state.
+   * If the user exits fullscreen with Esc (not the toggle button),
+   * we want the chrome to come back automatically.
+   */
+  useEffect(() => {
+    const sync = () => {
+      if (!document.fullscreenElement) {
+        document.body.classList.remove("zen");
+      }
+    };
+    document.addEventListener("fullscreenchange", sync);
+    return () => document.removeEventListener("fullscreenchange", sync);
+  }, []);
 
   return (
     <header className="relative z-10 flex items-center justify-between px-4 py-3 sm:px-7 sm:py-4">

@@ -1,9 +1,13 @@
 import { NextResponse } from "next/server";
 
-const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-2.5-flash";
+// Valid Gemini model names: gemini-1.5-flash, gemini-1.5-pro, gemini-2.0-flash-exp.
+// `gemini-2.5-flash` doesn't exist — was the cause of "Gemini request failed".
+const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-1.5-flash-latest";
 
 export async function POST(request: Request) {
-  const apiKey = process.env.GEMINI_API_KEY;
+  // Accept either env var name (Google's own or Vercel AI SDK convention).
+  const apiKey =
+    process.env.GEMINI_API_KEY || process.env.GOOGLE_GENERATIVE_AI_API_KEY;
 
   if (!apiKey) {
     return NextResponse.json(

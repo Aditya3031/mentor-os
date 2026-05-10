@@ -51,7 +51,8 @@ export function Dock() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.2, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
       className={cn(
-        "fixed bottom-3 left-1/2 z-50 flex -translate-x-1/2 items-center rounded-[18px] border border-white/[0.08] bg-bg-2/65 shadow-deep backdrop-blur-xl backdrop-saturate-150",
+        // `zen-hide` so it fades out when zen mode is active
+        "zen-hide fixed bottom-3 left-1/2 z-50 flex -translate-x-1/2 items-center rounded-[18px] border border-white/[0.08] bg-bg-2/65 shadow-deep backdrop-blur-xl backdrop-saturate-150",
         // Mobile: tight padding, small gap, allow horizontal scroll if it doesn't fit
         "max-w-[calc(100vw-1rem)] gap-0.5 overflow-x-auto p-1.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
         // Desktop: original spacious feel

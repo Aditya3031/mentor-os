@@ -118,4 +118,24 @@
       radial-gradient(900px 700px at 85% 90%, hsl(var(--accent-alt) / 0.14), transparent 55%),
       linear-gradient(180deg, hsl(var(--bg-0)) 0%, hsl(var(--bg-1)) 100%);
   }
+
+  /* ==========================================================
+     Zen / fullscreen mode
+     Toggled by pressing the maximize icon in the topbar (or "Z").
+     Hides chrome (topbar, side rails, dock) so only the timer
+     remains. Smooth fade so it feels intentional.
+     ========================================================== */
+  body.zen header,
+  body.zen aside,
+  body.zen .zen-hide {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+  }
+
+  body.zen main {
+    /* Recover the vertical space the dock + topbar were holding. */
+    padding-bottom: 0 !important;
+    padding-top: 0 !important;
+  }
 }
