@@ -52,7 +52,7 @@ export function TimerControls() {
         running ? pause() : start();
       } else if (e.key.toLowerCase() === "r") reset();
       else if (e.key.toLowerCase() === "s") {
-        completeSession();
+        completeSession("skip");
         toast("Session skipped");
       }
     };
@@ -84,7 +84,7 @@ export function TimerControls() {
       </motion.button>
 
       <button
-        onClick={() => completeSession()}
+        onClick={() => completeSession("skip")}
         className="grid h-12 w-12 place-items-center rounded-2xl border border-white/[0.08] bg-white/[0.04] text-text-dim transition-colors hover:bg-white/[0.08] hover:text-text"
         title="Skip (S)"
       >

@@ -11,7 +11,12 @@ export type ThemeId =
   | "library"
   | "cyber"
   | "cozy"
-  | "cabin";
+  | "cabin"
+  | "ocean"
+  | "forest"
+  | "sunrise"
+  | "arctic"
+  | "ember";
 
 export interface Theme {
   id: ThemeId;
@@ -106,6 +111,56 @@ export const THEMES: Theme[] = [
     accentAlt: "210 35% 67%",
     ambiencePreset: ["fire", "noise"],
     rain: true,
+  },
+  {
+    id: "ocean",
+    name: "Ocean Desk",
+    subtitle: "Blue glass, slow waves",
+    gradient: "linear-gradient(135deg,#052032 0%,#07121d 48%,#10334a 100%)",
+    accent: "188 86% 66%",
+    accentAlt: "214 82% 72%",
+    ambiencePreset: ["rain", "noise"],
+    rain: false,
+  },
+  {
+    id: "forest",
+    name: "Forest Canopy",
+    subtitle: "Moss light, grounded calm",
+    gradient: "linear-gradient(135deg,#0c2419 0%,#07130f 50%,#1e301d 100%)",
+    accent: "142 52% 66%",
+    accentAlt: "72 54% 66%",
+    ambiencePreset: ["rain", "lofi"],
+    rain: true,
+  },
+  {
+    id: "sunrise",
+    name: "Sunrise Studio",
+    subtitle: "Bright morning momentum",
+    gradient: "linear-gradient(135deg,#341527 0%,#241723 45%,#4c2e22 100%)",
+    accent: "18 95% 74%",
+    accentAlt: "48 88% 70%",
+    ambiencePreset: ["lofi", "cafe"],
+    rain: false,
+  },
+  {
+    id: "arctic",
+    name: "Arctic Lab",
+    subtitle: "Clean air, sharp focus",
+    gradient: "linear-gradient(135deg,#101f2b 0%,#091116 48%,#1d3035 100%)",
+    accent: "190 44% 78%",
+    accentAlt: "166 48% 70%",
+    ambiencePreset: ["noise"],
+    rain: false,
+  },
+  {
+    id: "ember",
+    name: "Ember Room",
+    subtitle: "Low light, steady heat",
+    gradient: "linear-gradient(135deg,#27110d 0%,#130d0b 46%,#351a12 100%)",
+    accent: "12 82% 70%",
+    accentAlt: "38 72% 62%",
+    ambiencePreset: ["fire", "keys"],
+    rain: false,
   },
 ];
 

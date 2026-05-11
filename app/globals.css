@@ -46,6 +46,26 @@
     --accent: 205 50% 78%;
     --accent-alt: 210 35% 67%;
   }
+  body[data-theme="ocean"] {
+    --accent: 188 86% 66%;
+    --accent-alt: 214 82% 72%;
+  }
+  body[data-theme="forest"] {
+    --accent: 142 52% 66%;
+    --accent-alt: 72 54% 66%;
+  }
+  body[data-theme="sunrise"] {
+    --accent: 18 95% 74%;
+    --accent-alt: 48 88% 70%;
+  }
+  body[data-theme="arctic"] {
+    --accent: 190 44% 78%;
+    --accent-alt: 166 48% 70%;
+  }
+  body[data-theme="ember"] {
+    --accent: 12 82% 70%;
+    --accent-alt: 38 72% 62%;
+  }
 
   * {
     @apply border-border;

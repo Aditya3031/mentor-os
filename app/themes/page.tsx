@@ -24,7 +24,7 @@ export default function ThemesPage() {
             Choose your room
           </p>
           <h1 className="mt-2 text-balance text-3xl font-light tracking-tight">
-            Seven curated environments.
+            Twelve curated environments.
           </h1>
         </header>
 

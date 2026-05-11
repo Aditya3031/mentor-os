@@ -1,6 +1,6 @@
 "use client";
 
-import { useAmbienceEngine, useTickEngine } from "@/lib/audio";
+import { useAmbienceEngine, useCompletionChimeEngine, useTickEngine } from "@/lib/audio";
 
 /**
  * Headless component — mount once in the root layout.
@@ -10,5 +10,6 @@ import { useAmbienceEngine, useTickEngine } from "@/lib/audio";
 export function AudioEngine() {
   useAmbienceEngine();
   useTickEngine();
+  useCompletionChimeEngine();
   return null;
 }

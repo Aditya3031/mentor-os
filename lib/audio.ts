@@ -153,6 +153,27 @@ export function useTickEngine() {
   }, [running, ticking, mode]);
 }
 
+/**
+ * Plays one calm bell-like chime when the timer naturally reaches zero.
+ * It is synthesized with Web Audio so the app does not depend on a
+ * missing mp3 asset and the tone stays consistent across installs.
+ */
+export function useCompletionChimeEngine() {
+  const timerCompletedAt = useStore((s) => s.timerCompletedAt);
+  const sfx = useStore((s) => s.settings.sfx);
+  const notifications = useStore((s) => s.settings.notifications);
+  const lastPlayedRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    if (!timerCompletedAt || lastPlayedRef.current === timerCompletedAt) return;
+    lastPlayedRef.current = timerCompletedAt;
+    if (sfx) playCompletionChime();
+    if (notifications) {
+      notify("Timer complete", "Your FocusFlow session is ready for the next step.");
+    }
+  }, [timerCompletedAt, sfx, notifications]);
+}
+
 /* ============================================================
    Sound effects + browser notifications
    ============================================================ */
@@ -169,6 +190,44 @@ export function playSfx(src: string, volume = 0.5) {
   el.volume = Math.max(0, Math.min(1, volume));
   el.currentTime = 0;
   el.play().catch(() => {});
+}
+
+function playCompletionChime() {
+  if (typeof window === "undefined") return;
+  const AudioContextClass =
+    window.AudioContext ||
+    (window as typeof window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+  if (!AudioContextClass) return;
+
+  const ctx = new AudioContextClass();
+  const now = ctx.currentTime;
+  const master = ctx.createGain();
+  master.gain.setValueAtTime(0.0001, now);
+  master.gain.exponentialRampToValueAtTime(0.55, now + 0.025);
+  master.gain.exponentialRampToValueAtTime(0.0001, now + 2.2);
+  master.connect(ctx.destination);
+
+  const partials = [
+    { frequency: 523.25, gain: 0.8, decay: 1.9 },
+    { frequency: 659.25, gain: 0.36, decay: 1.55 },
+    { frequency: 783.99, gain: 0.2, decay: 1.25 },
+  ];
+
+  partials.forEach(({ frequency, gain, decay }, i) => {
+    const osc = ctx.createOscillator();
+    const amp = ctx.createGain();
+    osc.type = i === 0 ? "sine" : "triangle";
+    osc.frequency.setValueAtTime(frequency, now);
+    osc.detune.setValueAtTime(i * 3, now);
+    amp.gain.setValueAtTime(gain, now);
+    amp.gain.exponentialRampToValueAtTime(0.0001, now + decay);
+    osc.connect(amp);
+    amp.connect(master);
+    osc.start(now);
+    osc.stop(now + decay + 0.1);
+  });
+
+  window.setTimeout(() => void ctx.close(), 2400);
 }
 
 export const SFX = {

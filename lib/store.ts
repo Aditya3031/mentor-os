@@ -71,6 +71,8 @@ interface FocusFlowState {
   /** Set when a focus session just completed and is awaiting reflection.
    *  The ReflectionModal subscribes to this and shows itself. */
   pendingReflectionSessionId: string | null;
+  /** Bumped when a timer naturally reaches zero so audio can react once. */
+  timerCompletedAt: number | null;
 
   /* User */
   theme: ThemeId;
@@ -88,7 +90,7 @@ interface FocusFlowState {
   reset: () => void;
   tick: () => void;
   syncTimer: () => void;
-  completeSession: () => void;
+  completeSession: (source?: "elapsed" | "skip") => void;
   setCurrentSubject: (s: string) => void;
 
   setTheme: (t: ThemeId) => void;
@@ -226,6 +228,7 @@ export const useStore = create<FocusFlowState>()(
       currentSubject: "",
       lastSessionDate: "",
       pendingReflectionSessionId: null,
+      timerCompletedAt: null,
 
       theme: "aurora",
       // Start with no tasks — empty state is welcoming and honest.
@@ -274,7 +277,7 @@ export const useStore = create<FocusFlowState>()(
       start: () => {
         const s = get();
         if (s.remaining <= 0) {
-          s.completeSession();
+          s.completeSession("elapsed");
           return;
         }
         set({ running: true, timerEndsAt: Date.now() + s.remaining * 1000 });
@@ -284,7 +287,7 @@ export const useStore = create<FocusFlowState>()(
         if (s.running && s.timerEndsAt) {
           const remaining = secondsUntil(s.timerEndsAt);
           if (remaining <= 0) {
-            s.completeSession();
+            s.completeSession("elapsed");
             return;
           }
           set({ running: false, remaining, timerEndsAt: null });
@@ -306,7 +309,7 @@ export const useStore = create<FocusFlowState>()(
           running && timerEndsAt ? secondsUntil(timerEndsAt) : Math.max(0, remaining - 1);
 
         if (nextRemaining <= 0) {
-          completeSession();
+          completeSession("elapsed");
           return;
         }
         set({ remaining: nextRemaining });
@@ -322,14 +325,15 @@ export const useStore = create<FocusFlowState>()(
 
         const remaining = secondsUntil(s.timerEndsAt);
         if (remaining <= 0) {
-          s.completeSession();
+          s.completeSession("elapsed");
           return;
         }
         set({ remaining });
       },
-      completeSession: () => {
+      completeSession: (source = "elapsed") => {
         const s = get();
         const { mode, cycleSession, settings, currentSubject } = s;
+        const timerCompletedAt = source === "elapsed" ? Date.now() : s.timerCompletedAt;
 
         if (mode === "focus") {
           const endedAt = Date.now();
@@ -387,6 +391,7 @@ export const useStore = create<FocusFlowState>()(
             lastSessionDate: todayKey,
             // Trigger the reflection modal for this session
             pendingReflectionSessionId: newSession.id,
+            timerCompletedAt,
           });
         } else {
           const nextRemaining = settings.durations.focus * 60;
@@ -396,6 +401,7 @@ export const useStore = create<FocusFlowState>()(
             remaining: nextRemaining,
             running: nextRunning,
             timerEndsAt: nextRunning ? Date.now() + nextRemaining * 1000 : null,
+            timerCompletedAt,
           });
         }
       },
