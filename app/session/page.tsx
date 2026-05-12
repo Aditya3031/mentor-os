@@ -553,10 +553,18 @@ function StatusPill({ active, label }: { active: boolean; label: string }) {
 function getMediaError(error: unknown) {
   if (error instanceof DOMException) {
     if (error.name === "NotAllowedError")
-      return "Permission was blocked for this device.";
+      return "Permission was blocked — click the camera icon in the address bar to allow, then try again.";
     if (error.name === "NotFoundError")
-      return "No matching camera, microphone, or display was found.";
+      return "No camera or microphone was detected on this device.";
+    if (error.name === "NotReadableError")
+      return "Camera or mic is already in use by another app (Zoom, OBS, browser tab, etc.). Close it and try again.";
+    if (error.name === "OverconstrainedError")
+      return "Your camera doesn't support the requested settings.";
+    if (error.name === "SecurityError")
+      return "Browser blocked media access — this usually means an insecure (HTTP) connection. Use HTTPS.";
+    return `Could not start device (${error.name}: ${error.message}).`;
   }
+  if (error instanceof Error) return `Could not start device: ${error.message}`;
   return "Could not start the selected device.";
 }
 
