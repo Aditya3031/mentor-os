@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import type { RealtimeChannel } from "@supabase/supabase-js";
 import { supabase, isSupabaseConfigured } from "./supabase";
 import { createPeerConnection } from "./webrtc";
 
@@ -46,7 +47,7 @@ export function useRoom(
   const [error, setError] = useState<string | null>(null);
 
   // Refs — avoid stale-closure problems by always reading current state from refs
-  const channelRef = useRef<ReturnType<typeof supabase.channel> | null>(null);
+  const channelRef = useRef<RealtimeChannel | null>(null);
   const peerConnsRef = useRef<Map<string, RTCPeerConnection>>(new Map());
   const remoteStreamsRef = useRef<Map<string, MediaStream>>(new Map());
   const knownPeersRef = useRef<Map<string, { name: string }>>(new Map());
