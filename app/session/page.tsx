@@ -183,10 +183,55 @@ function Room({ roomId }: { roomId: string }) {
   const [micOn, setMicOn] = useState(false);
   const [busy, setBusy] = useState("");
   const [mediaError, setMediaError] = useState("");
+  const [acquiringMedia, setAcquiringMedia] = useState(true);
 
-  // WebRTC + signaling
+  // Whether the browser even supports screen share (desktop only)
+  const canShareScreen =
+    typeof navigator !== "undefined" &&
+    !!navigator.mediaDevices &&
+    typeof navigator.mediaDevices.getDisplayMedia === "function";
+
+  /* ----------------------------------------------------------
+     Request camera + mic ONCE on room entry.
+     Tracks start disabled (you appear muted/camera-off) but the
+     stream is already in the peer connection so the SDP offer
+     includes the right m-lines. Toggling later just flips
+     track.enabled — no renegotiation needed.
+     ---------------------------------------------------------- */
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: true,
+          audio: true,
+        });
+        if (cancelled) {
+          stream.getTracks().forEach((t) => t.stop());
+          return;
+        }
+        // Start muted + camera off — user explicitly turns each on.
+        stream.getVideoTracks().forEach((t) => (t.enabled = false));
+        stream.getAudioTracks().forEach((t) => (t.enabled = false));
+        setLocalStream(stream);
+      } catch (err) {
+        if (!cancelled) {
+          setMediaError(getMediaError(err));
+          // Still join the room — they can see/hear others, just can't broadcast.
+        }
+      } finally {
+        if (!cancelled) setAcquiringMedia(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  // WebRTC + signaling — only start AFTER we've finished trying to get media.
+  // This ensures the initial SDP offer includes our tracks.
   const { peers, connected, error: roomError } = useRoom(
-    roomId,
+    acquiringMedia ? null : roomId,
     localStream,
     displayName
   );
@@ -213,44 +258,24 @@ function Room({ roomId }: { roomId: string }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  /* ---------- Media control handlers ---------- */
-  const ensureLocalStream = async (): Promise<MediaStream | null> => {
-    if (localStream) return localStream;
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: true,
-        audio: true,
-      });
-      // Start with both tracks DISABLED — user explicitly toggles each
-      stream.getVideoTracks().forEach((t) => (t.enabled = false));
-      stream.getAudioTracks().forEach((t) => (t.enabled = false));
-      setLocalStream(stream);
-      return stream;
-    } catch (err) {
-      setMediaError(getMediaError(err));
-      return null;
+  /* ---------- Toggle handlers — just flip track.enabled ---------- */
+  const toggleCamera = () => {
+    if (!localStream) {
+      setMediaError("Camera not available — refresh and grant permission.");
+      return;
     }
-  };
-
-  const toggleCamera = async () => {
-    setBusy("camera");
-    setMediaError("");
-    const stream = await ensureLocalStream();
-    setBusy("");
-    if (!stream) return;
     const next = !cameraOn;
-    stream.getVideoTracks().forEach((t) => (t.enabled = next));
+    localStream.getVideoTracks().forEach((t) => (t.enabled = next));
     setCameraOn(next);
   };
 
-  const toggleMic = async () => {
-    setBusy("mic");
-    setMediaError("");
-    const stream = await ensureLocalStream();
-    setBusy("");
-    if (!stream) return;
+  const toggleMic = () => {
+    if (!localStream) {
+      setMediaError("Microphone not available — refresh and grant permission.");
+      return;
+    }
     const next = !micOn;
-    stream.getAudioTracks().forEach((t) => (t.enabled = next));
+    localStream.getAudioTracks().forEach((t) => (t.enabled = next));
     setMicOn(next);
   };
 
@@ -346,13 +371,15 @@ function Room({ roomId }: { roomId: string }) {
               label={micOn ? "Mic on" : "Mic"}
               onClick={toggleMic}
             />
-            <ControlButton
-              active={!!screenStream}
-              disabled={busy === "screen"}
-              icon={screenStream ? ScreenShareOff : ScreenShare}
-              label={screenStream ? "Stop share" : "Share"}
-              onClick={toggleScreen}
-            />
+            {canShareScreen && (
+              <ControlButton
+                active={!!screenStream}
+                disabled={busy === "screen"}
+                icon={screenStream ? ScreenShareOff : ScreenShare}
+                label={screenStream ? "Stop share" : "Share"}
+                onClick={toggleScreen}
+              />
+            )}
             <button
               onClick={leaveSession}
               className="inline-flex h-10 items-center gap-2 rounded-xl border border-[#FF8A8A]/25 bg-[#FF8A8A]/10 px-3 text-sm font-medium text-[#FFB0B0] transition-colors hover:bg-[#FF8A8A]/20"
@@ -395,11 +422,16 @@ function Room({ roomId }: { roomId: string }) {
                   <div className="grid min-h-[280px] place-items-center text-center text-sm text-text-faint">
                     <div>
                       <ScreenShare className="mx-auto mb-3 h-8 w-8 opacity-60" />
-                      <div>Click "Share" to project your screen.</div>
-                      <div className="mt-1 text-[11px]">
-                        (Local preview only — screen sharing to peers comes in a future
-                        update.)
+                      <div>
+                        {canShareScreen
+                          ? "Click 'Share' to project your screen."
+                          : "Screen sharing isn't supported in mobile browsers."}
                       </div>
+                      {canShareScreen && (
+                        <div className="mt-1 text-[11px]">
+                          (Local preview only — sharing to peers comes in a future update.)
+                        </div>
+                      )}
                     </div>
                   </div>
                 )}

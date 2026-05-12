@@ -123,15 +123,33 @@ export function useRoom(
 
       // Add local tracks (camera, mic) so the remote peer receives them
       const stream = localStreamRef.current;
+      const trackCount = stream?.getTracks().length ?? 0;
+      console.log(
+        `[room] createPeerFor(${peerId}) — adding ${trackCount} local tracks ` +
+          (stream
+            ? `(${stream
+                .getTracks()
+                .map((t) => `${t.kind}:${t.readyState}`)
+                .join(", ")})`
+            : "(no stream!)")
+      );
       if (stream) {
         stream.getTracks().forEach((track) => {
           pc.addTrack(track, stream);
         });
+      } else {
+        // No local stream — at least add transceivers so we can receive media.
+        // Without these the remote answer won't include any m-lines for us.
+        pc.addTransceiver("audio", { direction: "recvonly" });
+        pc.addTransceiver("video", { direction: "recvonly" });
       }
 
       // Remote tracks arrive here. We bucket them all into one MediaStream
       // per peer so the UI just renders <video srcObject={remotePeer.stream}>.
       pc.ontrack = (event) => {
+        console.log(
+          `[room] ontrack fired from ${peerId}: kind=${event.track.kind}, streams=${event.streams.length}`
+        );
         let remoteStream = remoteStreamsRef.current.get(peerId);
         if (!remoteStream) {
           remoteStream = new MediaStream();
@@ -142,22 +160,25 @@ export function useRoom(
       };
 
       // ICE candidates — send via signaling channel as they're discovered
+      let iceCount = 0;
       pc.onicecandidate = (event) => {
         if (event.candidate) {
+          iceCount++;
           sendSignal({
             type: "ice",
             from: myId,
             to: peerId,
             candidate: event.candidate.toJSON(),
           });
+        } else {
+          console.log(`[room] ICE gathering complete for ${peerId} (sent ${iceCount} candidates)`);
         }
       };
 
       pc.onconnectionstatechange = () => {
-        console.log(`[room] peer ${peerId} state: ${pc.connectionState}`);
+        console.log(`[room] peer ${peerId} CONNECTION state: ${pc.connectionState}`);
         rebuildPeerList();
         if (pc.connectionState === "failed" || pc.connectionState === "closed") {
-          // Cleanup; the peer might rejoin via a fresh offer
           peerConnsRef.current.delete(peerId);
           remoteStreamsRef.current.delete(peerId);
           rebuildPeerList();
@@ -166,6 +187,10 @@ export function useRoom(
 
       pc.oniceconnectionstatechange = () => {
         console.log(`[room] peer ${peerId} ICE state: ${pc.iceConnectionState}`);
+      };
+
+      pc.onsignalingstatechange = () => {
+        console.log(`[room] peer ${peerId} SIGNALING state: ${pc.signalingState}`);
       };
 
       return pc;
