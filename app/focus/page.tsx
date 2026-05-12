@@ -37,7 +37,7 @@ export default function FocusPage() {
         Each rail scrolls independently so short laptops (1366×768, 1280×800)
         don't push content under the dock.
       */}
-      <main className="relative z-[5] grid min-h-0 flex-1 grid-cols-1 gap-4 overflow-y-auto px-3 pb-24 sm:px-7 sm:pb-28 lg:grid-cols-[280px_minmax(0,1fr)] lg:gap-5 lg:overflow-hidden xl:grid-cols-[280px_minmax(0,1fr)_300px]">
+      <main className="relative z-[5] grid min-h-0 flex-1 grid-cols-1 gap-4 overflow-y-auto px-3 pb-32 sm:px-7 sm:pb-28 lg:grid-cols-[280px_minmax(0,1fr)] lg:gap-5 lg:overflow-hidden xl:grid-cols-[280px_minmax(0,1fr)_300px]">
         {/* Left rail */}
         <aside className="hidden min-h-0 flex-col gap-4 overflow-y-auto lg:flex">
           <GoalsPanel />

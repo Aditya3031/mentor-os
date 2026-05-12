@@ -154,6 +154,7 @@ export function useRoom(
       };
 
       pc.onconnectionstatechange = () => {
+        console.log(`[room] peer ${peerId} state: ${pc.connectionState}`);
         rebuildPeerList();
         if (pc.connectionState === "failed" || pc.connectionState === "closed") {
           // Cleanup; the peer might rejoin via a fresh offer
@@ -161,6 +162,10 @@ export function useRoom(
           remoteStreamsRef.current.delete(peerId);
           rebuildPeerList();
         }
+      };
+
+      pc.oniceconnectionstatechange = () => {
+        console.log(`[room] peer ${peerId} ICE state: ${pc.iceConnectionState}`);
       };
 
       return pc;
@@ -224,6 +229,8 @@ export function useRoom(
         }
       });
 
+      console.log(`[room ${roomId}] sync — peers in room:`, Array.from(seen));
+
       // For every peer in the room I haven't connected to yet, decide:
       // the peer with the LEXICOGRAPHICALLY GREATER id sends the offer.
       // The other peer just waits. This guarantees exactly one offer per pair.
@@ -232,6 +239,7 @@ export function useRoom(
         handledPeersRef.current.add(peerId);
 
         if (myId > peerId) {
+          console.log(`[room ${roomId}] initiating offer → ${peerId}`);
           const pc = createPeerFor(peerId);
           try {
             const offer = await pc.createOffer();
@@ -241,9 +249,9 @@ export function useRoom(
             console.warn("[room] offer failed", e);
             handledPeersRef.current.delete(peerId);
           }
+        } else {
+          console.log(`[room ${roomId}] waiting for offer from ${peerId}`);
         }
-        // If myId < peerId, we wait for them to offer us — handled below in
-        // the broadcast handler.
       }
 
       rebuildPeerList();
@@ -255,6 +263,7 @@ export function useRoom(
       if (msg.to !== myId) return;
 
       if (msg.type === "offer") {
+        console.log(`[room ${roomId}] received offer from ${msg.from}`);
         // We're the answerer. Mark this peer as "handled" so the sync
         // handler doesn't ALSO try to offer to them in a race.
         handledPeersRef.current.add(msg.from);
@@ -269,10 +278,12 @@ export function useRoom(
             to: msg.from,
             sdp: answer,
           });
+          console.log(`[room ${roomId}] sent answer to ${msg.from}`);
         } catch (e) {
           console.warn("[room] handling offer failed", e);
         }
       } else if (msg.type === "answer") {
+        console.log(`[room ${roomId}] received answer from ${msg.from}`);
         const pc = peerConnsRef.current.get(msg.from);
         if (pc) {
           try {
@@ -296,6 +307,7 @@ export function useRoom(
 
     /* Subscribe + track presence */
     channel.subscribe(async (status) => {
+      console.log(`[room ${roomId}] channel status: ${status}, myId=${myId}`);
       if (status === "SUBSCRIBED") {
         await channel.track({ name: displayName, joinedAt: Date.now() });
         setConnected(true);
