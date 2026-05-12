@@ -26,7 +26,7 @@ import { TopBar } from "@/components/top-bar";
 import { useUser } from "@/lib/auth";
 import { useRoom, type RemotePeer } from "@/lib/use-room";
 import { generateRoomCode } from "@/lib/webrtc";
-import { isSupabaseConfigured } from "@/lib/supabase";
+import { isSupabaseConfigured, supabase } from "@/lib/supabase";
 import { cn } from "@/lib/utils";
 
 const COLORS = ["#ECECF2", "#86F7D0", "#78B7FF", "#FFB86B", "#FF8A8A", "#C7A3FF"];
@@ -460,7 +460,7 @@ function Room({ roomId }: { roomId: string }) {
             </div>
           </section>
 
-          <Whiteboard />
+          <Whiteboard roomId={roomId} />
         </div>
       </main>
 
@@ -601,10 +601,20 @@ function getMediaError(error: unknown) {
 }
 
 /* ============================================================
-   Whiteboard (unchanged from previous version)
+   Whiteboard — collaborative via Supabase Realtime broadcast.
+   Strokes are sent as normalized 0..1 coordinates so they render
+   identically across different canvas sizes (laptop vs phone).
    ============================================================ */
 
-function Whiteboard() {
+interface StrokeMessage {
+  from: { x: number; y: number };
+  to: { x: number; y: number };
+  color: string;
+  size: number;
+  mode: BoardMode;
+}
+
+function Whiteboard({ roomId }: { roomId: string }) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const drawingRef = useRef(false);
@@ -612,6 +622,11 @@ function Whiteboard() {
   const [mode, setMode] = useState<BoardMode>("pen");
   const [color, setColor] = useState(COLORS[1]);
   const [size, setSize] = useState(4);
+
+  // Broadcast helper — sends strokes to other peers in this room.
+  const broadcastRef = useRef<((event: string, payload: any) => void) | null>(
+    null
+  );
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -666,25 +681,85 @@ function Whiteboard() {
     return { x: event.clientX - rect.left, y: event.clientY - rect.top };
   };
 
+  /* ----------------------------------------------------------
+     Subscribe to a separate Supabase channel just for whiteboard
+     strokes. Decoupled from the WebRTC video channel so they
+     don't interfere with each other.
+     ---------------------------------------------------------- */
+  useEffect(() => {
+    if (!isSupabaseConfigured || !supabase || !roomId) return;
+    const channel = supabase.channel(`whiteboard:${roomId}`, {
+      config: { broadcast: { self: false } },
+    });
+
+    channel.on("broadcast", { event: "stroke" }, ({ payload }) => {
+      drawStroke(payload as StrokeMessage, false);
+    });
+    channel.on("broadcast", { event: "clear" }, () => {
+      clearLocal();
+    });
+
+    channel.subscribe();
+    broadcastRef.current = (event, payload) => {
+      void channel.send({ type: "broadcast", event, payload });
+    };
+
+    return () => {
+      broadcastRef.current = null;
+      void supabase!.removeChannel(channel);
+    };
+  }, [roomId]);
+
+  /* drawStroke applies a stroke to the canvas. If `andBroadcast`
+     is true, also pushes it to other peers. */
+  const drawStroke = (msg: StrokeMessage, andBroadcast: boolean) => {
+    const canvas = canvasRef.current;
+    const ctx = canvas?.getContext("2d");
+    if (!canvas || !ctx) return;
+    const rect = canvas.getBoundingClientRect();
+
+    // Strokes are stored as 0..1 normalized coords for cross-device consistency.
+    const fx = msg.from.x * rect.width;
+    const fy = msg.from.y * rect.height;
+    const tx = msg.to.x * rect.width;
+    const ty = msg.to.y * rect.height;
+
+    ctx.save();
+    ctx.globalCompositeOperation =
+      msg.mode === "eraser" ? "destination-out" : "source-over";
+    ctx.strokeStyle = msg.color;
+    ctx.lineWidth = msg.mode === "eraser" ? msg.size * 4 : msg.size;
+    ctx.beginPath();
+    ctx.moveTo(fx, fy);
+    ctx.lineTo(tx, ty);
+    ctx.stroke();
+    ctx.restore();
+
+    if (andBroadcast && broadcastRef.current) {
+      broadcastRef.current("stroke", msg);
+    }
+  };
+
   const drawTo = (point: { x: number; y: number }) => {
     const canvas = canvasRef.current;
     const previous = lastPointRef.current;
-    const ctx = canvas?.getContext("2d");
-    if (!canvas || !ctx || !previous) return;
+    if (!canvas || !previous) return;
+    const rect = canvas.getBoundingClientRect();
 
-    ctx.save();
-    ctx.globalCompositeOperation = mode === "eraser" ? "destination-out" : "source-over";
-    ctx.strokeStyle = color;
-    ctx.lineWidth = mode === "eraser" ? size * 4 : size;
-    ctx.beginPath();
-    ctx.moveTo(previous.x, previous.y);
-    ctx.lineTo(point.x, point.y);
-    ctx.stroke();
-    ctx.restore();
+    drawStroke(
+      {
+        from: { x: previous.x / rect.width, y: previous.y / rect.height },
+        to: { x: point.x / rect.width, y: point.y / rect.height },
+        color,
+        size,
+        mode,
+      },
+      true
+    );
     lastPointRef.current = point;
   };
 
-  const clearBoard = () => {
+  const clearLocal = () => {
     const canvas = canvasRef.current;
     const ctx = canvas?.getContext("2d");
     if (!canvas || !ctx) return;
@@ -692,6 +767,11 @@ function Whiteboard() {
     ctx.clearRect(0, 0, rect.width, rect.height);
     ctx.fillStyle = "rgba(255,255,255,0.015)";
     ctx.fillRect(0, 0, rect.width, rect.height);
+  };
+
+  const clearBoard = () => {
+    clearLocal();
+    broadcastRef.current?.("clear", {});
   };
 
   const downloadBoard = () => {

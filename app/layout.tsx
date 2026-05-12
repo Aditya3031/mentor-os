@@ -5,6 +5,9 @@ import { SyncProvider } from "@/components/providers/sync-provider";
 import { AudioEngine } from "@/components/audio-engine";
 import { ReflectionModal } from "@/components/reflection-modal";
 import { PWARegister } from "@/components/pwa-register";
+import { Onboarding } from "@/components/onboarding";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Toaster } from "sonner";
 import "./globals.css";
 
@@ -115,6 +118,8 @@ export default function RootLayout({
           <AudioEngine />
           {/* Pops up automatically after a focus session completes. */}
           <ReflectionModal />
+          {/* First-run welcome modal, gated by localStorage flag. */}
+          <Onboarding />
         </ThemeProvider>
         <Toaster
           position="top-right"
@@ -128,6 +133,9 @@ export default function RootLayout({
             },
           }}
         />
+        {/* Vercel-native analytics + Core Web Vitals (no extra config needed). */}
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
