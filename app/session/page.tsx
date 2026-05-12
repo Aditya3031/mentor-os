@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   Copy,
@@ -33,7 +33,16 @@ const COLORS = ["#ECECF2", "#86F7D0", "#78B7FF", "#FFB86B", "#FF8A8A", "#C7A3FF"
 type BoardMode = "pen" | "eraser";
 
 export default function SessionPage() {
-  const router = useRouter();
+  // Next.js 15 requires useSearchParams to live inside a Suspense boundary
+  // so that the prerender doesn't bail out the whole route into pure CSR.
+  return (
+    <Suspense fallback={<SessionLoading />}>
+      <SessionRouter />
+    </Suspense>
+  );
+}
+
+function SessionRouter() {
   const searchParams = useSearchParams();
   const roomFromUrl = searchParams.get("room");
 
@@ -43,6 +52,19 @@ export default function SessionPage() {
   }
 
   return <Room roomId={roomFromUrl.toUpperCase()} />;
+}
+
+function SessionLoading() {
+  return (
+    <div className="relative flex h-dvh flex-col overflow-hidden">
+      <BackgroundStage />
+      <TopBar />
+      <main className="relative z-[5] mx-auto flex w-full max-w-2xl flex-1 flex-col items-center justify-center px-4 pb-28 sm:px-7">
+        <div className="text-sm text-text-dim">Loading session…</div>
+      </main>
+      <Dock />
+    </div>
+  );
 }
 
 /* ============================================================
