@@ -36,7 +36,9 @@ export default function ThemesPage() {
                 key={t.id}
                 onClick={() => {
                   setTheme(t.id);
-                  toast(`Switched to ${t.name}`);
+                  toast(`${t.name} room loaded`, {
+                    description: "Ambience preset applied.",
+                  });
                 }}
                 className={cn(
                   "group relative aspect-[4/3] overflow-hidden rounded-2xl border-2 transition-all duration-300 hover:-translate-y-1",

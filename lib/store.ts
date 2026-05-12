@@ -2,7 +2,7 @@
 
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
-import type { ThemeId, AmbienceId } from "./themes";
+import { getTheme, type ThemeId, type AmbienceId } from "./themes";
 
 /* ============================================================
    Types
@@ -185,6 +185,14 @@ function withDefaultSettings(settings?: Partial<Settings>): Settings {
       ...settings?.durations,
     },
   };
+}
+
+function applyAmbiencePreset(ambience: AmbienceTrack[], preset: AmbienceId[]) {
+  const enabled = new Set(preset);
+  return ambience.map((track) => ({
+    ...track,
+    enabled: enabled.has(track.id),
+  }));
 }
 
 function syncedSnapshot(s: FocusFlowState): SyncedFocusFlowState {
@@ -422,7 +430,11 @@ export const useStore = create<FocusFlowState>()(
       setCurrentSubject: (s) => set({ currentSubject: s }),
 
       /* Theme */
-      setTheme: (t) => set({ theme: t }),
+      setTheme: (t) =>
+        set((s) => ({
+          theme: t,
+          ambience: applyAmbiencePreset(s.ambience, getTheme(t).ambiencePreset),
+        })),
 
       toggleAmbience: (id) =>
         set((s) => ({
