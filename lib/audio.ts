@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { useStore } from "./store";
+import { useStore, type CompletionSoundId } from "./store";
 import {
   AMBIENCE_TRACKS,
   ambienceTrackUrl,
@@ -10,6 +10,17 @@ import {
 } from "./themes";
 
 const FADE_MS = 600;
+
+export const COMPLETION_SOUNDS: Array<{
+  id: CompletionSoundId;
+  name: string;
+  description: string;
+}> = [
+  { id: "soft-bell", name: "Soft Bell", description: "Warm and calm" },
+  { id: "singing-bowl", name: "Singing Bowl", description: "Long mindful ring" },
+  { id: "bright-ding", name: "Bright Ding", description: "Clear and quick" },
+  { id: "digital", name: "Digital Pulse", description: "Clean app alert" },
+];
 
 /**
  * Ambience audio engine — vanilla HTMLAudioElement based, no library.
@@ -161,17 +172,18 @@ export function useTickEngine() {
 export function useCompletionChimeEngine() {
   const timerCompletedAt = useStore((s) => s.timerCompletedAt);
   const sfx = useStore((s) => s.settings.sfx);
+  const completionSound = useStore((s) => s.settings.completionSound);
   const notifications = useStore((s) => s.settings.notifications);
   const lastPlayedRef = useRef<number | null>(null);
 
   useEffect(() => {
     if (!timerCompletedAt || lastPlayedRef.current === timerCompletedAt) return;
     lastPlayedRef.current = timerCompletedAt;
-    if (sfx) playCompletionChime();
+    if (sfx) playCompletionSound(completionSound);
     if (notifications) {
       notify("Timer complete", "Your FocusFlow session is ready for the next step.");
     }
-  }, [timerCompletedAt, sfx, notifications]);
+  }, [timerCompletedAt, sfx, completionSound, notifications]);
 }
 
 /* ============================================================
@@ -192,7 +204,7 @@ export function playSfx(src: string, volume = 0.5) {
   el.play().catch(() => {});
 }
 
-function playCompletionChime() {
+export function playCompletionSound(sound: CompletionSoundId = "soft-bell") {
   if (typeof window === "undefined") return;
   const AudioContextClass =
     window.AudioContext ||
@@ -202,32 +214,81 @@ function playCompletionChime() {
   const ctx = new AudioContextClass();
   const now = ctx.currentTime;
   const master = ctx.createGain();
+  const envelope = completionEnvelope(sound);
   master.gain.setValueAtTime(0.0001, now);
-  master.gain.exponentialRampToValueAtTime(0.55, now + 0.025);
-  master.gain.exponentialRampToValueAtTime(0.0001, now + 2.2);
+  master.gain.exponentialRampToValueAtTime(envelope.volume, now + envelope.attack);
+  master.gain.exponentialRampToValueAtTime(0.0001, now + envelope.duration);
   master.connect(ctx.destination);
 
-  const partials = [
-    { frequency: 523.25, gain: 0.8, decay: 1.9 },
-    { frequency: 659.25, gain: 0.36, decay: 1.55 },
-    { frequency: 783.99, gain: 0.2, decay: 1.25 },
-  ];
+  const partials = completionPartials(sound);
 
-  partials.forEach(({ frequency, gain, decay }, i) => {
+  partials.forEach(({ frequency, gain, decay, type = "sine", delay = 0 }, i) => {
+    const start = now + delay;
     const osc = ctx.createOscillator();
     const amp = ctx.createGain();
-    osc.type = i === 0 ? "sine" : "triangle";
-    osc.frequency.setValueAtTime(frequency, now);
-    osc.detune.setValueAtTime(i * 3, now);
-    amp.gain.setValueAtTime(gain, now);
-    amp.gain.exponentialRampToValueAtTime(0.0001, now + decay);
+    osc.type = type;
+    osc.frequency.setValueAtTime(frequency, start);
+    osc.detune.setValueAtTime(i * 3, start);
+    amp.gain.setValueAtTime(0.0001, start);
+    amp.gain.exponentialRampToValueAtTime(gain, start + 0.02);
+    amp.gain.exponentialRampToValueAtTime(0.0001, start + decay);
     osc.connect(amp);
     amp.connect(master);
-    osc.start(now);
-    osc.stop(now + decay + 0.1);
+    osc.start(start);
+    osc.stop(start + decay + 0.1);
   });
 
-  window.setTimeout(() => void ctx.close(), 2400);
+  window.setTimeout(() => void ctx.close(), Math.ceil(envelope.duration * 1000) + 250);
+}
+
+function completionEnvelope(sound: CompletionSoundId) {
+  switch (sound) {
+    case "digital":
+      return { attack: 0.01, duration: 0.95, volume: 0.32 };
+    case "bright-ding":
+      return { attack: 0.012, duration: 1.25, volume: 0.42 };
+    case "singing-bowl":
+      return { attack: 0.04, duration: 3.1, volume: 0.48 };
+    case "soft-bell":
+    default:
+      return { attack: 0.025, duration: 2.2, volume: 0.55 };
+  }
+}
+
+function completionPartials(sound: CompletionSoundId): Array<{
+  frequency: number;
+  gain: number;
+  decay: number;
+  type?: OscillatorType;
+  delay?: number;
+}> {
+  switch (sound) {
+    case "digital":
+      return [
+        { frequency: 880, gain: 0.42, decay: 0.18, type: "square" },
+        { frequency: 1174.66, gain: 0.3, decay: 0.16, type: "triangle", delay: 0.16 },
+        { frequency: 1567.98, gain: 0.22, decay: 0.16, type: "sine", delay: 0.32 },
+      ];
+    case "bright-ding":
+      return [
+        { frequency: 1046.5, gain: 0.58, decay: 0.85 },
+        { frequency: 1318.51, gain: 0.22, decay: 0.65 },
+        { frequency: 2093, gain: 0.12, decay: 0.5 },
+      ];
+    case "singing-bowl":
+      return [
+        { frequency: 261.63, gain: 0.54, decay: 2.9 },
+        { frequency: 392, gain: 0.2, decay: 2.5 },
+        { frequency: 523.25, gain: 0.1, decay: 2.2, type: "triangle" },
+      ];
+    case "soft-bell":
+    default:
+      return [
+        { frequency: 523.25, gain: 0.8, decay: 1.9 },
+        { frequency: 659.25, gain: 0.36, decay: 1.55, type: "triangle" },
+        { frequency: 783.99, gain: 0.2, decay: 1.25, type: "triangle" },
+      ];
+  }
 }
 
 export const SFX = {

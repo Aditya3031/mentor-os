@@ -9,6 +9,7 @@ import type { ThemeId, AmbienceId } from "./themes";
    ============================================================ */
 
 export type TimerMode = "focus" | "short" | "long";
+export type CompletionSoundId = "soft-bell" | "digital" | "singing-bowl" | "bright-ding";
 
 export interface Task {
   id: string;
@@ -43,6 +44,7 @@ export interface Settings {
   autoStart: boolean;
   ticking: boolean;
   sfx: boolean;
+  completionSound: CompletionSoundId;
   notifications: boolean;
   particles: boolean;
   font: "inter" | "serif" | "mono";
@@ -157,6 +159,7 @@ const DEFAULT_SETTINGS: Settings = {
   autoStart: true,
   ticking: false,
   sfx: true,
+  completionSound: "soft-bell",
   notifications: false,
   particles: true,
   font: "inter",
@@ -172,6 +175,17 @@ const DEFAULT_AMBIENCE: AmbienceTrack[] = [
   { id: "keys",  enabled: false, volume: 0.3 },
   { id: "noise", enabled: false, volume: 0.3 },
 ];
+
+function withDefaultSettings(settings?: Partial<Settings>): Settings {
+  return {
+    ...DEFAULT_SETTINGS,
+    ...settings,
+    durations: {
+      ...DEFAULT_SETTINGS.durations,
+      ...settings?.durations,
+    },
+  };
+}
 
 function syncedSnapshot(s: FocusFlowState): SyncedFocusFlowState {
   return {
@@ -489,14 +503,7 @@ export const useStore = create<FocusFlowState>()(
 
       hydrateFromSync: (state) =>
         set((s) => {
-          const settings = {
-            ...DEFAULT_SETTINGS,
-            ...state.settings,
-            durations: {
-              ...DEFAULT_SETTINGS.durations,
-              ...state.settings?.durations,
-            },
-          };
+          const settings = withDefaultSettings(state.settings);
 
           return {
             theme: state.theme ?? s.theme,
@@ -523,6 +530,14 @@ export const useStore = create<FocusFlowState>()(
       name: "focusflow.v1",
       storage: createJSONStorage(() => localStorage),
       partialize: persistedSnapshot,
+      merge: (persisted, current) => {
+        const state = persisted as Partial<FocusFlowState> | undefined;
+        return {
+          ...current,
+          ...state,
+          settings: withDefaultSettings(state?.settings),
+        };
+      },
     }
   )
 );

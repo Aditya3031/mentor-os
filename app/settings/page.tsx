@@ -3,8 +3,9 @@
 import { BackgroundStage } from "@/components/bg/background-stage";
 import { TopBar } from "@/components/top-bar";
 import { Dock } from "@/components/dock";
-import { useStore } from "@/lib/store";
-import { Minus, Plus, Trash2 } from "lucide-react";
+import { useStore, type CompletionSoundId } from "@/lib/store";
+import { COMPLETION_SOUNDS, playCompletionSound } from "@/lib/audio";
+import { Minus, Play, Plus, Trash2 } from "lucide-react";
 import { clamp } from "@/lib/utils";
 
 const LIMITS = {
@@ -15,13 +16,10 @@ const LIMITS = {
 } as const;
 
 export default function SettingsPage() {
-  const mode = useStore((s) => s.mode);
-  const setMode = useStore((s) => s.setMode);
   const settings = useStore((s) => s.settings);
+  const completionSound = settings.completionSound ?? "soft-bell";
 
-const updateSettings = useStore(
-  (s) => s.updateSettings
-);
+  const updateSettings = useStore((s) => s.updateSettings);
 
   const stepDuration = (k: keyof typeof LIMITS, d: number) => {
     const [mn, mx] = LIMITS[k];
@@ -91,6 +89,11 @@ const updateSettings = useStore(
               desc="Completion chimes and clicks"
               value={settings.sfx}
               onChange={(v) => updateSettings({ sfx: v })}
+            />
+            <SoundRow
+              value={completionSound}
+              onChange={(sound) => updateSettings({ completionSound: sound, sfx: true })}
+              onPreview={() => playCompletionSound(completionSound)}
             />
             <ToggleRow
               label="Browser notifications"
@@ -214,6 +217,54 @@ function NumRow({
         </button>
       </div>
     </Row>
+  );
+}
+
+function SoundRow({
+  value,
+  onChange,
+  onPreview,
+}: {
+  value: CompletionSoundId;
+  onChange: (value: CompletionSoundId) => void;
+  onPreview: () => void;
+}) {
+  return (
+    <div className="rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-3.5">
+      <div className="flex items-center justify-between gap-3">
+        <div>
+          <div className="text-sm">Completion sound</div>
+          <div className="mt-0.5 text-xs text-text-dim">Choose the timer-end chime</div>
+        </div>
+        <button
+          onClick={onPreview}
+          className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-white/[0.1] bg-white/[0.05] px-3 py-2 text-xs font-medium text-text-dim transition-colors hover:bg-white/[0.08] hover:text-text"
+        >
+          <Play className="h-3.5 w-3.5" fill="currentColor" />
+          Preview
+        </button>
+      </div>
+
+      <div className="mt-3 grid gap-2 sm:grid-cols-2">
+        {COMPLETION_SOUNDS.map((sound) => {
+          const active = value === sound.id;
+          return (
+            <button
+              key={sound.id}
+              onClick={() => onChange(sound.id)}
+              className={`rounded-lg border px-3 py-2 text-left transition-colors ${
+                active
+                  ? "border-[hsl(var(--accent)/0.55)] bg-[hsl(var(--accent)/0.13)] text-text"
+                  : "border-white/[0.08] bg-white/[0.03] text-text-dim hover:bg-white/[0.06] hover:text-text"
+              }`}
+            >
+              <span className="block text-xs font-medium">{sound.name}</span>
+              <span className="mt-0.5 block text-[11px] text-text-faint">{sound.description}</span>
+            </button>
+          );
+        })}
+      </div>
+    </div>
   );
 }
 
