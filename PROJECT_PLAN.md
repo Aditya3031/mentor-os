@@ -2,17 +2,17 @@
 
 > Pick this up anytime. This file is the source of truth for what's done, what's next, and every decision you'll need to make to ship a real product.
 
-**Last updated:** May 9, 2026 (Phase 1 complete, audio working with real files, real data wired everywhere)
-**Current state:** App is fully functional locally. Real data, real audio, all pages working. Not yet deployed.
+**Last updated:** May 13, 2026
+**Current state:** Deployed on Vercel with real Supabase auth, AI features (chat + reflection + planning), live video rooms (signaling works, peer streams need debugging), cloud sync, PWA install, analytics, and a collaborative whiteboard. Daily-use ready for solo features; multi-user video has one known bug.
 
 ---
 
 ## When you come back, start here
 
-1. Re-read **§ Current State** below to remember where you left off.
-2. `cd C:\Users\adity\OneDrive\Desktop\focusflow` and run `npm run dev` — open `localhost:3000`.
-3. Look at **§ Phase 2 — Decide: local-first or with accounts?** — that decision gates the next batch of work.
-4. Update this file's checkboxes as you go. The "Last updated" date at the top should match your last work session.
+1. Re-read **§ Current State** to remember where you left off.
+2. `cd C:\Users\adity\OneDrive\Desktop\DEV\focusflow` and run `npm run dev` (or just visit the deployed Vercel URL).
+3. The TOP priority right now is **debugging the WebRTC video stream** (see "Known bugs" below). After that, **friend testing** is the highest-leverage thing.
+4. Update the "Last updated" date and the checkboxes when you make changes.
 
 ---
 
@@ -20,237 +20,140 @@
 
 ### What's working end-to-end
 
-- [x] **Landing page** at `/` (hero, features, themes showcase, CTA)
-- [x] **Login page** at `/login` (UI only — no auth backend yet)
-- [x] **Focus room** at `/focus` — animated timer ring, mode tabs, controls, subject input, quote, drag-and-drop tasks, goals panel, snapshot, heatmap, ambience panel
-- [x] **Dashboard** at `/dashboard` — bar/pie/line charts driven from real history
-- [x] **Settings** at `/settings` — including the new "Clear all data" button
-- [x] **History** at `/history` — chronological session list with empty state
-- [x] **Themes** at `/themes` — 7-theme picker grid with live preview
-- [x] **Achievements** at `/achievements` — 12 milestones, unlock state computed from real stats
-- [x] **404** at any unknown route, **Loading** between routes
+**Pages**
+- [x] Landing (`/`) — hero with animated stage, feature grid, theme showcase, CTA, OG image for link previews
+- [x] Login + signup (`/login`) — email/password, Google OAuth (UI wired, needs provider setup), GitHub OAuth (UI wired, needs provider setup)
+- [x] Focus room (`/focus`) — animated timer ring, mode tabs, controls, subject input with recent-subject chips, quote rotator, drag-and-drop tasks, goals panel, snapshot, heatmap, ambience mixer
+- [x] Tasks (`/tasks`) — full-page task management
+- [x] Dashboard (`/dashboard`) — bar/pie/line charts driven from real history, stats grid
+- [x] Settings (`/settings`) — timer durations, ambience, completion-sound picker, danger-zone "Clear all data"
+- [x] History (`/history`) — chronological session list with AI summaries
+- [x] Themes (`/themes`) — 7-theme picker; switching auto-applies the matching ambience preset
+- [x] Achievements (`/achievements`) — milestones, unlock states computed from real stats
+- [x] AI coach (`/ai`) — streaming chat with Gemini Flash, personalized via your stats
+- [x] Session room (`/session`) — lobby (create/join), video call infrastructure, collaborative whiteboard
+- [x] Workspace (`/workspace`) — shared workspaces with invite codes
+- [x] 404 (`/not-found`) and Loading skeletons
 
-### Data layer
-
+**Data layer**
 - [x] Zustand store with `persist` middleware → localStorage
-- [x] Session completion pushes to `history`, increments `totalSessions` / `totalMinutes`, awards XP
-- [x] Streak logic: only bumps on first session of a new day, resets on gap, doesn't double-count same-day sessions
-- [x] `currentSubject` field tagged onto each session for the history list and subject pie chart
-- [x] All visible numbers (snapshot, dashboard, heatmap) are computed from store, not hardcoded
+- [x] Sessions push to history with AI summary on completion
+- [x] Day-rollover streak logic
+- [x] Tasks, settings, history, ambience, theme, current subject all persist
+- [x] **Cloud sync** via `SyncProvider` → Supabase `focusflow_state` table (debounced writes, hydration on sign-in)
 
-### Audio
-
-- [x] Vanilla HTMLAudioElement engine in `lib/audio.ts` — no Howler dependency
-- [x] 51 ambience tracks in `public/audio/{lofi,rain,cafe,fire,keys,noise}/` named `<category>-<n>.mp3`
-- [x] Each toggle picks a **random track** from that category (variety like a real lofi station)
+**Audio**
+- [x] Vanilla HTMLAudioElement engine — no Howler dependency
+- [x] 51 ambience tracks across 6 categories with random pick per toggle
 - [x] Smooth 600ms fade in/out
-- [x] Autoplay-blocked tracks queue and start on first user click anywhere
-- [x] Volume slider per track, persisted
+- [x] Autoplay-blocked tracks retry on first interaction
+- [x] Selectable completion sound (settings)
+- [x] Per-track volume sliders, persisted
 
-### Polish + UX
+**AI**
+- [x] **Reflection modal** — auto-pops after focus completion; Gemini generates 1-line summary saved to history
+- [x] **AI study coach chat** (`/ai`) — streaming responses, knows your streak/hours/current subject
+- [x] **Focus plan generator** (`/api/ai/plan` — legacy endpoint, fallback path)
 
-- [x] Glassmorphism panels, floating dock, animated background
-- [x] Responsive: 3-column desktop, single-column mobile fallback
-- [x] Theme accent colors propagate to all components via CSS vars
+**Auth**
+- [x] Email/password sign in + sign up via Supabase
+- [x] OAuth callback route at `/auth/callback` handles confirmation links
+- [x] Profile menu with avatar + sign out
+- [x] Demo mode fallback when Supabase env vars aren't set
 
-### Bugs squashed today
+**Live sessions**
+- [x] Room lobby — create new room (6-char code) or join existing
+- [x] Supabase Realtime channel signaling
+- [x] Local camera + mic capture (gets permission on room entry)
+- [x] Local screen-share preview (desktop only — mobile browsers don't support `getDisplayMedia`)
+- [x] **Collaborative whiteboard** — pen, eraser, color, size; strokes + clear sync across peers via separate broadcast channel; normalized coordinates work across screen sizes
+- [x] Toggle camera/mic without dropping connection (track.enabled flips)
 
-- [x] Zustand v5 selector pattern — switched to individual selectors / useShallow
-- [x] dnd-kit hydration mismatch — DndContext now mounts after client hydration
-- [x] `deleteTask` → `removeTask` rename (action name was wrong)
-- [x] Windows path-length limit — solved by moving project to `OneDrive\Desktop\focusflow`
-- [x] PowerShell script execution policy — `Set-ExecutionPolicy RemoteSigned -Scope CurrentUser`
-
-### Known gaps (next-stop work)
-
-- [ ] **Audio engine doesn't play `complete.mp3` or `tick.mp3`** — files don't exist yet (only ambience). Engine is wired, just needs the files.
-- [ ] **App icons + favicon** — `public/icons/icon-192.png`, `icon-512.png`, `favicon.ico` all missing → console 404s, no PWA install
-- [ ] **Open Graph image** for social sharing
-- [ ] **Service worker** for offline support (`next-pwa` package)
-- [ ] **Login backend** — auth UI exists, needs Supabase or Firebase wiring
-- [ ] **Command palette** — exists in HTML demo but not in React app (cmdk package)
-- [ ] **First-run onboarding modal** in React (only in HTML demo currently)
-- [ ] **Browser notifications** on session complete — code helper exists in `lib/audio.ts`, not yet wired into completeSession
-- [ ] **Mobile testing** end-to-end on a real phone (not just dev tools emulator)
-- [ ] **Polish pass** on landing + login pages — generated but not refined
-- [ ] **Discoverability of ambience toggles** — clicking the row to enable a track isn't obvious; needs a play icon or stronger active state
-
----
-
-## Phase 2 — Decide: local-first or with accounts?
-
-This is **the** decision that gates everything else. Pick before Phase 3.
-
-### Option A — Local-first, no backend (current state)
-
-- **Pros:** zero cost, zero ops, ships in a day, no privacy policy needed
-- **Cons:** no cross-device sync, no real "studying now" counter, no leaderboards if you ever want them
-- **Action:** skip Phase 3, jump to Phase 4
-
-### Option B — With auth + cloud sync
-
-- **Pros:** users sign in across devices, real social proof, foundation for any future feature
-- **Cons:** more code, ongoing costs, legal obligations (Privacy Policy, ToS), more attack surface
-- **Action:** do Phase 3
-
-**Recommendation:** ship Option A first. Get real users. Add Option B once you know they want it.
-
-### Decision log
-
-- [ ] Decision made: ☐ A (local-first) ☐ B (with backend)
-- [ ] Date decided: ____________
-- [ ] Reason: ____________
+**Polish**
+- [x] Glassmorphism panels, animated theme-specific backgrounds, drift gradients, floating particles
+- [x] Floating macOS-style dock with 9 nav items
+- [x] Top bar with brand, search, zen toggle, notifications, profile dropdown
+- [x] **Zen mode** — real browser fullscreen + chrome fades out; Esc syncs back
+- [x] First-run **onboarding modal** — 4-step walkthrough with progress dots
+- [x] Toast notifications via sonner
+- [x] **Confetti** on session complete
+- [x] Mobile responsive end-to-end (tighter padding, dock shrinks + scrolls, screen share hidden on mobile)
+- [x] Browser tab favicon + Apple Touch icon
+- [x] OG image (1200×630) for link previews
+- [x] PWA installable — manifest + service worker registered, "Install" prompt in Chrome
+- [x] **Vercel Analytics + Speed Insights** mounted
 
 ---
 
-## Phase 3 — Backend (only if Option B)
+## Known bugs
 
-**Stack recommendation: Supabase.** Easiest, free tier covers ~50k MAU.
-
-- [ ] Create Supabase project at supabase.com
-- [ ] Copy `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` to `.env.local`
-- [ ] `npm install @supabase/supabase-js @supabase/ssr`
-- [ ] Create `lib/supabase/client.ts` and `lib/supabase/server.ts`
-- [ ] Build database schema (run in Supabase SQL editor):
-
-```sql
--- profiles (extends auth.users)
-create table profiles (
-  id uuid references auth.users on delete cascade primary key,
-  display_name text,
-  level int default 1,
-  xp int default 0,
-  streak_days int default 0,
-  created_at timestamptz default now()
-);
-
--- tasks
-create table tasks (
-  id uuid primary key default gen_random_uuid(),
-  user_id uuid references auth.users on delete cascade,
-  text text not null,
-  done bool default false,
-  priority text default 'med',
-  position int default 0,
-  created_at timestamptz default now()
-);
-
--- sessions (history)
-create table sessions (
-  id uuid primary key default gen_random_uuid(),
-  user_id uuid references auth.users on delete cascade,
-  subject text,
-  mode text,
-  duration_sec int,
-  started_at timestamptz,
-  ended_at timestamptz
-);
-
--- enable Row Level Security
-alter table profiles enable row level security;
-alter table tasks enable row level security;
-alter table sessions enable row level security;
-
--- policies: users only see their own data
-create policy "users see own profile" on profiles for all using (auth.uid() = id);
-create policy "users own tasks" on tasks for all using (auth.uid() = user_id);
-create policy "users own sessions" on sessions for all using (auth.uid() = user_id);
-```
-
-- [ ] Wire `app/login/page.tsx` to Supabase auth (email + Google OAuth)
-- [ ] Add middleware (`middleware.ts`) gating `/focus` for signed-in users (or allow guest mode)
-- [ ] Replace Zustand `persist` localStorage backend with one mirroring writes to Supabase
-- [ ] Optional: real "studying now" counter using Supabase Realtime presence
+- [ ] **WebRTC video/audio doesn't reach peers across the network** — signaling works (both peers see "Connected" + appear in each other's participant list), but media tracks aren't transmitted/rendered. Diagnostic console logs are in place — need to capture browser console output from both peers simultaneously to pinpoint where the chain breaks (offer/answer? ICE? ontrack?). See `lib/use-room.ts` for the logs.
+- [ ] **Browsers occasionally fail to start camera/mic** — when this happens, the toast says `NotReadableError` (another app has the camera) or `NotAllowedError` (permission denied). User has to free up the camera and refresh.
 
 ---
 
-## Phase 4 — Asset sourcing
+## What's NOT done yet
 
-### Audio (mostly done)
+**Manual setup steps** (you, not code)
+- [ ] **Run the cloud-sync SQL** — paste `supabase/focusflow-sync.sql` into Supabase SQL editor and Run. Without this, signed-in users won't sync data across devices.
+- [ ] **Run the collaborative-workspaces SQL** — `supabase/collaborative-workspaces.sql` or its migration version. Needed for `/workspace` to actually work.
+- [ ] **Enable Vercel Analytics + Speed Insights** — Vercel dashboard → project → Settings → Analytics → enable both.
+- [ ] **Configure Google OAuth** — Google Cloud Console → Create OAuth client → add Supabase callback URL → paste credentials into Supabase Authentication → Providers → Google. See `AUTH_SETUP.md` Step 6.
+- [ ] **Configure GitHub OAuth** — github.com → Settings → Developer settings → OAuth Apps → New OAuth App → callback URL = your Supabase project URL + `/auth/v1/callback` → paste credentials into Supabase → Providers → GitHub.
+- [ ] **Update Supabase URL Configuration** — Authentication → URL Configuration → set Site URL to deployed Vercel URL, add `localhost:3000/**` and your Vercel URL `/**` to Redirect URLs. Otherwise email confirmation links 404.
 
-- [x] `lofi-1.mp3` ... `lofi-19.mp3` (19 tracks)
-- [x] `rain-1.mp3` ... `rain-13.mp3` (13 tracks)
-- [x] `cafe-1.mp3` ... `cafe-18.mp3` (18 tracks)
-- [x] `fire-1.mp3` (1 track)
-- [x] `keys-1.mp3` (1 track)
-- [x] `noise-1.mp3` (1 track)
-- [ ] `complete.mp3` (~1s pleasant chime for session completion)
-- [ ] `tick.mp3` (~50ms soft tick for the "background ticking" setting)
+**Code TODOs**
+- [ ] **Debug WebRTC peer streams** (capture both browsers' `[room ...]` console logs while in a room together — they'll show exactly where it breaks)
+- [ ] **`complete.mp3` and `tick.mp3`** still need to be sourced and dropped in `public/audio/`. Without them, session-complete is silent.
+- [ ] **TURN production credentials** — currently using the free public OpenRelay TURN; works for personal projects but flaky under load. Swap for Twilio / Cloudflare Calls / Metered.ca paid TURN when launching to real users.
+- [ ] **Real-device mobile testing** — Chrome dev tools mobile emulation only approximates. Open the deployed URL on your actual phone and try every page.
 
-### Visual assets (not started)
+**Asset polish**
+- [ ] Custom domain (Cloudflare Registrar is cheapest — ~$10/year)
+- [ ] App icons in PNG format (currently using SVG which works but Apple Touch + some Android home screens prefer PNG)
+- [ ] Marketing screenshots for app stores if you ever go that route
 
-- [ ] App icon — design 1024×1024 master, export 192×192 and 512×512 PNGs
-- [ ] Favicon (use [realfavicongenerator.net](https://realfavicongenerator.net/))
-- [ ] Open Graph image (1200×630 PNG) for when links are shared
-- [ ] Apple Touch icon (180×180)
-
----
-
-## Phase 5 — Hosting + domain
-
-- [ ] Buy domain (Cloudflare Registrar — at-cost) — $10–15/yr
-  - Suggested: focusflow.app, focusflow.io, focusflow.studio, getfocusflow.com
-- [ ] Push code to GitHub (private repo to start)
-- [ ] Connect GitHub to Vercel (vercel.com → Import Project)
-- [ ] Add env vars in Vercel dashboard (copy from `.env.local`)
-- [ ] Configure custom domain in Vercel
-- [ ] Verify SSL (automatic, ~5 min)
-- [ ] Test production build locally first: `npm run build && npm start`
-
-### Alternatives if Vercel feels expensive later
-
-- **Cloudflare Pages** — cheaper at scale
-- **Netlify** — basically Vercel-equivalent
-- **Self-host on a VPS** — Hetzner $5/mo, Docker
-
----
-
-## Phase 6 — Production polish
-
-### Error tracking + analytics
-
-- [ ] Sentry (sentry.io) — free tier is generous; `npm install @sentry/nextjs`
-- [ ] Plausible ($9/mo, privacy-friendly) **or** PostHog (free tier) **or** Vercel Analytics
-
-### SEO
-
-- [ ] Real `<meta>` tags in `layout.tsx`
-- [ ] Open Graph + Twitter Card meta
-- [ ] `app/sitemap.ts` and `app/robots.ts`
-- [ ] Submit to Google Search Console once deployed
-
-### Legal (mandatory if collecting any user data)
-
+**Legal (mandatory before public launch)**
 - [ ] Privacy Policy at `/privacy`
 - [ ] Terms of Service at `/terms`
-- [ ] Cookie banner (if EU users)
-- [ ] Footer link to both pages
-
-### Performance
-
-- [ ] Run Lighthouse on production — aim for 90+ on all categories
-- [ ] Lazy-load heavy components (charts, command palette) with `next/dynamic`
+- [ ] Cookie banner if targeting EU users
+- [ ] Footer links to both on landing
 
 ---
 
-## Phase 7 — Launch
+## Phase plan — what to do next
 
-- [ ] Beta with 5–10 friends for 2 weeks
-- [ ] Collect feedback (Tally.so or Google Form)
-- [ ] Fix top 5 issues
-- [ ] Write launch post
-- [ ] Post to: Product Hunt, r/getmotivated, r/studytips, r/productivity, HN, Indie Hackers, Twitter, TikTok/Reels
-- [ ] Set up feedback channel (Discord or email)
+### Phase A: Stabilize (this is where you are)
+- [ ] Fix WebRTC video stream bug (capture diagnostic logs from both browsers)
+- [ ] Run the SQL migrations in Supabase
+- [ ] Configure OAuth providers (Google + GitHub)
+- [ ] Source the 2 remaining audio files
+- [ ] Real-device mobile test
+
+### Phase B: First real users (~1 week)
+- [ ] Friend testing — share your Vercel URL with 5–10 friends, watch them use it, write down every confusion
+- [ ] Fix the top 3 UX issues they hit
+- [ ] Enable error tracking (Sentry — free tier, one-command install)
+
+### Phase C: Polish for launch
+- [ ] Write Privacy Policy + Terms of Service (Termly or Iubenda generate them for ~$10/mo)
+- [ ] Custom domain
+- [ ] Lighthouse audit — aim for 90+ on Performance, Accessibility, Best Practices, SEO
+- [ ] OG image refinements (test how it renders on Twitter, Slack, iMessage)
+- [ ] Email collection / waitlist if you want to drip-launch
+
+### Phase D: Launch
+- [ ] Write launch post (your blog, Substack, or LinkedIn)
+- [ ] Post to: Product Hunt (Tuesday/Wednesday morning), HN as Show HN, r/getmotivated, r/studytips, r/productivity, Indie Hackers, Twitter, TikTok if that fits
+- [ ] Be in the comments answering questions the first day
 
 ---
 
 ## Decisions to make
 
 - [ ] **Domain name:** ____________
-- [ ] **Local-first or with accounts:** A / B
-- [ ] **Auth provider** (if B): Supabase / Firebase / NextAuth
-- [ ] **Hosting:** Vercel / Cloudflare / Netlify / self-host
-- [ ] **Analytics:** Plausible / PostHog / Vercel / GA4 / none
+- [ ] **TURN provider** when ready (Twilio / Cloudflare Calls / Metered): ____________
+- [ ] **Analytics:** Vercel built-in (current) is fine — add Plausible/PostHog only if you need event tracking
 - [ ] **Pricing model:** free forever / freemium / one-time / subscription
 - [ ] **Target audience priority:** college students / professionals / both
 - [ ] **Launch date target:** ____________
@@ -261,7 +164,7 @@ create policy "users own sessions" on sessions for all using (auth.uid() = user_
 
 ```bash
 # Develop
-cd C:\Users\adity\OneDrive\Desktop\focusflow
+cd C:\Users\adity\OneDrive\Desktop\DEV\focusflow
 npm run dev                # localhost:3000
 
 # Type check before pushing
@@ -270,8 +173,10 @@ npm run type-check
 # Build production locally (test before deploying)
 npm run build && npm start
 
-# Deploy (after Vercel is connected)
-git push origin main       # auto-deploys
+# Push to GitHub → Vercel auto-deploys within 90 sec
+git add .
+git commit -m "..."
+git push
 ```
 
 ---
@@ -280,24 +185,38 @@ git push origin main       # auto-deploys
 
 | Stage | Setup | Monthly | Notes |
 |---|---|---|---|
-| Local-first only | Domain only | ~$1 | localStorage, no backend (current) |
-| With auth + sync, < 1k users | Vercel free + Supabase free + domain | ~$1 | Free tiers cover this |
-| 1k–10k MAU | Vercel Pro + Supabase Pro + Plausible | ~$60 | Honest growth phase |
-| 50k+ MAU | + Sentry team + email + CDN | ~$200 | Real product economics |
+| Current state | Vercel free + Supabase free + Gemini free + domain | ~$1 | What you have now |
+| 1k–10k MAU | Vercel Pro + Supabase Pro + Plausible + paid TURN | ~$80 | Growth phase |
+| 50k+ MAU | + Sentry team + email service + CDN bandwidth | ~$250 | Real product economics |
+
+---
+
+## Reference: critical files
+
+| Path | What it does |
+|---|---|
+| `lib/store.ts` | Zustand store — single source of truth for client state |
+| `lib/auth.ts` | Supabase auth wrapper with demo fallback |
+| `lib/supabase.ts` | Supabase browser client |
+| `lib/audio.ts` | Ambience engine + completion sound + tick |
+| `lib/use-room.ts` | WebRTC mesh + Supabase Realtime signaling (the buggy one) |
+| `lib/webrtc.ts` | STUN/TURN config |
+| `components/providers/sync-provider.tsx` | Cloud sync between Zustand and Supabase |
+| `app/session/page.tsx` | Live room with video + collab whiteboard |
+| `app/ai/page.tsx` | AI chat interface |
+| `app/api/ai/chat/route.ts` | Gemini chat streaming endpoint |
+| `app/api/reflect/route.ts` | Gemini session-reflection endpoint |
+| `supabase/focusflow-sync.sql` | Cloud sync table schema |
+| `supabase/collaborative-workspaces.sql` | Workspace schema |
 
 ---
 
 ## Notes / scratch
 
-**Session: May 9, 2026 — full Phase 1 push + audio integration**
-- Real data flows everywhere now. Snapshot, dashboard charts, heatmap, history all read from `store.history`. No more hardcoded demo numbers.
-- Streak logic respects day rollovers — multiple sessions on the same day don't double-count.
-- Subject input added above the timer; tags every session in history.
-- 51 audio files moved into `public/audio/<category>/`, renamed `<category>-N.mp3`. Engine picks random track per category for variety.
-- Vanilla HTMLAudioElement engine, no Howler — simpler, no extra dependency.
-- Autoplay block handled gracefully — pending tracks retry on first user interaction.
-- Three missing pages created: `/themes`, `/achievements`, `/history` — plus `lib/achievements.ts` registry.
-- Settings: added "Clear all data" button in a Danger Zone section.
-- Big Windows-specific debugging session resolved: PowerShell script policy, path-length limit, OneDrive sync quirks.
+**Session: May 13, 2026 — added the kitchen sink**
+- Subject autocomplete chips, onboarding multi-step modal, Vercel Analytics + Speed Insights, dynamic OG image, browser favicon + apple-icon, collaborative whiteboard via separate Supabase channel.
+- WebRTC video is still broken — built it with proper mesh + STUN + TURN + tie-break logic + acquire-media-on-entry to avoid renegotiation, but media doesn't reach peers. Diagnostic logging is in place; next session, capture both browsers' `[room ...]` console output to pinpoint the break.
+- Codex has been pairing on this — built `SyncProvider`, `PWARegister`, theme-specific motion, ambience presets per theme. Worth diffing recent commits before any major refactor to see what's new.
 
-**Next session priority:** decide local-first vs accounts (Phase 2). If local-first → focus on Phase 4 visual assets + Phase 5 deploy. If accounts → tackle Phase 3 Supabase wiring.
+**Next session priority:** WebRTC debugging via captured console logs. Then friend testing.
+
