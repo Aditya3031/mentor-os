@@ -13,6 +13,7 @@ import {
   Settings,
   BrainCircuit,
   UsersRound,
+  Video,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -29,6 +30,7 @@ const ITEMS_LEFT: DockItem[] = [
   { id: "stats", icon: BarChart3, label: "Analytics", href: "/dashboard" },
   { id: "ai", icon: BrainCircuit, label: "AI coach", href: "/ai" },
   { id: "workspace", icon: UsersRound, label: "Workspace", href: "/workspace" },
+  { id: "session", icon: Video, label: "Live session", href: "/session" },
   { id: "history", icon: History, label: "History", href: "/history" },
   { id: "trophies", icon: Trophy, label: "Achievements", href: "/achievements" },
 ];
