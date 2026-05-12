@@ -52,6 +52,9 @@ export function useRoom(
   const remoteStreamsRef = useRef<Map<string, MediaStream>>(new Map());
   const knownPeersRef = useRef<Map<string, { name: string }>>(new Map());
   const localStreamRef = useRef<MediaStream | null>(localStream);
+  // Peers we've already kicked off an offer/answer dance with.
+  // Prevents double-offering when sync re-fires.
+  const handledPeersRef = useRef<Set<string>>(new Set());
 
   // Keep ref in sync with prop so async callbacks always see the latest stream.
   useEffect(() => {
@@ -194,8 +197,10 @@ export function useRoom(
     });
     channelRef.current = channel;
 
-    /* Handle presence updates — when remote peers join/leave */
-    channel.on("presence", { event: "sync" }, () => {
+    /* Handle presence updates — when remote peers join/leave.
+       This fires on every state change, so we use it as our single
+       source of truth for "who's in the room." */
+    channel.on("presence", { event: "sync" }, async () => {
       const state = channel.presenceState();
       const seen = new Set<string>();
 
@@ -211,6 +216,7 @@ export function useRoom(
       Array.from(knownPeersRef.current.keys()).forEach((id) => {
         if (!seen.has(id)) {
           knownPeersRef.current.delete(id);
+          handledPeersRef.current.delete(id);
           const pc = peerConnsRef.current.get(id);
           pc?.close();
           peerConnsRef.current.delete(id);
@@ -218,27 +224,26 @@ export function useRoom(
         }
       });
 
-      rebuildPeerList();
-    });
+      // For every peer in the room I haven't connected to yet, decide:
+      // the peer with the LEXICOGRAPHICALLY GREATER id sends the offer.
+      // The other peer just waits. This guarantees exactly one offer per pair.
+      for (const peerId of Array.from(seen)) {
+        if (handledPeersRef.current.has(peerId)) continue;
+        handledPeersRef.current.add(peerId);
 
-    /* When a NEW peer joins, the existing peers initiate the offer.
-       (This avoids the "both peers offer simultaneously" race.) */
-    channel.on("presence", { event: "join" }, async ({ key, newPresences }) => {
-      if (key === myId) return;
-      const first = (newPresences as Array<{ name?: string }>)[0];
-      knownPeersRef.current.set(key, { name: first?.name ?? "Friend" });
-
-      // Tie-break: only the peer with the smaller id sends the offer.
-      // This guarantees exactly one offer per peer pair.
-      if (myId < key) {
-        const pc = createPeerFor(key);
-        try {
-          const offer = await pc.createOffer();
-          await pc.setLocalDescription(offer);
-          sendSignal({ type: "offer", from: myId, to: key, sdp: offer });
-        } catch (e) {
-          console.warn("[room] offer failed", e);
+        if (myId > peerId) {
+          const pc = createPeerFor(peerId);
+          try {
+            const offer = await pc.createOffer();
+            await pc.setLocalDescription(offer);
+            sendSignal({ type: "offer", from: myId, to: peerId, sdp: offer });
+          } catch (e) {
+            console.warn("[room] offer failed", e);
+            handledPeersRef.current.delete(peerId);
+          }
         }
+        // If myId < peerId, we wait for them to offer us — handled below in
+        // the broadcast handler.
       }
 
       rebuildPeerList();
@@ -250,6 +255,9 @@ export function useRoom(
       if (msg.to !== myId) return;
 
       if (msg.type === "offer") {
+        // We're the answerer. Mark this peer as "handled" so the sync
+        // handler doesn't ALSO try to offer to them in a race.
+        handledPeersRef.current.add(msg.from);
         const pc = createPeerFor(msg.from);
         try {
           await pc.setRemoteDescription(msg.sdp);
@@ -306,6 +314,7 @@ export function useRoom(
       peerConnsRef.current.clear();
       remoteStreamsRef.current.clear();
       knownPeersRef.current.clear();
+      handledPeersRef.current.clear();
       setPeers([]);
       setConnected(false);
       supabase!.removeChannel(channel);
