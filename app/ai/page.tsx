@@ -225,7 +225,7 @@ function MessageBubble({
       )}
     >
       {!isUser && (
-        <div className="mt-1 grid h-7 w-7 flex-shrink-0 place-items-center rounded-lg bg-[linear-gradient(135deg,hsl(var(--accent)/0.25),hsl(var(--accent-alt)/0.25))] text-[hsl(var(--accent))]">
+        <div className="mt-1 grid h-7 w-7 flex-shrink-0 place-items-center rounded-lg bg-[linear-gradient(135deg,hsl(var(--accent)/0.25),hsl(var(--accent-alt)/0.25))] text-[var(--accent-deep)]">
           <BrainCircuit className="h-4 w-4" />
         </div>
       )}
@@ -233,7 +233,7 @@ function MessageBubble({
         className={cn(
           "max-w-[85%] whitespace-pre-wrap rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed",
           isUser
-            ? "bg-[linear-gradient(135deg,hsl(var(--accent)/0.18),hsl(var(--accent-alt)/0.18))] text-text"
+            ? "bevel-thin bg-chrome text-text"
             : "border border-black/25 bg-black/[0.05] text-text"
         )}
       >
@@ -267,7 +267,7 @@ function Dot({ delay }: { delay: number }) {
 function EmptyState({ onPick }: { onPick: (text: string) => void }) {
   return (
     <div className="flex h-full flex-col items-center justify-center gap-6 py-10 text-center">
-      <div className="grid h-14 w-14 place-items-center rounded-2xl bg-[linear-gradient(135deg,hsl(var(--accent)/0.2),hsl(var(--accent-alt)/0.2))] text-[hsl(var(--accent))] shadow-glow">
+      <div className="grid h-14 w-14 place-items-center rounded-2xl bevel-thin bg-chrome text-[var(--accent-deep)] shadow-glow">
         <BrainCircuit className="h-7 w-7" />
       </div>
       <div className="max-w-md">

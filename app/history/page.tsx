@@ -40,7 +40,7 @@ export default function HistoryPage() {
                 key={h.id}
                 className="flex items-start gap-3.5 rounded-xl border border-black/25 bg-black/[0.05] px-3.5 py-3"
               >
-                <div className="mt-0.5 grid h-9 w-9 flex-shrink-0 place-items-center rounded-xl bg-[linear-gradient(135deg,hsl(var(--accent)/0.2),hsl(var(--accent-alt)/0.2))] text-[hsl(var(--accent))]">
+                <div className="mt-0.5 grid h-9 w-9 flex-shrink-0 place-items-center rounded-xl bevel-thin bg-chrome text-[var(--accent-deep)]">
                   <Clock className="h-4 w-4" />
                 </div>
                 <div className="flex-1 min-w-0">
@@ -61,7 +61,7 @@ export default function HistoryPage() {
                   </div>
                   {h.aiSummary && (
                     <div className="mt-2 flex items-start gap-1.5 rounded-lg border border-[hsl(var(--accent))]/15 bg-[hsl(var(--accent))]/[0.04] px-2.5 py-2 text-[12px] leading-relaxed text-text">
-                      <Sparkles className="mt-0.5 h-3 w-3 flex-shrink-0 text-[hsl(var(--accent))]" />
+                      <Sparkles className="mt-0.5 h-3 w-3 flex-shrink-0 text-[var(--accent-deep)]" />
                       <span>{h.aiSummary}</span>
                     </div>
                   )}

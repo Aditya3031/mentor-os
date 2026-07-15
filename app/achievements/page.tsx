@@ -50,7 +50,7 @@ export default function AchievementsPage() {
                 className={cn(
                   "rounded-xl border bg-black/[0.05] p-4 text-center transition-all",
                   isUnlocked
-                    ? "border-[hsl(var(--accent)/0.3)] bg-[hsl(var(--accent)/0.05)]"
+                    ? "border-black/30 bg-[hsl(var(--accent)/0.05)]"
                     : "border-black/25 opacity-50"
                 )}
               >
@@ -58,7 +58,7 @@ export default function AchievementsPage() {
                   className={cn(
                     "mx-auto mb-2.5 grid h-11 w-11 place-items-center rounded-xl",
                     isUnlocked
-                      ? "bg-[linear-gradient(135deg,hsl(var(--accent)/0.2),hsl(var(--accent-alt)/0.2))] text-[hsl(var(--accent))]"
+                      ? "bevel-thin bg-chrome text-[var(--accent-deep)]"
                       : "bg-black/[0.05] text-text-faint"
                   )}
                 >

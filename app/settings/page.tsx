@@ -5,6 +5,7 @@ import { TopBar } from "@/components/top-bar";
 import { Dock } from "@/components/dock";
 import { useStore, type CompletionSoundId } from "@/lib/store";
 import { COMPLETION_SOUNDS, playCompletionSound } from "@/lib/audio";
+import { Window } from "@/components/retro/window";
 import { Minus, Play, Plus, Trash2 } from "lucide-react";
 import { clamp } from "@/lib/utils";
 
@@ -150,9 +151,9 @@ function DangerRow({
   onConfirm: () => void;
 }) {
   return (
-    <div className="flex items-center justify-between rounded-xl border border-[#FF8A8A]/[0.18] bg-[#FF8A8A]/[0.04] px-4 py-3.5">
+    <div className="bevel-thin flex items-center justify-between px-3 py-3">
       <div className="pr-4">
-        <div className="text-sm text-[#FF8A8A]">{label}</div>
+        <div className="text-[13px] font-bold text-[#9e2a1e]">{label}</div>
         <div className="mt-0.5 text-xs text-text-dim">{desc}</div>
       </div>
       <button
@@ -162,7 +163,7 @@ function DangerRow({
           );
           if (ok) onConfirm();
         }}
-        className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-[#FF8A8A]/30 bg-[#FF8A8A]/10 px-3 py-2 text-xs font-medium text-[#FF8A8A] transition-colors hover:bg-[#FF8A8A]/20"
+        className="btn95 h-9 shrink-0 px-3 text-[10px] text-[#9e2a1e]"
       >
         <Trash2 className="h-3.5 w-3.5" />
         Clear data
@@ -171,20 +172,26 @@ function DangerRow({
   );
 }
 
+const SECTION_FILES: Record<string, string> = {
+  Timer: "TIMER.INI",
+  Behavior: "BEHAVIOR.INI",
+  "Look & feel": "DISPLAY.INI",
+  "Danger zone": "FORMAT.COM",
+};
+
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div>
-      <h2 className="mb-2.5 px-1 text-xs font-semibold uppercase tracking-wide text-text-dim">{title}</h2>
-      <div className="space-y-2.5">{children}</div>
-    </div>
+    <Window title={SECTION_FILES[title] ?? title.toUpperCase()}>
+      <div className="space-y-2">{children}</div>
+    </Window>
   );
 }
 
 function Row({ label, desc, children }: { label: string; desc: string; children: React.ReactNode }) {
   return (
-    <div className="flex items-center justify-between rounded-xl border border-black/25 bg-black/[0.05] px-4 py-3.5">
+    <div className="bevel-thin flex items-center justify-between px-3 py-2.5">
       <div>
-        <div className="text-sm">{label}</div>
+        <div className="text-[13px]">{label}</div>
         <div className="mt-0.5 text-xs text-text-dim">{desc}</div>
       </div>
       {children}
@@ -207,12 +214,14 @@ function NumRow({
 }) {
   return (
     <Row label={label} desc={desc}>
-      <div className="flex items-center gap-1.5 rounded-lg bg-black/[0.05] p-1">
-        <button onClick={onMinus} className="grid h-6 w-6 place-items-center rounded-md text-text-dim hover:bg-black/[0.08] hover:text-text">
+      <div className="flex items-center gap-1">
+        <button onClick={onMinus} aria-label={`Decrease ${label}`} className="btn95 h-6 w-6 px-0">
           <Minus className="h-3 w-3" strokeWidth={2.5} />
         </button>
-        <span className="min-w-[42px] text-center text-[13px] tabular-nums">{value}</span>
-        <button onClick={onPlus} className="grid h-6 w-6 place-items-center rounded-md text-text-dim hover:bg-black/[0.08] hover:text-text">
+        <span className="well min-w-[56px] px-1 py-0.5 text-center font-digits text-base tabular-nums">
+          {value}
+        </span>
+        <button onClick={onPlus} aria-label={`Increase ${label}`} className="btn95 h-6 w-6 px-0">
           <Plus className="h-3 w-3" strokeWidth={2.5} />
         </button>
       </div>
@@ -230,35 +239,32 @@ function SoundRow({
   onPreview: () => void;
 }) {
   return (
-    <div className="rounded-xl border border-black/25 bg-black/[0.05] px-4 py-3.5">
+    <div className="bevel-thin px-3 py-2.5">
       <div className="flex items-center justify-between gap-3">
         <div>
-          <div className="text-sm">Completion sound</div>
+          <div className="text-[13px]">Completion sound</div>
           <div className="mt-0.5 text-xs text-text-dim">Choose the timer-end chime</div>
         </div>
-        <button
-          onClick={onPreview}
-          className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-black/25 bg-black/[0.05] px-3 py-2 text-xs font-medium text-text-dim transition-colors hover:bg-black/[0.08] hover:text-text"
-        >
-          <Play className="h-3.5 w-3.5" fill="currentColor" />
+        <button onClick={onPreview} className="btn95 h-8 shrink-0 px-3 text-[10px]">
+          <Play className="h-3 w-3" fill="currentColor" />
           Preview
         </button>
       </div>
 
-      <div className="mt-3 grid gap-2 sm:grid-cols-2">
+      <div className="mt-3 grid gap-1.5 sm:grid-cols-2">
         {COMPLETION_SOUNDS.map((sound) => {
           const active = value === sound.id;
           return (
             <button
               key={sound.id}
               onClick={() => onChange(sound.id)}
-              className={`rounded-lg border px-3 py-2 text-left transition-colors ${
+              className={`px-3 py-2 text-left ${
                 active
-                  ? "border-[hsl(var(--accent)/0.55)] bg-[hsl(var(--accent)/0.13)] text-text"
-                  : "border-black/25 bg-black/[0.05] text-text-dim hover:bg-black/[0.08] hover:text-text"
+                  ? "bevel-in bg-[var(--paper)]"
+                  : "bevel-thin bg-chrome text-text-dim hover:text-text"
               }`}
             >
-              <span className="block text-xs font-medium">{sound.name}</span>
+              <span className={`block text-xs ${active ? "font-bold" : ""}`}>{sound.name}</span>
               <span className="mt-0.5 block text-[11px] text-text-faint">{sound.description}</span>
             </button>
           );
@@ -283,14 +289,14 @@ function ToggleRow({
     <Row label={label} desc={desc}>
       <button
         onClick={() => onChange(!value)}
-        className={`relative h-[22px] w-10 rounded-full transition-colors ${
-          value ? "bg-[linear-gradient(90deg,hsl(var(--accent)),hsl(var(--accent-alt)))]" : "bg-black/[0.05]"
-        }`}
+        role="checkbox"
+        aria-checked={value}
+        aria-label={label}
+        className="bevel-in grid h-[18px] w-[18px] shrink-0 place-items-center bg-white"
       >
-        <span
-          className="absolute top-0.5 left-0.5 h-[18px] w-[18px] rounded-full bg-white transition-transform"
-          style={{ transform: value ? "translateX(18px)" : "translateX(0)" }}
-        />
+        {value && (
+          <span className="font-digits text-sm leading-none text-black">✓</span>
+        )}
       </button>
     </Row>
   );

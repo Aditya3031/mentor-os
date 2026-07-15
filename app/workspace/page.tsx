@@ -252,7 +252,7 @@ export default function WorkspacePage() {
             <aside className="space-y-4">
               <section className="panel">
                 <div className="mb-4 flex items-center gap-3">
-                  <div className="grid h-10 w-10 place-items-center rounded-xl bg-[hsl(var(--accent)/0.16)] text-[hsl(var(--accent))]">
+                  <div className="grid h-10 w-10 place-items-center rounded-xl bg-[hsl(var(--accent)/0.16)] text-[var(--accent-deep)]">
                     <UsersRound className="h-5 w-5" />
                   </div>
                   <div>
@@ -311,7 +311,7 @@ export default function WorkspacePage() {
                       className={cn(
                         "rounded-full border px-3 py-1.5 text-xs transition-colors",
                         activeId === workspace.id
-                          ? "border-[hsl(var(--accent)/0.45)] bg-[hsl(var(--accent)/0.14)] text-[hsl(var(--accent))]"
+                          ? "border-black/30 bg-[hsl(var(--accent)/0.14)] text-[var(--accent-deep)]"
                           : "border-black/25 text-text-dim hover:text-text"
                       )}
                     >

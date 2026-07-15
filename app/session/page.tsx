@@ -117,7 +117,7 @@ function Lobby() {
             disabled={!isSupabaseConfigured}
             className="panel flex flex-col items-start gap-3 text-left transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            <div className="grid h-11 w-11 place-items-center rounded-xl bg-[hsl(var(--accent)/0.16)] text-[hsl(var(--accent))]">
+            <div className="grid h-11 w-11 place-items-center rounded-xl bg-[hsl(var(--accent)/0.16)] text-[var(--accent-deep)]">
               <Plus className="h-5 w-5" />
             </div>
             <div>
@@ -345,7 +345,7 @@ function Room({ roomId }: { roomId: string }) {
               <button
                 onClick={copyCode}
                 title="Copy room code"
-                className="inline-flex items-center gap-2 rounded-xl border border-black/25 bg-black/[0.05] px-3 py-1.5 font-mono text-xl tracking-[0.25em] text-[hsl(var(--accent))] transition-colors hover:bg-black/[0.08]"
+                className="inline-flex items-center gap-2 rounded-xl border border-black/25 bg-black/[0.05] px-3 py-1.5 font-mono text-xl tracking-[0.25em] text-[var(--accent-deep)] transition-colors hover:bg-black/[0.08]"
               >
                 {roomId}
                 <Copy className="h-4 w-4 text-text-dim" />
@@ -402,7 +402,7 @@ function Room({ roomId }: { roomId: string }) {
             <div className="panel flex min-h-[360px] flex-col p-0">
               <div className="flex items-center justify-between border-b border-black/25 px-4 py-3">
                 <div className="flex items-center gap-2 text-sm font-semibold">
-                  <MonitorUp className="h-4 w-4 text-[hsl(var(--accent))]" />
+                  <MonitorUp className="h-4 w-4 text-[var(--accent-deep)]" />
                   Stage
                 </div>
                 <span className="rounded-full border border-black/25 px-2.5 py-1 text-[11px] text-text-dim">
@@ -493,7 +493,7 @@ function ControlButton({
       className={cn(
         "inline-flex h-10 items-center gap-2 rounded-xl border px-3 text-sm font-medium transition-colors disabled:opacity-55",
         active
-          ? "border-[hsl(var(--accent)/0.35)] bg-[hsl(var(--accent)/0.15)] text-[hsl(var(--accent))]"
+          ? "border-black/30 bg-[hsl(var(--accent)/0.15)] text-[var(--accent-deep)]"
           : "border-black/25 bg-black/[0.05] text-text-dim hover:bg-black/[0.08] hover:text-text"
       )}
     >
@@ -573,7 +573,7 @@ function StatusPill({ active, label }: { active: boolean; label: string }) {
       className={cn(
         "rounded-full border px-2 py-1 text-[10px] font-medium uppercase tracking-wide ",
         active
-          ? "border-[hsl(var(--accent)/0.28)] bg-[hsl(var(--accent)/0.16)] text-[hsl(var(--accent))]"
+          ? "border-black/30 bg-[hsl(var(--accent)/0.16)] text-[var(--accent-deep)]"
           : "border-black/25 bg-black/35 text-text-dim"
       )}
     >
@@ -787,7 +787,7 @@ function Whiteboard({ roomId }: { roomId: string }) {
     <section className="panel flex min-h-[560px] flex-col p-0">
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-black/25 px-4 py-3">
         <div className="flex items-center gap-2 text-sm font-semibold">
-          <Pencil className="h-4 w-4 text-[hsl(var(--accent))]" />
+          <Pencil className="h-4 w-4 text-[var(--accent-deep)]" />
           Whiteboard
         </div>
 
