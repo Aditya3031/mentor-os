@@ -7,6 +7,8 @@ import {
   Share_Tech_Mono,
   Shippori_Mincho,
   Zen_Old_Mincho,
+  Audiowide,
+  Michroma,
 } from "next/font/google";
 import { SkinChooser } from "@/components/skin-chooser";
 import { ThemeProvider } from "@/components/providers/theme-provider";
@@ -53,6 +55,21 @@ const shareTech = Share_Tech_Mono({
   subsets: ["latin"],
   weight: "400",
   variable: "--font-sharetech",
+  display: "swap",
+});
+
+/* Outrun / Blueprint skin fonts */
+const audiowide = Audiowide({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-audiowide",
+  display: "swap",
+});
+
+const michroma = Michroma({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-michroma",
   display: "swap",
 });
 
@@ -147,7 +164,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${plexMono.variable} ${vt323.variable} ${silkscreen.variable} ${orbitron.variable} ${shareTech.variable} ${shippori.variable} ${zenMincho.variable}`}
+      className={`${plexMono.variable} ${vt323.variable} ${silkscreen.variable} ${orbitron.variable} ${shareTech.variable} ${shippori.variable} ${zenMincho.variable} ${audiowide.variable} ${michroma.variable}`}
     >
       <body className="font-sans text-text" suppressHydrationWarning>
         {/* Apply persisted skin + theme before first paint to avoid a flash

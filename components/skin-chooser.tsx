@@ -68,7 +68,7 @@ export function SkinChooser() {
         <div className="mt-2 h-[2px] w-full bg-[#3a3a3a]" />
       </div>
 
-      <div className="mt-6 flex w-full max-w-2xl flex-col gap-3">
+      <div className="mt-5 flex w-full max-w-2xl min-h-0 flex-col gap-2 overflow-y-auto pr-1">
         {SKINS.map((s, i) => {
           const active = i === cursor;
           return (
@@ -78,7 +78,7 @@ export function SkinChooser() {
               onFocus={() => setCursor(i)}
               onClick={() => choose(s.id)}
               className={cn(
-                "flex items-stretch gap-4 border-2 p-3 text-left transition-none",
+                "flex flex-shrink-0 items-stretch gap-4 border-2 p-2.5 text-left transition-none",
                 active
                   ? "border-[#e8e8e8] bg-[#141414]"
                   : "border-[#333] opacity-70 hover:opacity-100"
@@ -86,12 +86,12 @@ export function SkinChooser() {
             >
               {/* Mini desktop preview */}
               <span
-                className="relative hidden w-36 flex-shrink-0 overflow-hidden sm:block"
+                className="relative hidden w-32 flex-shrink-0 overflow-hidden sm:block"
                 style={{ background: s.preview.desktop }}
                 aria-hidden
               >
                 <span
-                  className="absolute left-3 top-3 block h-16 w-24"
+                  className="absolute left-3 top-2.5 block h-14 w-20"
                   style={{
                     background: s.preview.chrome,
                     boxShadow: `inset 0 0 0 1px ${s.preview.accent}55`,
@@ -138,7 +138,7 @@ export function SkinChooser() {
         })}
       </div>
 
-      <p className="mt-6 animate-blink text-sm opacity-60">
+      <p className="mt-4 flex-shrink-0 animate-blink text-sm opacity-60">
         ↑↓ select · ENTER boot · or click
       </p>
     </div>

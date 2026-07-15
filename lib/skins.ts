@@ -5,7 +5,14 @@
  * themes (lib/themes.ts) compose with every skin.
  */
 
-export type SkinId = "retro95" | "cyberpunk" | "edo";
+export type SkinId =
+  | "retro95"
+  | "cyberpunk"
+  | "edo"
+  | "terminal"
+  | "mono"
+  | "outrun"
+  | "blueprint";
 
 export interface Skin {
   id: SkinId;
@@ -101,6 +108,102 @@ export const SKINS: Skin[] = [
       "OPENING THE SHOJI ...",
     ],
     bootColor: "#e8d5a3",
+  },
+  {
+    id: "terminal",
+    name: "MAINFRAME",
+    tagline: "Phosphor terminal",
+    description:
+      "A bare CRT terminal. Inverse-video title bars, glowing phosphor — the color scheme picks your phosphor.",
+    bootLabel: "MAINFRAME.TTY [phosphor]",
+    preview: {
+      desktop: "#010402",
+      chrome: "#041007",
+      titleBar: "linear-gradient(90deg,#63ff8f,#63ff8f)",
+      text: "#b8ffcb",
+      accent: "#63ff8f",
+    },
+    bootLines: [
+      "MAINFRAME TTY — DEEP WORK SYSTEMS",
+      "CONNECT 9600 BAUD ............... CARRIER OK",
+      "LOGIN: deepworker ............... AUTHENTICATED",
+      "MOTD: NO NEWS. ONLY WORK.",
+      "MOUNTING /dev/focus ............. OK",
+      "READY.",
+    ],
+    bootColor: "#7dffa0",
+  },
+  {
+    id: "mono",
+    name: "SYSTEM·1",
+    tagline: "1-bit monochrome",
+    description:
+      "Strict black on white. Pinstriped title bars, checkerboard desktop, not a single color anywhere.",
+    bootLabel: "SYSTEM1.IMG [1-bit]",
+    preview: {
+      desktop: "repeating-conic-gradient(#8a8a8a 0% 25%, #a8a8a8 0% 50%) 0 0 / 4px 4px",
+      chrome: "#ffffff",
+      titleBar: "repeating-linear-gradient(0deg,#000 0 1px,#fff 1px 3px)",
+      text: "#000000",
+      accent: "#000000",
+    },
+    bootLines: [
+      "SYSTEM 1 — DEEP WORK SYSTEMS",
+      "CHECKING DISK ................... OK",
+      "COLORS FOUND .................... 2 (PLENTY)",
+      "LOADING FINDER .................. OK",
+      "EMPTYING TRASH .................. DONE",
+      "WELCOME.",
+    ],
+    bootColor: "#ffffff",
+  },
+  {
+    id: "outrun",
+    name: "OUTRUN",
+    tagline: "Synthwave sunset",
+    description:
+      "Night drive at the edge of the grid. Sunset title bars, horizon floor, pink chrome everything.",
+    bootLabel: "OUTRUN.DRV [sunset]",
+    preview: {
+      desktop: "linear-gradient(180deg,#150a2e 0%,#3b1160 55%,#c13a6d 100%)",
+      chrome: "#1c1133",
+      titleBar: "linear-gradient(90deg,#ff2d78,#ff8c42)",
+      text: "#ffd9ec",
+      accent: "#ff5fa2",
+    },
+    bootLines: [
+      "OUTRUN ENGINE — DEEP WORK SYSTEMS",
+      "IGNITION ........................ V8 FOCUS",
+      "SUNSET .......................... RENDERED",
+      "GRID FLOOR ...................... INFINITE",
+      "CASSETTE ........................ SIDE A",
+      "DRIVE.",
+    ],
+    bootColor: "#ff6ea9",
+  },
+  {
+    id: "blueprint",
+    name: "BLUEPRINT",
+    tagline: "Drafting table",
+    description:
+      "Cyanotype paper and white line-work. Every window drawn with a T-square, labels in stencil caps.",
+    bootLabel: "BLUEPRINT.DWG [cyanotype]",
+    preview: {
+      desktop: "#123a6d",
+      chrome: "#1e4a80",
+      titleBar: "rgba(255,255,255,0.28)",
+      text: "#dbe9ff",
+      accent: "#ffffff",
+    },
+    bootLines: [
+      "DRAFTING TABLE v1.0 — DEEP WORK SYSTEMS",
+      "T-SQUARE ........................ ALIGNED",
+      "PAPER: A0 CYANOTYPE ............. PINNED",
+      "PENCILS ......................... SHARPENED",
+      "SCALE 1:1 (YOUR ACTUAL LIFE)",
+      "BEGIN DRAWING ...",
+    ],
+    bootColor: "#cfe4ff",
   },
 ];
 

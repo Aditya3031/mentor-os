@@ -547,3 +547,389 @@ body[data-skin="edo"] ::-webkit-scrollbar-thumb {
   background: hsl(var(--chrome-lo));
   box-shadow: inset 0 0 0 1px rgba(51, 41, 28, 0.6);
 }
+
+/* ------------------------------------------------------------
+   MAINFRAME — phosphor terminal. The color scheme picks the
+   phosphor: forest = classic green, ember = amber, etc.
+   ------------------------------------------------------------ */
+body[data-skin="terminal"] {
+  --chrome: 150 25% 4%;
+  --chrome-hi: 150 20% 8%;
+  --chrome-lo: 150 30% 2%;
+  --bg-1: 150 25% 4%;
+  --bg-2: 150 30% 2%;
+  --surface: 150 25% 4%;
+  --border: 150 20% 25%;
+
+  --text: 145 18% 82%;
+  --text-dim: 148 12% 58%;
+  --text-faint: 150 8% 38%;
+
+  /* Phosphor = brightened accent */
+  --accent-deep: color-mix(in oklch, hsl(var(--accent)), white 22%);
+  --accent-mid: hsl(var(--accent));
+  --desktop: #010302;
+  --title-grad: linear-gradient(
+    90deg,
+    var(--accent-deep),
+    var(--accent-deep)
+  );
+
+  --edge-black: #000;
+  --edge-dark: color-mix(in oklch, hsl(var(--accent)), #020503 70%);
+  --edge-light: color-mix(in oklch, hsl(var(--accent)), #041008 45%);
+  --edge-white: var(--accent-deep);
+
+  --paper: #010502;
+
+  --ui-display: var(--font-digits), monospace;
+  --ui-digits: var(--font-digits), monospace;
+  --ui-body: var(--font-body), monospace;
+
+  image-rendering: auto;
+  text-shadow: 0 0 4px color-mix(in srgb, var(--accent-deep), transparent 72%);
+}
+body[data-skin="terminal"] ::selection {
+  background: var(--accent-deep);
+  color: #000;
+}
+body[data-skin="terminal"] :focus-visible {
+  outline: 1px dotted var(--accent-deep);
+}
+body[data-skin="terminal"] .win95,
+body[data-skin="terminal"] .panel {
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--accent-deep), transparent 25%),
+    0 0 18px color-mix(in srgb, var(--accent-deep), transparent 88%);
+}
+body[data-skin="terminal"] .bevel-out {
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent-deep), transparent 35%);
+}
+body[data-skin="terminal"] .bevel-in,
+body[data-skin="terminal"] .bevel-thin-in {
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent-deep), transparent 55%);
+}
+body[data-skin="terminal"] .bevel-thin {
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent-deep), transparent 62%);
+}
+/* Inverse video title bars — the authentic terminal move */
+body[data-skin="terminal"] .title-bar {
+  color: #000;
+  text-shadow: none;
+  letter-spacing: 0.14em;
+  font-size: 13px;
+  text-transform: uppercase;
+}
+body[data-skin="terminal"] .tb-btn {
+  background: #000;
+  color: var(--accent-deep);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent-deep), transparent 40%);
+}
+body[data-skin="terminal"] .btn95 {
+  letter-spacing: 0.12em;
+  font-size: 13px;
+}
+body[data-skin="terminal"] .btn95:hover {
+  background: color-mix(in srgb, var(--accent-deep), transparent 88%);
+}
+body[data-skin="terminal"] .btn95-primary {
+  background: var(--accent-deep);
+  color: #000;
+  text-shadow: none;
+}
+body[data-skin="terminal"] .bg-stage-base {
+  background-color: var(--desktop);
+  background-image: radial-gradient(
+    ellipse at 50% 45%,
+    color-mix(in srgb, var(--accent-deep), transparent 94%),
+    transparent 70%
+  );
+}
+body[data-skin="terminal"] .crt-overlay {
+  background:
+    repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.22) 0 1px, transparent 1px 3px),
+    radial-gradient(ellipse at center, transparent 55%, rgba(0, 0, 0, 0.4) 100%);
+  mix-blend-mode: multiply;
+}
+
+/* ------------------------------------------------------------
+   SYSTEM·1 — strict 1-bit monochrome. Pinstripe title bars,
+   checkerboard desktop, zero color anywhere.
+   ------------------------------------------------------------ */
+body[data-skin="mono"] {
+  --chrome: 0 0% 100%;
+  --chrome-hi: 0 0% 100%;
+  --chrome-lo: 0 0% 88%;
+  --bg-1: 0 0% 100%;
+  --bg-2: 0 0% 94%;
+  --surface: 0 0% 100%;
+  --border: 0 0% 0%;
+
+  --text: 0 0% 0%;
+  --text-dim: 0 0% 25%;
+  --text-faint: 0 0% 45%;
+
+  --accent-deep: #000;
+  --accent-mid: #000;
+  --desktop: #9a9a9a;
+  --title-grad: repeating-linear-gradient(0deg, #000 0 1px, #fff 1px 3px);
+
+  --edge-black: #000;
+  --edge-dark: #000;
+  --edge-light: #fff;
+  --edge-white: #fff;
+
+  --paper: #fff;
+
+  image-rendering: auto;
+}
+body[data-skin="mono"] ::selection {
+  background: #000;
+  color: #fff;
+}
+body[data-skin="mono"] .win95,
+body[data-skin="mono"] .panel {
+  box-shadow:
+    inset 0 0 0 1px #000,
+    2px 2px 0 #000;
+}
+body[data-skin="mono"] .bevel-out {
+  box-shadow: inset 0 0 0 1px #000;
+}
+body[data-skin="mono"] .bevel-in,
+body[data-skin="mono"] .bevel-thin-in {
+  box-shadow: inset 0 0 0 1px #000;
+}
+body[data-skin="mono"] .bevel-thin {
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.55);
+}
+/* Classic pinstriped title bar with the name on a white plug */
+body[data-skin="mono"] .title-bar {
+  color: #000;
+  text-shadow: none;
+  box-shadow: inset 0 0 0 1px #000;
+}
+body[data-skin="mono"] .title-bar > span:first-child {
+  background: #fff;
+  padding: 0 8px;
+}
+body[data-skin="mono"] .tb-btn {
+  background: #fff;
+  box-shadow: inset 0 0 0 1px #000;
+}
+body[data-skin="mono"] .btn95:hover,
+body[data-skin="mono"] .btn95-primary {
+  background: #000;
+  color: #fff;
+  text-shadow: none;
+}
+body[data-skin="mono"] .bg-stage-base {
+  background: repeating-conic-gradient(#8e8e8e 0% 25%, #a6a6a6 0% 50%) 0 0 / 4px 4px;
+}
+body[data-skin="mono"] .crt-overlay {
+  background: none;
+}
+
+/* ------------------------------------------------------------
+   OUTRUN — synthwave sunset. Horizon grid, pink chrome.
+   ------------------------------------------------------------ */
+body[data-skin="outrun"] {
+  --chrome: 262 48% 12%;
+  --chrome-hi: 262 42% 18%;
+  --chrome-lo: 264 52% 7%;
+  --bg-1: 262 48% 12%;
+  --bg-2: 264 52% 8%;
+  --surface: 262 48% 12%;
+  --border: 320 50% 40%;
+
+  --text: 320 35% 92%;
+  --text-dim: 300 20% 68%;
+  --text-faint: 285 14% 48%;
+
+  --accent-deep: color-mix(in oklch, hsl(var(--accent)), #ff4f9e 45%);
+  --accent-mid: hsl(var(--accent));
+  --desktop: #150a2e;
+  --title-grad: linear-gradient(
+    90deg,
+    color-mix(in oklch, hsl(var(--accent)), #ff2d78 60%),
+    color-mix(in oklch, hsl(var(--accent-alt)), #ff8c42 60%)
+  );
+
+  --edge-black: #08030f;
+  --edge-dark: #3f2364;
+  --edge-light: color-mix(in oklch, hsl(var(--accent)), #ff4f9e 55%);
+  --edge-white: #ffd9ec;
+
+  --paper: #0e0721;
+
+  --ui-display: var(--font-audiowide), sans-serif;
+  --ui-digits: var(--font-digits), monospace;
+  --ui-body: var(--font-body), monospace;
+
+  image-rendering: auto;
+}
+body[data-skin="outrun"] :focus-visible {
+  outline: 1px dotted #ffd9ec;
+}
+body[data-skin="outrun"] .win95,
+body[data-skin="outrun"] .panel {
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--accent-deep), transparent 30%),
+    0 0 20px color-mix(in srgb, var(--accent-deep), transparent 82%),
+    0 8px 30px rgba(0, 0, 0, 0.55);
+}
+body[data-skin="outrun"] .bevel-out {
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent-deep), transparent 40%);
+}
+body[data-skin="outrun"] .bevel-in,
+body[data-skin="outrun"] .bevel-thin-in {
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--accent-deep), transparent 55%),
+    inset 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+body[data-skin="outrun"] .bevel-thin {
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent-deep), transparent 60%);
+}
+body[data-skin="outrun"] .title-bar {
+  letter-spacing: 0.16em;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5), 0 0 10px rgba(255, 120, 180, 0.5);
+}
+body[data-skin="outrun"] .btn95:hover {
+  background: color-mix(in oklch, hsl(var(--accent)), #1c1133 80%);
+}
+body[data-skin="outrun"] .btn95-primary {
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 217, 236, 0.5),
+    0 0 16px color-mix(in srgb, var(--accent-deep), transparent 55%);
+}
+/* Sunset sky, striped sun, perspective grid floor */
+body[data-skin="outrun"] .bg-stage-base {
+  background-color: #150a2e;
+  background-image:
+    /* grid floor */
+    linear-gradient(transparent 64%, rgba(255, 95, 162, 0.22) 64.2%, transparent 64.6%),
+    repeating-linear-gradient(
+      90deg,
+      transparent 0 58px,
+      rgba(255, 95, 162, 0.14) 58px 60px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      transparent 0 34px,
+      rgba(255, 95, 162, 0.12) 34px 36px
+    ),
+    /* sun */
+    radial-gradient(
+      circle at 50% 62%,
+      rgba(255, 140, 66, 0.5) 0 90px,
+      transparent 92px
+    ),
+    /* sky */
+    linear-gradient(180deg, #12082b 0%, #2c0f52 40%, #6d1b5e 62%, #c13a6d 66%, #150a2e 66.5%, #150a2e 100%);
+}
+body[data-skin="outrun"] .crt-overlay {
+  background:
+    repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.1) 0 1px, transparent 1px 3px),
+    radial-gradient(ellipse at center, transparent 62%, rgba(10, 0, 25, 0.35) 100%);
+  mix-blend-mode: multiply;
+}
+
+/* ------------------------------------------------------------
+   BLUEPRINT — cyanotype drafting table. White line-work on blue.
+   ------------------------------------------------------------ */
+body[data-skin="blueprint"] {
+  --chrome: 214 55% 24%;
+  --chrome-hi: 214 50% 30%;
+  --chrome-lo: 216 58% 17%;
+  --bg-1: 214 55% 24%;
+  --bg-2: 216 58% 18%;
+  --surface: 214 55% 24%;
+  --border: 213 45% 60%;
+
+  --text: 212 45% 94%;
+  --text-dim: 212 30% 76%;
+  --text-faint: 212 20% 58%;
+
+  /* Annotation tint: accent lightened toward pencil yellow-white */
+  --accent-deep: color-mix(in oklch, hsl(var(--accent)), #ffe9a8 55%);
+  --accent-mid: color-mix(in oklch, hsl(var(--accent)), #ffffff 30%);
+  --desktop: color-mix(in oklch, hsl(var(--accent)), #10315c 88%);
+  --title-grad: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.16),
+    rgba(255, 255, 255, 0.08)
+  );
+
+  --edge-black: #071a33;
+  --edge-dark: rgba(255, 255, 255, 0.35);
+  --edge-light: rgba(255, 255, 255, 0.55);
+  --edge-white: #fff;
+
+  --paper: #16406e;
+
+  --ui-display: var(--font-michroma), sans-serif;
+  --ui-digits: var(--font-body), monospace;
+  --ui-body: var(--font-body), monospace;
+
+  image-rendering: auto;
+}
+body[data-skin="blueprint"] ::selection {
+  background: #fff;
+  color: #123a6d;
+}
+body[data-skin="blueprint"] :focus-visible {
+  outline: 1px dotted #fff;
+}
+/* Double-line technical frames */
+body[data-skin="blueprint"] .win95,
+body[data-skin="blueprint"] .panel {
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.9),
+    inset 0 0 0 4px hsl(var(--chrome)),
+    inset 0 0 0 5px rgba(255, 255, 255, 0.35),
+    3px 3px 0 rgba(4, 16, 34, 0.5);
+}
+body[data-skin="blueprint"] .bevel-out {
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.75);
+}
+body[data-skin="blueprint"] .bevel-in,
+body[data-skin="blueprint"] .bevel-thin-in {
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.45);
+}
+body[data-skin="blueprint"] .bevel-thin {
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+}
+body[data-skin="blueprint"] .title-bar {
+  text-shadow: none;
+  letter-spacing: 0.24em;
+  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.8);
+  font-size: 10px;
+}
+body[data-skin="blueprint"] .tb-btn {
+  background: transparent;
+  color: #fff;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+}
+body[data-skin="blueprint"] .btn95 {
+  background: transparent;
+  letter-spacing: 0.18em;
+}
+body[data-skin="blueprint"] .btn95:hover,
+body[data-skin="blueprint"] .btn95-primary {
+  background: #eef4ff;
+  color: #123a6d;
+  text-shadow: none;
+}
+/* Graph-paper desktop: fine grid + heavy grid */
+body[data-skin="blueprint"] .bg-stage-base {
+  background-color: var(--desktop);
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+  background-size: 10px 10px, 10px 10px, 50px 50px, 50px 50px;
+}
+body[data-skin="blueprint"] .crt-overlay {
+  background: none;
+}
