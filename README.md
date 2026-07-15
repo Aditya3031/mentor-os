@@ -2,7 +2,7 @@
 
 > Your solo deep-work sanctuary — pomodoro, ambient rooms, and analytics, designed to make studying feel inviting.
 
-FocusFlow is a premium, calming, immersive solo study platform inspired by the energy of "study together" sites but built around individual deep-work. Pick a room, start a session, and let momentum carry you.
+FocusFlow is a solo study platform disguised as a retro operating system — **FOCUSFLOW·95**. Boot it up, drag your windows around, run FOCUS.EXE, and let momentum carry you. All the seriousness of deep work, none of the seriousness of design trends.
 
 ---
 
@@ -114,13 +114,15 @@ Live-switching is instant — accent CSS variables update on `<body data-theme="
 - Levels (next-level cost = `(level + 1) * 300`)
 - Achievements with unlocked / locked states
 
-### 10. UI / UX details
-- Glassmorphism panels (backdrop-filter, low-opacity surface, hairline borders)
-- Soft shadows, generous radii, premium easing curves
-- Floating macOS-style dock (Framer Motion `layoutId` for active state)
-- Command palette at `⌘K` / `Ctrl+K`
-- Smooth loading screen, animated confetti on session completion
-- First-run onboarding card
+### 10. UI / UX details — FOCUSFLOW·95
+The entire UI is a retro operating system:
+- Draggable, beveled windows with gradient title bars (FOCUS.EXE, TASKS.SYS, MIXER.EXE…)
+- Taskbar with Start menu, quick-launch programs, live pomodoro readout and tray clock
+- BIOS boot sequence on the landing page (once per browser session)
+- VT323 pixel digits, Silkscreen chrome labels, IBM Plex Mono body
+- Defrag-block progress bars instead of glowing rings; subtle CRT scanline overlay
+- Login as an OS logon dialog, themes as a Display Properties panel, onboarding as SETUP.EXE
+- First-run onboarding wizard, confetti on session completion
 
 ---
 

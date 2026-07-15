@@ -9,17 +9,39 @@ const config: Config = {
   ],
   theme: {
     container: { center: true, padding: "1.5rem" },
+    /*
+     * Retro OS: no rounded corners, anywhere. Overriding the whole
+     * scale (not extending) squares off every `rounded-*` in the app.
+     */
+    borderRadius: {
+      none: "0",
+      sm: "0",
+      DEFAULT: "0",
+      md: "0",
+      lg: "0",
+      xl: "0",
+      "2xl": "0",
+      "3xl": "0",
+      full: "0",
+    },
     extend: {
       fontFamily: {
-        sans: ["var(--font-inter)", "system-ui", "sans-serif"],
-        serif: ["var(--font-instrument)", "Georgia", "serif"],
-        mono: ["var(--font-jetbrains)", "monospace"],
+        sans: ["var(--font-body)", "Courier New", "monospace"],
+        serif: ["var(--font-digits)", "monospace"],
+        mono: ["var(--font-body)", "monospace"],
+        pixel: ["var(--font-pixel)", "monospace"],
+        digits: ["var(--font-digits)", "monospace"],
       },
       colors: {
         bg: {
           0: "hsl(var(--bg-0))",
           1: "hsl(var(--bg-1))",
           2: "hsl(var(--bg-2))",
+        },
+        chrome: {
+          DEFAULT: "hsl(var(--chrome))",
+          hi: "hsl(var(--chrome-hi))",
+          lo: "hsl(var(--chrome-lo))",
         },
         surface: "hsl(var(--surface))",
         border: "hsl(var(--border))",
@@ -33,23 +55,17 @@ const config: Config = {
           alt: "hsl(var(--accent-alt))",
         },
       },
-      borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 4px)",
-        sm: "calc(var(--radius) - 8px)",
-      },
-      backdropBlur: {
-        xs: "2px",
-      },
+      /* Hard pixel shadows — no soft blur in this OS */
       boxShadow: {
-        glow: "0 0 40px hsl(var(--accent) / 0.35)",
-        soft: "0 8px 30px rgba(0,0,0,0.35)",
-        deep: "0 20px 60px rgba(0,0,0,0.45)",
+        glow: "3px 3px 0 rgba(0,0,0,0.4)",
+        soft: "2px 2px 0 rgba(0,0,0,0.35)",
+        deep: "5px 5px 0 rgba(0,0,0,0.45)",
+        hard: "4px 4px 0 var(--edge-black)",
       },
       keyframes: {
         drift: {
-          "0%": { transform: "translate3d(0,0,0) scale(1)" },
-          "100%": { transform: "translate3d(4%,-3%,0) scale(1.05)" },
+          "0%": { transform: "translate3d(0,0,0)" },
+          "100%": { transform: "translate3d(0,0,0)" },
         },
         glowpulse: {
           "0%, 100%": { opacity: "0.6" },
@@ -66,6 +82,10 @@ const config: Config = {
         confettiFall: {
           to: { transform: "translateY(110vh) rotate(720deg)", opacity: "0" },
         },
+        blink: {
+          "0%, 49%": { opacity: "1" },
+          "50%, 100%": { opacity: "0" },
+        },
       },
       animation: {
         drift: "drift 24s ease-in-out infinite alternate",
@@ -73,10 +93,11 @@ const config: Config = {
         floaty: "floaty 4s ease-in-out infinite",
         shimmer: "shimmer 2s ease-in-out infinite",
         confetti: "confettiFall 3s ease-out forwards",
+        blink: "blink 1.1s step-end infinite",
       },
       transitionTimingFunction: {
-        elegant: "cubic-bezier(0.22, 1, 0.36, 1)",
-        out: "cubic-bezier(0.16, 1, 0.3, 1)",
+        elegant: "steps(4, end)",
+        out: "steps(4, end)",
       },
     },
   },

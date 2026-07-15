@@ -119,7 +119,7 @@ export default function AIPage() {
       <main className="relative z-[5] mx-auto flex w-full max-w-3xl flex-1 flex-col px-4 pb-20 sm:px-7 sm:pb-24 min-h-0">
         <header className="mb-4 mt-2 flex items-end justify-between gap-3">
           <div>
-            <p className="flex items-center gap-1.5 text-xs uppercase tracking-[0.2em] text-text-dim">
+            <p className="flex items-center gap-1.5 font-pixel text-[9px] uppercase tracking-[0.2em] text-white/70 [text-shadow:1px_1px_0_rgba(0,0,0,0.6)]">
               <Sparkles className="h-3 w-3" />
               Powered by Gemini
             </p>
@@ -130,7 +130,7 @@ export default function AIPage() {
           {messages.length > 0 && (
             <button
               onClick={clear}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-white/[0.08] bg-white/[0.03] px-3 py-1.5 text-xs text-text-dim transition-colors hover:bg-white/[0.06] hover:text-text"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-black/25 bg-black/[0.05] px-3 py-1.5 text-xs text-text-dim transition-colors hover:bg-black/[0.08] hover:text-text"
             >
               <Trash2 className="h-3 w-3" />
               New chat
@@ -167,7 +167,7 @@ export default function AIPage() {
             e.preventDefault();
             send();
           }}
-          className="mt-3 flex items-end gap-2 rounded-2xl border border-white/[0.08] bg-white/[0.03] p-2.5 transition-colors focus-within:border-white/[0.2]"
+          className="mt-3 flex items-end gap-2 rounded-2xl border border-black/25 bg-black/[0.05] p-2.5 transition-colors focus-within:border-black/40"
         >
           <textarea
             value={input}
@@ -187,7 +187,7 @@ export default function AIPage() {
           <button
             type="submit"
             disabled={busy || !input.trim()}
-            className="grid h-9 w-9 flex-shrink-0 place-items-center rounded-xl bg-[linear-gradient(135deg,hsl(var(--accent)),hsl(var(--accent-alt)))] text-bg-0 shadow-glow transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0"
+            className="grid h-9 w-9 flex-shrink-0 place-items-center rounded-xl bg-[var(--title-grad)] text-white shadow-glow transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0"
             aria-label="Send"
           >
             {busy ? (
@@ -234,7 +234,7 @@ function MessageBubble({
           "max-w-[85%] whitespace-pre-wrap rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed",
           isUser
             ? "bg-[linear-gradient(135deg,hsl(var(--accent)/0.18),hsl(var(--accent-alt)/0.18))] text-text"
-            : "border border-white/[0.08] bg-white/[0.03] text-text"
+            : "border border-black/25 bg-black/[0.05] text-text"
         )}
       >
         {message.content || (
@@ -284,7 +284,7 @@ function EmptyState({ onPick }: { onPick: (text: string) => void }) {
           <button
             key={s}
             onClick={() => onPick(s)}
-            className="rounded-xl border border-white/[0.08] bg-white/[0.02] px-3.5 py-3 text-left text-[13px] leading-snug text-text transition-all hover:-translate-y-0.5 hover:border-white/[0.16] hover:bg-white/[0.04]"
+            className="rounded-xl border border-black/25 bg-black/[0.05] px-3.5 py-3 text-left text-[13px] leading-snug text-text transition-all hover:-translate-y-0.5 hover:border-black/25 hover:bg-black/[0.08]"
           >
             {s}
           </button>

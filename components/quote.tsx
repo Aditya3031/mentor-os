@@ -29,13 +29,13 @@ export function Quote() {
   return (
     <motion.div
       key={idx}
-      initial={{ opacity: 0, y: 6 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-      className="mb-5 max-w-md text-center text-sm text-text-dim"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.4, ease: "linear" }}
+      className="mb-4 w-full max-w-md text-center text-[12px] text-text-dim"
     >
-      <span className="italic">{q.t}</span>
-      <span className="mt-1.5 block text-[11px] uppercase tracking-widest text-text-faint">
+      <span className="font-digits text-base">&quot;{q.t}&quot;</span>
+      <span className="mt-0.5 block font-pixel text-[9px] uppercase tracking-widest text-text-faint">
         — {q.a}
       </span>
     </motion.div>

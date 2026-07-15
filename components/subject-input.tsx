@@ -33,14 +33,19 @@ export function SubjectInput() {
   }, [history]);
 
   return (
-    <div className="mb-6 w-full max-w-md">
-      <input
-        value={currentSubject}
-        onChange={(e) => setCurrentSubject(e.target.value)}
-        placeholder="What are you working on?"
-        maxLength={60}
-        className="w-full rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-2.5 text-center text-sm transition-colors placeholder:text-text-faint focus:border-white/[0.18] focus:bg-white/[0.05] focus:outline-none"
-      />
+    <div className="mb-5 w-full max-w-md">
+      <div className="well flex items-center gap-2 px-3 py-2">
+        <span className="select-none font-digits text-base text-text-dim">
+          C:\&gt;
+        </span>
+        <input
+          value={currentSubject}
+          onChange={(e) => setCurrentSubject(e.target.value)}
+          placeholder="what are you working on?"
+          maxLength={60}
+          className="w-full bg-transparent text-sm outline-none placeholder:text-text-faint"
+        />
+      </div>
 
       {recentSubjects.length > 0 && (
         <div className="mt-2 flex flex-wrap justify-center gap-1.5">
@@ -53,10 +58,10 @@ export function SubjectInput() {
                 type="button"
                 onClick={() => setCurrentSubject(subject)}
                 className={
-                  "rounded-full border px-2.5 py-1 text-[11px] transition-colors " +
+                  "px-2.5 py-1 text-[11px] " +
                   (active
-                    ? "border-[hsl(var(--accent)/0.4)] bg-[hsl(var(--accent)/0.15)] text-[hsl(var(--accent))]"
-                    : "border-white/[0.08] bg-white/[0.02] text-text-dim hover:bg-white/[0.05] hover:text-text")
+                    ? "bevel-in bg-[var(--paper)] font-bold"
+                    : "bevel-thin bg-chrome text-text-dim hover:text-text")
                 }
               >
                 {subject}

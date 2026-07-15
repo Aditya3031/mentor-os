@@ -40,13 +40,13 @@ export function TimerDurationControl() {
   };
 
   return (
-    <div className="flex items-center gap-2 rounded-xl border border-white/[0.08] bg-white/[0.035] p-1.5">
-      <div className="grid h-8 w-8 place-items-center rounded-lg bg-white/[0.05] text-text-dim">
+    <div className="flex items-center gap-1.5">
+      <span className="grid h-8 w-8 place-items-center text-text-dim">
         <Clock3 className="h-4 w-4" />
-      </div>
+      </span>
       <button
         onClick={() => step(-1)}
-        className="grid h-8 w-8 place-items-center rounded-lg text-text-dim transition-colors hover:bg-white/[0.06] hover:text-text"
+        className="btn95 h-8 w-8 px-0"
         aria-label="Decrease duration"
       >
         <Minus className="h-3.5 w-3.5" />
@@ -68,12 +68,12 @@ export function TimerDurationControl() {
             apply();
           }
         }}
-        className="h-8 w-16 rounded-lg border border-white/[0.08] bg-white/[0.03] text-center text-sm tabular-nums outline-none transition-colors focus:border-white/[0.22]"
+        className="well h-8 w-16 text-center font-digits text-lg tabular-nums outline-none"
       />
       <span className="text-xs text-text-dim">min</span>
       <button
         onClick={() => step(1)}
-        className="grid h-8 w-8 place-items-center rounded-lg text-text-dim transition-colors hover:bg-white/[0.06] hover:text-text"
+        className="btn95 h-8 w-8 px-0"
         aria-label="Increase duration"
       >
         <Plus className="h-3.5 w-3.5" />
@@ -81,7 +81,7 @@ export function TimerDurationControl() {
       <button
         onClick={apply}
         disabled={!canApply}
-        className="grid h-8 w-8 place-items-center rounded-lg bg-[linear-gradient(135deg,hsl(var(--accent)),hsl(var(--accent-alt)))] text-bg-0 transition-opacity disabled:opacity-45"
+        className="btn95 h-8 w-8 px-0 disabled:opacity-50"
         aria-label="Apply duration"
       >
         <Check className="h-4 w-4" />

@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { useStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
 import type { TimerMode } from "@/lib/store";
@@ -13,27 +12,23 @@ const MODES: { id: TimerMode; label: string }[] = [
 
 export function ModeTabs() {
   const mode = useStore((s) => s.mode);
-
-const setMode = useStore((s) => s.setMode);
+  const setMode = useStore((s) => s.setMode);
 
   return (
-    <div className="flex gap-1 rounded-xl border border-white/[0.08] bg-white/[0.04] p-1">
+    <div className="flex gap-1">
       {MODES.map((m) => {
         const active = mode === m.id;
         return (
           <button
             key={m.id}
             onClick={() => setMode(m.id)}
-            className="relative px-[18px] py-2 text-xs font-medium text-text-dim transition-colors hover:text-text"
-          >
-            {active && (
-              <motion.span
-                layoutId="modeTabActive"
-                className="absolute inset-0 rounded-lg bg-white/[0.08] shadow-soft"
-                transition={{ type: "spring", stiffness: 380, damping: 30 }}
-              />
+            className={cn(
+              "btn95 h-8 px-3 text-[10px]",
+              active &&
+                "bevel-in font-bold [background-image:radial-gradient(rgba(255,255,255,0.5)_1px,transparent_1px)] [background-size:3px_3px]"
             )}
-            <span className={cn("relative", active && "text-text")}>{m.label}</span>
+          >
+            {m.label}
           </button>
         );
       })}

@@ -94,8 +94,8 @@ function Lobby() {
 
       <main className="relative z-[5] mx-auto flex w-full max-w-2xl flex-1 flex-col px-4 pb-28 sm:px-7">
         <header className="mb-8 mt-2">
-          <p className="text-xs uppercase tracking-[0.2em] text-text-dim">Live session</p>
-          <h1 className="mt-2 text-balance text-3xl font-light tracking-tight">
+          <p className="font-pixel text-[9px] uppercase tracking-[0.2em] text-white/70 [text-shadow:1px_1px_0_rgba(0,0,0,0.6)]">Live session</p>
+          <h1 className="mt-2 text-balance font-pixel text-xl text-white [text-shadow:2px_2px_0_rgba(0,0,0,0.55)] sm:text-2xl">
             Study together in a private room.
           </h1>
           <p className="mt-3 max-w-lg text-sm leading-relaxed text-text-dim">
@@ -143,12 +143,12 @@ function Lobby() {
               onChange={(e) => setJoinCode(e.target.value.toUpperCase())}
               placeholder="A1B2C3"
               maxLength={8}
-              className="mt-1 w-full rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-3 text-center font-mono text-lg tracking-[0.3em] uppercase outline-none transition-colors placeholder:text-text-faint focus:border-white/[0.2]"
+              className="mt-1 w-full rounded-xl border border-black/25 bg-black/[0.05] px-4 py-3 text-center font-mono text-lg tracking-[0.3em] uppercase outline-none transition-colors placeholder:text-text-faint focus:border-black/40"
             />
             <button
               type="submit"
               disabled={joinCode.trim().length < 4 || !isSupabaseConfigured}
-              className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[linear-gradient(135deg,hsl(var(--accent)),hsl(var(--accent-alt)))] px-6 py-3 text-sm font-semibold text-bg-0 transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--title-grad)] px-6 py-3 text-sm font-semibold text-white transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0"
             >
               Join room
             </button>
@@ -327,25 +327,25 @@ function Room({ roomId }: { roomId: string }) {
       <main className="relative z-[5] mx-auto flex w-full max-w-7xl flex-1 flex-col overflow-y-auto px-4 pb-28 sm:px-7">
         <header className="mb-5 mt-2 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
-            <div className="flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-text-dim">
+            <div className="flex items-center gap-2 font-pixel text-[9px] uppercase tracking-[0.2em] text-white/70 [text-shadow:1px_1px_0_rgba(0,0,0,0.6)]">
               Live session
               <span
                 className={cn(
                   "rounded-full px-2 py-0.5 text-[10px] font-medium tracking-wide",
                   connected
                     ? "bg-[#7DE0B6]/[0.15] text-[#B6EFD3]"
-                    : "bg-white/[0.06] text-text-dim"
+                    : "bg-black/[0.05] text-text-dim"
                 )}
               >
                 {connected ? "Connected" : "Connecting…"}
               </span>
             </div>
-            <h1 className="mt-2 flex items-center gap-3 text-balance text-3xl font-light tracking-tight">
+            <h1 className="mt-2 flex items-center gap-3 text-balance font-pixel text-xl text-white [text-shadow:2px_2px_0_rgba(0,0,0,0.55)] sm:text-2xl">
               Room
               <button
                 onClick={copyCode}
                 title="Copy room code"
-                className="inline-flex items-center gap-2 rounded-xl border border-white/[0.1] bg-white/[0.04] px-3 py-1.5 font-mono text-xl tracking-[0.25em] text-[hsl(var(--accent))] transition-colors hover:bg-white/[0.08]"
+                className="inline-flex items-center gap-2 rounded-xl border border-black/25 bg-black/[0.05] px-3 py-1.5 font-mono text-xl tracking-[0.25em] text-[hsl(var(--accent))] transition-colors hover:bg-black/[0.08]"
               >
                 {roomId}
                 <Copy className="h-4 w-4 text-text-dim" />
@@ -400,12 +400,12 @@ function Room({ roomId }: { roomId: string }) {
           <section className="grid gap-4 lg:grid-rows-[minmax(320px,1fr)_220px]">
             {/* Stage — your screen share preview */}
             <div className="panel flex min-h-[360px] flex-col p-0">
-              <div className="flex items-center justify-between border-b border-white/[0.08] px-4 py-3">
+              <div className="flex items-center justify-between border-b border-black/25 px-4 py-3">
                 <div className="flex items-center gap-2 text-sm font-semibold">
                   <MonitorUp className="h-4 w-4 text-[hsl(var(--accent))]" />
                   Stage
                 </div>
-                <span className="rounded-full border border-white/[0.08] px-2.5 py-1 text-[11px] text-text-dim">
+                <span className="rounded-full border border-black/25 px-2.5 py-1 text-[11px] text-text-dim">
                   {screenStream ? "You're sharing" : "Ready"}
                 </span>
               </div>
@@ -494,7 +494,7 @@ function ControlButton({
         "inline-flex h-10 items-center gap-2 rounded-xl border px-3 text-sm font-medium transition-colors disabled:opacity-55",
         active
           ? "border-[hsl(var(--accent)/0.35)] bg-[hsl(var(--accent)/0.15)] text-[hsl(var(--accent))]"
-          : "border-white/[0.1] bg-white/[0.04] text-text-dim hover:bg-white/[0.08] hover:text-text"
+          : "border-black/25 bg-black/[0.05] text-text-dim hover:bg-black/[0.08] hover:text-text"
       )}
     >
       <Icon className="h-4 w-4" />
@@ -524,7 +524,7 @@ function ParticipantTile({
 
   return (
     <div className="panel flex min-h-[160px] flex-col p-0">
-      <div className="border-b border-white/[0.08] px-4 py-3 text-sm font-semibold">
+      <div className="border-b border-black/25 px-4 py-3 text-sm font-semibold">
         {label}
       </div>
       <div className="relative flex flex-1 items-center justify-center overflow-hidden rounded-b-2xl bg-black/30">
@@ -536,7 +536,7 @@ function ParticipantTile({
           className={cn("h-full w-full object-cover", !cameraOn && "hidden")}
         />
         {!cameraOn && (
-          <div className="grid h-14 w-14 place-items-center rounded-2xl bg-white/[0.06] text-text-dim">
+          <div className="grid h-14 w-14 place-items-center rounded-2xl bg-black/[0.05] text-text-dim">
             <VideoOff className="h-6 w-6" />
           </div>
         )}
@@ -571,10 +571,10 @@ function StatusPill({ active, label }: { active: boolean; label: string }) {
   return (
     <span
       className={cn(
-        "rounded-full border px-2 py-1 text-[10px] font-medium uppercase tracking-wide backdrop-blur-md",
+        "rounded-full border px-2 py-1 text-[10px] font-medium uppercase tracking-wide ",
         active
           ? "border-[hsl(var(--accent)/0.28)] bg-[hsl(var(--accent)/0.16)] text-[hsl(var(--accent))]"
-          : "border-white/[0.1] bg-black/35 text-text-dim"
+          : "border-black/25 bg-black/35 text-text-dim"
       )}
     >
       {label}
@@ -785,14 +785,14 @@ function Whiteboard({ roomId }: { roomId: string }) {
 
   return (
     <section className="panel flex min-h-[560px] flex-col p-0">
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/[0.08] px-4 py-3">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-black/25 px-4 py-3">
         <div className="flex items-center gap-2 text-sm font-semibold">
           <Pencil className="h-4 w-4 text-[hsl(var(--accent))]" />
           Whiteboard
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          <div className="flex rounded-lg bg-white/[0.05] p-1">
+          <div className="flex rounded-lg bg-black/[0.05] p-1">
             <IconToggle
               active={mode === "pen"}
               label="Pen"
@@ -807,7 +807,7 @@ function Whiteboard({ roomId }: { roomId: string }) {
             />
           </div>
 
-          <div className="flex gap-1 rounded-lg bg-white/[0.05] p-1">
+          <div className="flex gap-1 rounded-lg bg-black/[0.05] p-1">
             {COLORS.map((swatch) => (
               <button
                 key={swatch}
@@ -827,7 +827,7 @@ function Whiteboard({ roomId }: { roomId: string }) {
             ))}
           </div>
 
-          <label className="flex h-9 items-center gap-2 rounded-lg bg-white/[0.05] px-2 text-xs text-text-dim">
+          <label className="flex h-9 items-center gap-2 rounded-lg bg-black/[0.05] px-2 text-xs text-text-dim">
             <span>{size}px</span>
             <input
               type="range"
@@ -835,20 +835,20 @@ function Whiteboard({ roomId }: { roomId: string }) {
               max="14"
               value={size}
               onChange={(event) => setSize(Number(event.target.value))}
-              className="h-1 w-20 cursor-pointer appearance-none rounded-full bg-white/[0.12] [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[hsl(var(--accent))]"
+              className="h-1 w-20 cursor-pointer appearance-none rounded-full bg-black/[0.05] [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[hsl(var(--accent))]"
             />
           </label>
 
           <button
             onClick={downloadBoard}
-            className="grid h-9 w-9 place-items-center rounded-lg border border-white/[0.1] bg-white/[0.04] text-text-dim transition-colors hover:bg-white/[0.08] hover:text-text"
+            className="grid h-9 w-9 place-items-center rounded-lg border border-black/25 bg-black/[0.05] text-text-dim transition-colors hover:bg-black/[0.08] hover:text-text"
             title="Download"
           >
             <Download className="h-4 w-4" />
           </button>
           <button
             onClick={clearBoard}
-            className="grid h-9 w-9 place-items-center rounded-lg border border-white/[0.1] bg-white/[0.04] text-text-dim transition-colors hover:bg-white/[0.08] hover:text-text"
+            className="grid h-9 w-9 place-items-center rounded-lg border border-black/25 bg-black/[0.05] text-text-dim transition-colors hover:bg-black/[0.08] hover:text-text"
             title="Clear"
           >
             <Trash2 className="h-4 w-4" />
@@ -907,7 +907,7 @@ function IconToggle({
       onClick={onClick}
       className={cn(
         "inline-flex h-7 items-center gap-1.5 rounded-md px-2 text-xs transition-colors",
-        active ? "bg-white/[0.12] text-text" : "text-text-dim hover:text-text"
+        active ? "bg-black/[0.05] text-text" : "text-text-dim hover:text-text"
       )}
     >
       <Icon className="h-3.5 w-3.5" />

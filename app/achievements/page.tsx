@@ -23,10 +23,10 @@ export default function AchievementsPage() {
       <main className="relative z-[5] mx-auto w-full max-w-3xl flex-1 overflow-y-auto px-4 pb-20 sm:px-7 sm:pb-28">
         <header className="mb-8 mt-2 flex items-end justify-between">
           <div>
-            <p className="text-xs uppercase tracking-[0.2em] text-text-dim">
+            <p className="font-pixel text-[9px] uppercase tracking-[0.2em] text-white/70 [text-shadow:1px_1px_0_rgba(0,0,0,0.6)]">
               Milestones
             </p>
-            <h1 className="mt-2 text-balance text-3xl font-light tracking-tight">
+            <h1 className="mt-2 text-balance font-pixel text-xl text-white [text-shadow:2px_2px_0_rgba(0,0,0,0.55)] sm:text-2xl">
               Achievements
             </h1>
           </div>
@@ -48,10 +48,10 @@ export default function AchievementsPage() {
               <div
                 key={a.id}
                 className={cn(
-                  "rounded-xl border bg-white/[0.02] p-4 text-center transition-all",
+                  "rounded-xl border bg-black/[0.05] p-4 text-center transition-all",
                   isUnlocked
                     ? "border-[hsl(var(--accent)/0.3)] bg-[hsl(var(--accent)/0.05)]"
-                    : "border-white/[0.08] opacity-50"
+                    : "border-black/25 opacity-50"
                 )}
               >
                 <div
@@ -59,7 +59,7 @@ export default function AchievementsPage() {
                     "mx-auto mb-2.5 grid h-11 w-11 place-items-center rounded-xl",
                     isUnlocked
                       ? "bg-[linear-gradient(135deg,hsl(var(--accent)/0.2),hsl(var(--accent-alt)/0.2))] text-[hsl(var(--accent))]"
-                      : "bg-white/[0.04] text-text-faint"
+                      : "bg-black/[0.05] text-text-faint"
                   )}
                 >
                   <Icon className="h-5 w-5" />

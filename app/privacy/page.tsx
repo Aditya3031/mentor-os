@@ -59,14 +59,14 @@ export default function PrivacyPage() {
       <div className="relative z-[5] mx-auto max-w-3xl">
         <Link
           href="/"
-          className="inline-flex items-center gap-2 rounded-full border border-white/[0.1] bg-white/[0.04] px-4 py-2 text-sm text-text-dim transition-colors hover:bg-white/[0.08] hover:text-text"
+          className="inline-flex items-center gap-2 rounded-full border border-black/25 bg-black/[0.05] px-4 py-2 text-sm text-text-dim transition-colors hover:bg-black/[0.08] hover:text-text"
         >
           <ArrowLeft className="h-4 w-4" />
           Back home
         </Link>
 
         <header className="pb-8 pt-12">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[hsl(var(--accent))]">
+          <p className="font-pixel text-[9px] uppercase tracking-[0.2em] text-white/70 [text-shadow:1px_1px_0_rgba(0,0,0,0.6)]">
             Legal
           </p>
           <h1 className="mt-4 text-4xl font-light tracking-tight sm:text-5xl">
@@ -82,7 +82,7 @@ export default function PrivacyPage() {
           {sections.map((section) => (
             <section
               key={section.title}
-              className="rounded-2xl border border-white/[0.08] bg-white/[0.035] p-5 backdrop-blur-xl"
+              className="rounded-2xl border border-black/25 bg-black/[0.05] p-5 "
             >
               <h2 className="text-lg font-semibold tracking-tight">{section.title}</h2>
               <div className="mt-3 space-y-3 text-sm leading-7 text-text-dim">

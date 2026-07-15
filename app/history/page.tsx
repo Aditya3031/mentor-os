@@ -17,10 +17,10 @@ export default function HistoryPage() {
 
       <main className="relative z-[5] mx-auto w-full max-w-2xl flex-1 overflow-y-auto px-4 pb-20 sm:px-7 sm:pb-28">
         <header className="mb-8 mt-2">
-          <p className="text-xs uppercase tracking-[0.2em] text-text-dim">
+          <p className="font-pixel text-[9px] uppercase tracking-[0.2em] text-white/70 [text-shadow:1px_1px_0_rgba(0,0,0,0.6)]">
             Sessions
           </p>
-          <h1 className="mt-2 text-balance text-3xl font-light tracking-tight">
+          <h1 className="mt-2 text-balance font-pixel text-xl text-white [text-shadow:2px_2px_0_rgba(0,0,0,0.55)] sm:text-2xl">
             History
           </h1>
         </header>
@@ -38,7 +38,7 @@ export default function HistoryPage() {
             {history.map((h) => (
               <div
                 key={h.id}
-                className="flex items-start gap-3.5 rounded-xl border border-white/[0.08] bg-white/[0.025] px-3.5 py-3"
+                className="flex items-start gap-3.5 rounded-xl border border-black/25 bg-black/[0.05] px-3.5 py-3"
               >
                 <div className="mt-0.5 grid h-9 w-9 flex-shrink-0 place-items-center rounded-xl bg-[linear-gradient(135deg,hsl(var(--accent)/0.2),hsl(var(--accent-alt)/0.2))] text-[hsl(var(--accent))]">
                   <Clock className="h-4 w-4" />

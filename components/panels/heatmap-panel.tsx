@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 import { useStore } from "@/lib/store";
+import { Window } from "@/components/retro/window";
 
 const DAYS = 90;
 const MS_PER_DAY = 24 * 60 * 60 * 1000;
@@ -55,41 +56,50 @@ export function HeatmapPanel() {
     });
   }, [history]);
 
+  // Defrag block palette: empty disk → fully optimized.
   const levelClass = [
-    "bg-white/[0.04]",
-    "bg-[hsl(var(--accent)/0.18)]",
-    "bg-[hsl(var(--accent)/0.35)]",
+    "bg-[var(--paper)]",
+    "bg-[hsl(var(--accent)/0.3)]",
     "bg-[hsl(var(--accent)/0.55)]",
-    "bg-[hsl(var(--accent)/0.85)]",
+    "bg-[hsl(var(--accent)/0.8)]",
+    "bg-[var(--accent-deep)]",
   ];
 
+  const studied = cells.filter((c) => c.level > 0).length;
+
   return (
-    <div className="panel">
-      <div className="panel-h">
-        <h3>Last 90 days</h3>
-        <span className="font-mono text-xs text-text-dim">90d</span>
-      </div>
+    <Window
+      title="DEFRAG.LOG — 90 DAYS"
+      draggable
+      statusBar={
+        <>
+          <span className="status-cell flex-1">
+            {studied}/{DAYS} days optimized
+          </span>
+        </>
+      }
+    >
       <div
-        className="grid gap-[3px] py-1"
+        className="well grid gap-[2px] p-[4px]"
         style={{ gridTemplateColumns: "repeat(15, 1fr)" }}
       >
         {cells.map((c, i) => (
           <div
             key={i}
-            className={`${levelClass[c.level]} aspect-square rounded-[3px] transition-transform hover:scale-150`}
+            className={`${levelClass[c.level]} aspect-square border border-black/15`}
             title={`${c.label}: ${c.hours.toFixed(1)}h focus`}
           />
         ))}
       </div>
-      <div className="mt-2 flex items-center justify-between text-[10px] uppercase tracking-wide text-text-faint">
+      <div className="mt-2 flex items-center justify-between font-pixel text-[8px] uppercase tracking-wide text-text-faint">
         <span>Less</span>
-        <div className="flex items-center gap-[3px]">
+        <div className="flex items-center gap-[2px]">
           {levelClass.map((cls, i) => (
-            <span key={i} className={`${cls} h-[9px] w-[9px] rounded-sm`} />
+            <span key={i} className={`${cls} h-[9px] w-[9px] border border-black/15`} />
           ))}
         </div>
         <span>More</span>
       </div>
-    </div>
+    </Window>
   );
 }

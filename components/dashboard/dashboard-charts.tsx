@@ -15,6 +15,7 @@ import {
   YAxis,
 } from "recharts";
 import { useStore } from "@/lib/store";
+import { Window } from "@/components/retro/window";
 
 const MS_PER_DAY = 24 * 60 * 60 * 1000;
 
@@ -22,22 +23,24 @@ const MS_PER_DAY = 24 * 60 * 60 * 1000;
 const SUBJECT_COLORS = [
   "hsl(var(--accent))",
   "hsl(var(--accent-alt))",
-  "#7DE0B6",
-  "#FFCB6B",
-  "#FFB8A2",
-  "#A8C8E0",
+  "#1e7d4f",
+  "#b07a1e",
+  "#9e2a1e",
+  "#1e5f7d",
 ];
 
 const tooltipStyle = {
   contentStyle: {
-    background: "#14141d",
-    border: "1px solid rgba(255,255,255,0.1)",
-    borderRadius: 8,
+    background: "hsl(var(--chrome))",
+    border: "2px solid var(--edge-black)",
+    borderRadius: 0,
     padding: 10,
     fontSize: 12,
+    fontFamily: "var(--font-body), monospace",
+    boxShadow: "3px 3px 0 rgba(0,0,0,0.4)",
   },
-  itemStyle: { color: "#ECECF2" },
-  cursor: { fill: "rgba(255,255,255,0.04)" },
+  itemStyle: { color: "hsl(var(--text))" },
+  cursor: { fill: "rgba(0,0,0,0.06)" },
 };
 
 function labelHour(h: number) {
@@ -116,7 +119,7 @@ export function DashboardCharts() {
 
   return (
     <div className="space-y-3.5">
-      <ChartCard title="Last 7 days">
+      <ChartCard title="WEEK.CSV — LAST 7 DAYS">
         {empty ? (
           <Empty />
         ) : (
@@ -124,13 +127,13 @@ export function DashboardCharts() {
             <BarChart data={weekData}>
               <XAxis
                 dataKey="day"
-                stroke="#5C5C6A"
+                stroke="hsl(var(--text-dim))"
                 axisLine={false}
                 tickLine={false}
                 fontSize={11}
               />
               <YAxis
-                stroke="#5C5C6A"
+                stroke="hsl(var(--text-dim))"
                 axisLine={false}
                 tickLine={false}
                 fontSize={11}
@@ -143,14 +146,14 @@ export function DashboardCharts() {
               <Bar
                 dataKey="hrs"
                 fill="hsl(var(--accent))"
-                radius={[8, 8, 0, 0]}
+                radius={[0, 0, 0, 0]}
               />
             </BarChart>
           </ResponsiveContainer>
         )}
       </ChartCard>
 
-      <ChartCard title="Time by subject">
+      <ChartCard title="SUBJECTS.PIE">
         {subjectData.length === 0 ? (
           <Empty />
         ) : (
@@ -168,7 +171,7 @@ export function DashboardCharts() {
                   <Cell
                     key={s.name}
                     fill={s.c}
-                    stroke="#14141d"
+                    stroke="var(--paper)"
                     strokeWidth={3}
                   />
                 ))}
@@ -182,7 +185,7 @@ export function DashboardCharts() {
         )}
       </ChartCard>
 
-      <ChartCard title="Best study hours">
+      <ChartCard title="HOURS.PLT — BEST STUDY HOURS">
         {empty ? (
           <Empty />
         ) : (
@@ -190,13 +193,13 @@ export function DashboardCharts() {
             <LineChart data={hourData}>
               <XAxis
                 dataKey="h"
-                stroke="#5C5C6A"
+                stroke="hsl(var(--text-dim))"
                 axisLine={false}
                 tickLine={false}
                 fontSize={11}
               />
               <YAxis
-                stroke="#5C5C6A"
+                stroke="hsl(var(--text-dim))"
                 axisLine={false}
                 tickLine={false}
                 fontSize={11}
@@ -206,7 +209,7 @@ export function DashboardCharts() {
                 formatter={(v: number) => [`${v}h`, "Focus"]}
               />
               <Line
-                type="monotone"
+                type="step"
                 dataKey="hrs"
                 stroke="hsl(var(--accent-alt))"
                 strokeWidth={2}
@@ -227,20 +230,13 @@ function ChartCard({
   title: string;
   children: React.ReactNode;
 }) {
-  return (
-    <div className="panel">
-      <h4 className="mb-3 text-xs font-medium uppercase tracking-wide text-text-dim">
-        {title}
-      </h4>
-      {children}
-    </div>
-  );
+  return <Window title={title}>{children}</Window>;
 }
 
 function Empty() {
   return (
-    <div className="grid h-[140px] place-items-center text-center text-xs text-text-faint">
-      Complete a focus session to start seeing data.
+    <div className="grid h-[140px] place-items-center text-center font-digits text-base text-text-faint">
+      NO DATA. Complete a focus session to plot something.
     </div>
   );
 }

@@ -229,8 +229,8 @@ export default function WorkspacePage() {
 
       <main className="relative z-[5] mx-auto w-full max-w-5xl flex-1 overflow-y-auto px-4 pb-28 sm:px-7">
         <header className="mb-8 mt-2">
-          <p className="text-xs uppercase tracking-[0.2em] text-text-dim">Collaborative workspace</p>
-          <h1 className="mt-2 text-balance text-3xl font-light tracking-tight">
+          <p className="font-pixel text-[9px] uppercase tracking-[0.2em] text-white/70 [text-shadow:1px_1px_0_rgba(0,0,0,0.6)]">Collaborative workspace</p>
+          <h1 className="mt-2 text-balance font-pixel text-xl text-white [text-shadow:2px_2px_0_rgba(0,0,0,0.55)] sm:text-2xl">
             Shared focus rooms for people working together.
           </h1>
         </header>
@@ -264,12 +264,12 @@ export default function WorkspacePage() {
                   value={workspaceName}
                   onChange={(e) => setWorkspaceName(e.target.value)}
                   placeholder="Study group name"
-                  className="w-full rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-3 text-sm outline-none placeholder:text-text-faint"
+                  className="w-full rounded-xl border border-black/25 bg-black/[0.05] px-4 py-3 text-sm outline-none placeholder:text-text-faint"
                 />
                 <button
                   onClick={createWorkspace}
                   disabled={busy === "create" || !workspaceName.trim()}
-                  className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[linear-gradient(135deg,hsl(var(--accent)),hsl(var(--accent-alt)))] px-4 py-3 text-sm font-semibold text-bg-0 disabled:opacity-55"
+                  className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--title-grad)] px-4 py-3 text-sm font-semibold text-white disabled:opacity-55"
                 >
                   {busy === "create" ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
                   Create
@@ -282,12 +282,12 @@ export default function WorkspacePage() {
                   value={joinCode}
                   onChange={(e) => setJoinCode(e.target.value.toUpperCase())}
                   placeholder="ABC123"
-                  className="w-full rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-3 text-sm uppercase outline-none placeholder:text-text-faint"
+                  className="w-full rounded-xl border border-black/25 bg-black/[0.05] px-4 py-3 text-sm uppercase outline-none placeholder:text-text-faint"
                 />
                 <button
                   onClick={joinWorkspace}
                   disabled={busy === "join" || !joinCode.trim()}
-                  className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-white/[0.12] px-4 py-3 text-sm font-semibold text-text disabled:opacity-55"
+                  className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-black/25 px-4 py-3 text-sm font-semibold text-text disabled:opacity-55"
                 >
                   {busy === "join" && <Loader2 className="h-4 w-4 animate-spin" />}
                   Join room
@@ -312,7 +312,7 @@ export default function WorkspacePage() {
                         "rounded-full border px-3 py-1.5 text-xs transition-colors",
                         activeId === workspace.id
                           ? "border-[hsl(var(--accent)/0.45)] bg-[hsl(var(--accent)/0.14)] text-[hsl(var(--accent))]"
-                          : "border-white/[0.1] text-text-dim hover:text-text"
+                          : "border-black/25 text-text-dim hover:text-text"
                       )}
                     >
                       {workspace.name}
@@ -323,7 +323,7 @@ export default function WorkspacePage() {
                 {activeWorkspace && (
                   <button
                     onClick={copyInvite}
-                    className="inline-flex items-center gap-2 rounded-full border border-white/[0.1] px-3 py-1.5 text-xs text-text-dim hover:text-text"
+                    className="inline-flex items-center gap-2 rounded-full border border-black/25 px-3 py-1.5 text-xs text-text-dim hover:text-text"
                   >
                     <Copy className="h-3.5 w-3.5" />
                     {activeWorkspace.invite_code}
@@ -337,7 +337,7 @@ export default function WorkspacePage() {
                 </div>
               ) : (
                 <>
-                  <div className="mb-4 flex gap-2 rounded-xl border border-white/[0.08] bg-white/[0.03] p-2.5">
+                  <div className="mb-4 flex gap-2 rounded-xl border border-black/25 bg-black/[0.05] p-2.5">
                     <input
                       value={taskText}
                       onChange={(e) => setTaskText(e.target.value)}
@@ -348,7 +348,7 @@ export default function WorkspacePage() {
                     <button
                       onClick={addTask}
                       disabled={busy === "task" || !taskText.trim()}
-                      className="grid h-8 w-8 place-items-center rounded-lg bg-[linear-gradient(135deg,hsl(var(--accent)),hsl(var(--accent-alt)))] text-bg-0 disabled:opacity-55"
+                      className="grid h-8 w-8 place-items-center rounded-lg bg-[var(--title-grad)] text-white disabled:opacity-55"
                     >
                       {busy === "task" ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
                     </button>
@@ -360,7 +360,7 @@ export default function WorkspacePage() {
                         key={task.id}
                         onClick={() => toggleTask(task)}
                         className={cn(
-                          "flex w-full items-center justify-between rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-3 text-left text-sm transition-colors hover:bg-white/[0.06]",
+                          "flex w-full items-center justify-between rounded-xl border border-black/25 bg-black/[0.05] px-4 py-3 text-left text-sm transition-colors hover:bg-black/[0.08]",
                           task.done && "opacity-55"
                         )}
                       >

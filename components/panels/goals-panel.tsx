@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import { format } from "date-fns";
 import { useStore } from "@/lib/store";
+import { Window } from "@/components/retro/window";
 
 export function GoalsPanel() {
   const sessionsToday = useStore((s) => s.sessionsToday);
@@ -46,15 +47,13 @@ export function GoalsPanel() {
   }, [tasksDone, tasksTotal]);
 
   return (
-    <div className="panel">
-      <div className="panel-h">
-        <h3>Today's Goals</h3>
-
-        <span className="font-mono text-xs text-text-dim">
-          {format(new Date(), "MMM d")}
-        </span>
-      </div>
-
+    <Window
+      title="GOALS.TXT"
+      draggable
+      statusBar={
+        <span className="status-cell flex-1">{format(new Date(), "EEE, MMM d yyyy")}</span>
+      }
+    >
       <div className="flex flex-col gap-3.5">
         <Goal
           label="Study time"
@@ -80,7 +79,7 @@ export function GoalsPanel() {
           variant="amber"
         />
       </div>
-    </div>
+    </Window>
   );
 }
 
@@ -99,31 +98,34 @@ function Goal({
 }) {
   const fill =
     variant === "primary"
-      ? "bg-[linear-gradient(90deg,hsl(var(--accent)),hsl(var(--accent-alt)))]"
+      ? "bg-[var(--accent-deep)]"
       : variant === "green"
-      ? "bg-[linear-gradient(90deg,#7DE0B6,#B6EFD3)]"
-      : "bg-[linear-gradient(90deg,#FFCB6B,#FFB8A2)]";
+      ? "bg-[#1e7d4f]"
+      : "bg-[#b07a1e]";
+
+  // Classic segmented progress bar: solid blocks in a sunken well.
+  const segments = 18;
+  const filledSegments = Math.round((pct / 100) * segments);
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-1.5">
       <div className="flex items-baseline justify-between">
-        <span className="text-[13px]">
-          {label}
-        </span>
+        <span className="text-[12px]">{label}</span>
 
-        <span className="text-xs text-text-dim">
-          <b className="font-medium text-text">
-            {current}
-          </b>{" "}
-          / {target}
+        <span className="font-digits text-sm text-text-dim">
+          <b className="text-text">{current}</b> / {target}
         </span>
       </div>
 
-      <div className="h-1.5 overflow-hidden rounded-full bg-white/[0.06]">
-        <div
-          className={`h-full rounded-full ${fill} transition-[width] duration-700 ease-elegant`}
-          style={{ width: `${pct}%` }}
-        />
+      <div className="well flex gap-[2px] p-[3px]">
+        {Array.from({ length: segments }, (_, i) => (
+          <span
+            key={i}
+            className={`h-2.5 min-w-0 flex-1 ${
+              i < filledSegments ? fill : "bg-transparent"
+            }`}
+          />
+        ))}
       </div>
     </div>
   );

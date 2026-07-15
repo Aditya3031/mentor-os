@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import Link from "next/link";
 import { Flame, Clock, Layers, Zap } from "lucide-react";
 import { useStore } from "@/lib/store";
+import { Window } from "@/components/retro/window";
 
 const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
 
@@ -51,14 +52,16 @@ export function SnapshotPanel() {
   const xpNeeded = Math.max(0, xpToNext - xp);
 
   return (
-    <div className="panel">
-      <div className="panel-h">
-        <h3>Snapshot</h3>
-        <Link href="/dashboard" className="text-xs text-text-dim hover:text-text">
-          View all →
+    <Window
+      title="STATS.NFO"
+      draggable
+      statusBar={
+        <Link href="/dashboard" className="status-cell flex-1 hover:underline">
+          Open STATS.EXE for full report →
         </Link>
-      </div>
-      <div className="grid grid-cols-2 gap-2.5">
+      }
+    >
+      <div className="grid grid-cols-2 gap-1.5">
         <Stat
           icon={Flame}
           label="Streak"
@@ -84,7 +87,7 @@ export function SnapshotPanel() {
           sub={`${xpNeeded} to lvl ${level + 1}`}
         />
       </div>
-    </div>
+    </Window>
   );
 }
 
@@ -100,13 +103,15 @@ function Stat({
   sub: string;
 }) {
   return (
-    <div className="rounded-xl border border-white/[0.08] bg-white/[0.03] p-3">
-      <div className="flex items-center gap-1.5 text-[11px] uppercase tracking-wide text-text-dim">
+    <div className="well p-2.5">
+      <div className="flex items-center gap-1.5 font-pixel text-[8px] uppercase tracking-wide text-text-dim">
         <Icon className="h-3 w-3" />
         {label}
       </div>
-      <div className="mt-1.5 text-[22px] font-medium tracking-tight">{value}</div>
-      <div className="mt-0.5 text-[11px] text-text-faint">{sub}</div>
+      <div className="mt-1 font-digits text-[26px] leading-none text-[var(--accent-deep)]">
+        {value}
+      </div>
+      <div className="mt-1 text-[10px] text-text-faint">{sub}</div>
     </div>
   );
 }

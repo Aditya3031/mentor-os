@@ -2,69 +2,103 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================================
+   FOCUSFLOW 95 — retro OS design system
+   Window chrome is a warm gray; every theme recolors the
+   desktop + title bars through --accent via color-mix.
+   ============================================================ */
+
 @layer base {
   :root {
-    --bg-0: 240 12% 4%;
-    --bg-1: 240 14% 6%;
-    --bg-2: 240 14% 9%;
-    --surface: 0 0% 100% / 0.04;
-    --border: 0 0% 100% / 0.08;
-    --text: 240 12% 93%;
-    --text-dim: 240 7% 64%;
-    --text-faint: 240 6% 38%;
+    /* Chrome (window body) grays */
+    --chrome: 48 8% 78%; /* #c9c6bc-ish warm gray */
+    --chrome-hi: 48 14% 90%;
+    --chrome-lo: 48 5% 60%;
+
+    /* Token remap: bg-0 = desktop, bg-1/2 = chrome surfaces */
+    --bg-0: 176 78% 25%; /* fallback desktop teal; themes override via --desktop */
+    --bg-1: 48 8% 78%;
+    --bg-2: 48 6% 70%;
+    --surface: 48 8% 78%;
+    --border: 48 4% 40%;
+
+    /* Ink on chrome */
+    --text: 40 8% 8%;
+    --text-dim: 40 5% 28%;
+    --text-faint: 40 4% 44%;
+
     --accent: 260 100% 80%;
     --accent-alt: 207 100% 74%;
-    --radius: 14px;
+    --radius: 0px;
+
+    /* Derived retro colors (oklch mix keeps saturation when darkening) */
+    --accent-deep: color-mix(in oklch, hsl(var(--accent)), black 55%);
+    --accent-mid: color-mix(in oklch, hsl(var(--accent)), black 30%);
+    --desktop: color-mix(in oklch, hsl(var(--accent)), #0c4844 80%);
+    --title-grad: linear-gradient(
+      90deg,
+      var(--accent-deep) 0%,
+      color-mix(in oklch, hsl(var(--accent-alt)), black 35%) 100%
+    );
+
+    /* Bevel edges */
+    --edge-black: #1c1b17;
+    --edge-dark: #8b887c;
+    --edge-light: #f5f3ea;
+    --edge-white: #ffffff;
+
+    /* Paper = white input wells / list surfaces */
+    --paper: #fbfaf3;
   }
 
   /* Theme variants — set on <body data-theme="..."> */
   body[data-theme="aurora"] {
-    --accent: 260 100% 80%;
-    --accent-alt: 207 100% 74%;
+    --accent: 260 85% 66%;
+    --accent-alt: 207 90% 60%;
   }
   body[data-theme="tokyo"] {
-    --accent: 330 100% 74%;
-    --accent-alt: 230 100% 74%;
+    --accent: 330 90% 60%;
+    --accent-alt: 230 90% 62%;
   }
   body[data-theme="cafe"] {
-    --accent: 30 70% 73%;
-    --accent-alt: 25 60% 62%;
+    --accent: 28 65% 50%;
+    --accent-alt: 22 55% 45%;
   }
   body[data-theme="library"] {
-    --accent: 38 50% 67%;
-    --accent-alt: 28 40% 56%;
+    --accent: 36 55% 45%;
+    --accent-alt: 28 45% 40%;
   }
   body[data-theme="cyber"] {
-    --accent: 170 100% 45%;
-    --accent-alt: 320 100% 65%;
+    --accent: 170 100% 34%;
+    --accent-alt: 320 95% 50%;
   }
   body[data-theme="cozy"] {
-    --accent: 0 100% 85%;
-    --accent-alt: 0 60% 75%;
+    --accent: 355 70% 60%;
+    --accent-alt: 0 55% 52%;
   }
   body[data-theme="cabin"] {
-    --accent: 205 50% 78%;
-    --accent-alt: 210 35% 67%;
+    --accent: 205 48% 48%;
+    --accent-alt: 210 38% 42%;
   }
   body[data-theme="ocean"] {
-    --accent: 188 86% 66%;
-    --accent-alt: 214 82% 72%;
+    --accent: 195 85% 40%;
+    --accent-alt: 214 78% 48%;
   }
   body[data-theme="forest"] {
-    --accent: 142 52% 66%;
-    --accent-alt: 72 54% 66%;
+    --accent: 142 48% 38%;
+    --accent-alt: 90 45% 38%;
   }
   body[data-theme="sunrise"] {
-    --accent: 18 95% 74%;
-    --accent-alt: 48 88% 70%;
+    --accent: 18 90% 52%;
+    --accent-alt: 40 85% 48%;
   }
   body[data-theme="arctic"] {
-    --accent: 190 44% 78%;
-    --accent-alt: 166 48% 70%;
+    --accent: 190 45% 45%;
+    --accent-alt: 166 45% 40%;
   }
   body[data-theme="ember"] {
-    --accent: 12 82% 70%;
-    --accent-alt: 38 72% 62%;
+    --accent: 12 80% 48%;
+    --accent-alt: 32 75% 44%;
   }
 
   * {
@@ -77,49 +111,156 @@
   }
 
   body {
-    font-feature-settings: "ss01", "cv11";
-    letter-spacing: -0.01em;
+    background: var(--desktop);
+    letter-spacing: 0;
+    image-rendering: pixelated;
   }
 
+  /* Classic dotted focus rectangle instead of glow rings */
+  :focus-visible {
+    outline: 1px dotted var(--edge-black);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background: var(--accent-deep);
+    color: #fff;
+  }
+
+  /* Chunky retro scrollbars */
   ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 16px;
+    height: 16px;
   }
   ::-webkit-scrollbar-track {
-    background: transparent;
+    background: repeating-conic-gradient(
+        hsl(var(--chrome-hi)) 0% 25%,
+        hsl(var(--chrome)) 0% 50%
+      )
+      0 0 / 4px 4px;
   }
   ::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.06);
-    border-radius: 8px;
+    background: hsl(var(--chrome));
+    box-shadow:
+      inset -1px -1px 0 var(--edge-black),
+      inset 1px 1px 0 var(--edge-white),
+      inset -2px -2px 0 var(--edge-dark),
+      inset 2px 2px 0 var(--edge-light);
   }
-  ::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.12);
+  ::-webkit-scrollbar-corner {
+    background: hsl(var(--chrome));
   }
 }
 
 @layer components {
+  /* ---- Bevels (the classic 2px raised / sunken chrome) ---- */
+  .bevel-out {
+    box-shadow:
+      inset -1px -1px 0 var(--edge-black),
+      inset 1px 1px 0 var(--edge-white),
+      inset -2px -2px 0 var(--edge-dark),
+      inset 2px 2px 0 var(--edge-light);
+  }
+  .bevel-in {
+    box-shadow:
+      inset -1px -1px 0 var(--edge-white),
+      inset 1px 1px 0 var(--edge-black),
+      inset -2px -2px 0 var(--edge-light),
+      inset 2px 2px 0 var(--edge-dark);
+  }
+  .bevel-thin {
+    box-shadow:
+      inset -1px -1px 0 var(--edge-dark),
+      inset 1px 1px 0 var(--edge-light);
+  }
+  .bevel-thin-in {
+    box-shadow:
+      inset -1px -1px 0 var(--edge-light),
+      inset 1px 1px 0 var(--edge-dark);
+  }
+
+  /* ---- Window chrome ---- */
+  .win95 {
+    background: hsl(var(--chrome));
+    color: hsl(var(--text));
+    @apply bevel-out rounded-none;
+  }
+
+  .title-bar {
+    background: var(--title-grad);
+    @apply flex select-none items-center gap-2 px-2 py-1 text-[11px] uppercase tracking-wider text-white;
+    font-family: var(--font-pixel), monospace;
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.45);
+  }
+  .title-bar-inactive {
+    background: linear-gradient(90deg, #7a786e, #9a988c);
+  }
+
+  /* Tiny square title-bar buttons (— □ ✕) */
+  .tb-btn {
+    background: hsl(var(--chrome));
+    color: hsl(var(--text));
+    @apply bevel-thin grid h-[18px] w-[18px] flex-shrink-0 place-items-center text-[10px] leading-none;
+  }
+  .tb-btn:active {
+    @apply bevel-thin-in;
+  }
+
+  /* ---- Buttons ---- */
+  .btn95 {
+    background: hsl(var(--chrome));
+    color: hsl(var(--text));
+    font-family: var(--font-pixel), monospace;
+    @apply bevel-out inline-flex select-none items-center justify-center gap-2 rounded-none px-4 py-1.5 text-[11px] uppercase tracking-wide;
+  }
+  .btn95:active {
+    @apply bevel-in;
+    transform: translate(1px, 1px);
+  }
+  .btn95-primary {
+    background: var(--title-grad);
+    color: #fff;
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.4);
+  }
+  .btn95[disabled] {
+    color: var(--edge-dark);
+    text-shadow: 1px 1px 0 var(--edge-light);
+  }
+
+  /* ---- Sunken white field (inputs, lists, canvases) ---- */
+  .well {
+    background: var(--paper);
+    color: hsl(var(--text));
+    @apply bevel-in rounded-none;
+  }
+
+  /* ---- Legacy classes remapped so old panels instantly retro-fy ---- */
   .panel {
-    @apply rounded-2xl border border-white/[0.08] bg-white/[0.035] p-[18px] shadow-soft;
-    backdrop-filter: blur(24px) saturate(140%);
-    -webkit-backdrop-filter: blur(24px) saturate(140%);
+    background: hsl(var(--chrome));
+    color: hsl(var(--text));
+    @apply bevel-out rounded-none p-3;
   }
-
   .panel-h {
-    @apply mb-3.5 flex items-center justify-between;
+    @apply mb-3 flex items-center justify-between;
   }
-
   .panel-h h3 {
-    @apply text-xs font-semibold uppercase tracking-wide;
+    font-family: var(--font-pixel), monospace;
+    @apply text-[10px] font-normal uppercase tracking-wider;
   }
-
   .glass {
-    @apply rounded-xl border border-white/[0.08] bg-white/[0.04];
-    backdrop-filter: blur(20px) saturate(140%);
-    -webkit-backdrop-filter: blur(20px) saturate(140%);
+    background: hsl(var(--chrome));
+    @apply bevel-thin rounded-none;
+  }
+  .ring-glow {
+    filter: none;
   }
 
-  .ring-glow {
-    filter: drop-shadow(0 0 6px hsl(var(--accent) / 0.45));
+  /* ---- Status bar (bottom strip of windows) ---- */
+  .status-bar {
+    @apply flex items-center gap-1 px-1 py-1 text-[11px];
+  }
+  .status-cell {
+    @apply bevel-thin-in px-2 py-0.5;
   }
 }
 
@@ -131,19 +272,45 @@
     text-wrap: pretty;
   }
 
-  /* Animated background — used inside <BackgroundStage /> */
+  .font-pixel {
+    font-family: var(--font-pixel), monospace;
+  }
+  .font-digits {
+    font-family: var(--font-digits), monospace;
+  }
+
+  /* Desktop wallpaper: flat theme color + faint dither grid */
   .bg-stage-base {
-    background:
-      radial-gradient(1200px 800px at 15% 10%, hsl(var(--accent) / 0.18), transparent 60%),
-      radial-gradient(900px 700px at 85% 90%, hsl(var(--accent-alt) / 0.14), transparent 55%),
-      linear-gradient(180deg, hsl(var(--bg-0)) 0%, hsl(var(--bg-1)) 100%);
+    background-color: var(--desktop);
+    background-image: radial-gradient(
+      rgba(255, 255, 255, 0.06) 1px,
+      transparent 1px
+    );
+    background-size: 4px 4px;
+  }
+
+  /* Subtle CRT scanlines — mounted once, fixed overlay */
+  .crt-overlay {
+    pointer-events: none;
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.055) 0 1px,
+      transparent 1px 3px
+    );
+    mix-blend-mode: multiply;
+  }
+
+  /* Marching ants border (selected desktop icons, drag targets) */
+  .marching-ants {
+    outline: 1px dashed rgba(255, 255, 255, 0.75);
+    outline-offset: 1px;
   }
 
   /* ==========================================================
-     Zen / fullscreen mode
-     Toggled by pressing the maximize icon in the topbar (or "Z").
-     Hides chrome (topbar, side rails, dock) so only the timer
-     remains. Smooth fade so it feels intentional.
+     Zen / fullscreen mode — hides chrome, keeps FOCUS.EXE
      ========================================================== */
   body.zen header,
   body.zen aside,
@@ -154,7 +321,6 @@
   }
 
   body.zen main {
-    /* Recover the vertical space the dock + topbar were holding. */
     padding-bottom: 0 !important;
     padding-top: 0 !important;
   }

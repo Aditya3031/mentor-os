@@ -95,71 +95,76 @@ export function Onboarding() {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.4 }}
-          className="fixed inset-0 z-[600] grid place-items-center bg-[radial-gradient(ellipse_at_center,rgba(15,15,22,0.96),rgba(7,7,11,0.99))] px-6 backdrop-blur-xl"
+          className="fixed inset-0 z-[600] grid place-items-center bg-black/50 px-4"
         >
           <motion.div
             initial={{ y: 12, scale: 0.97 }}
             animate={{ y: 0, scale: 1 }}
-            transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
-            className="w-full max-w-lg"
+            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            className="win95 w-full max-w-lg p-[3px] shadow-deep"
           >
-            {/* Progress dots */}
-            <div className="mb-8 flex justify-center gap-1.5">
-              {STEPS.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setStep(i)}
-                  aria-label={`Step ${i + 1}`}
-                  className={
-                    "h-1.5 rounded-full transition-all " +
-                    (i === step
-                      ? "w-8 bg-[hsl(var(--accent))]"
-                      : i < step
-                      ? "w-1.5 bg-[hsl(var(--accent)/0.5)]"
-                      : "w-1.5 bg-white/[0.15]")
-                  }
-                />
-              ))}
+            <div className="title-bar justify-between">
+              <span>FOCUSFLOW 95 SETUP — step {step + 1} of {STEPS.length}</span>
+              <button onClick={dismiss} className="tb-btn" aria-label="Skip intro">
+                ✕
+              </button>
             </div>
 
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={step}
-                initial={{ opacity: 0, x: 12 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -12 }}
-                transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                className="text-center"
-              >
-                <div className="mx-auto mb-6 grid h-[72px] w-[72px] place-items-center rounded-[22px] bg-[linear-gradient(135deg,hsl(var(--accent)),hsl(var(--accent-alt)))] shadow-glow">
-                  <Icon className="h-9 w-9 text-bg-0" />
-                </div>
-                <p className="text-xs uppercase tracking-[0.2em] text-text-dim">
-                  {current.kicker}
-                </p>
-                <h1 className="mt-3 text-balance text-[clamp(28px,4vw,36px)] font-light leading-tight tracking-tight">
-                  {current.title}
-                </h1>
-                <p className="mx-auto mt-4 max-w-md text-pretty text-sm leading-relaxed text-text-dim">
-                  {current.body}
-                </p>
-              </motion.div>
-            </AnimatePresence>
+            <div className="p-6">
+              {/* Progress blocks */}
+              <div className="well mb-6 flex gap-[3px] p-[4px]">
+                {STEPS.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setStep(i)}
+                    aria-label={`Step ${i + 1}`}
+                    className={
+                      "h-3 flex-1 " +
+                      (i <= step ? "bg-[var(--accent-deep)]" : "bg-transparent")
+                    }
+                  />
+                ))}
+              </div>
 
-            <div className="mt-10 flex items-center justify-between gap-3">
-              <button
-                onClick={dismiss}
-                className="text-xs text-text-dim transition-colors hover:text-text"
-              >
-                Skip intro
-              </button>
-              <button
-                onClick={next}
-                className="inline-flex items-center gap-2 rounded-xl bg-[linear-gradient(135deg,hsl(var(--accent)),hsl(var(--accent-alt)))] px-6 py-3 text-sm font-semibold text-bg-0 shadow-glow transition-transform hover:-translate-y-0.5"
-              >
-                {isLast ? "Let's go" : "Next"}
-                <ArrowRight className="h-4 w-4" />
-              </button>
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={step}
+                  initial={{ opacity: 0, x: 12 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -12 }}
+                  transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                  className="text-center"
+                >
+                  <div className="bevel-out mx-auto mb-5 grid h-16 w-16 place-items-center bg-[var(--title-grad)]">
+                    <Icon className="h-8 w-8 text-white" />
+                  </div>
+                  <p className="font-pixel text-[9px] uppercase tracking-[0.2em] text-text-dim">
+                    {current.kicker}
+                  </p>
+                  <h1 className="mt-2 text-balance font-pixel text-lg leading-snug">
+                    {current.title}
+                  </h1>
+                  <p className="mx-auto mt-3 max-w-md text-pretty text-[13px] leading-relaxed text-text-dim">
+                    {current.body}
+                  </p>
+                </motion.div>
+              </AnimatePresence>
+
+              <div className="mt-8 flex items-center justify-between gap-3">
+                <button
+                  onClick={dismiss}
+                  className="btn95 h-9 px-4 text-[10px]"
+                >
+                  Skip
+                </button>
+                <button
+                  onClick={next}
+                  className="btn95 btn95-primary h-9 px-5 text-[11px]"
+                >
+                  {isLast ? "Finish" : "Next >"}
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </button>
+              </div>
             </div>
           </motion.div>
         </motion.div>

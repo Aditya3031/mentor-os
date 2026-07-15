@@ -2,7 +2,6 @@
 
 import { useEffect } from "react";
 import { Play, Pause, RotateCcw, SkipForward } from "lucide-react";
-import { motion } from "framer-motion";
 import { toast } from "sonner";
 import { useStore } from "@/lib/store";
 
@@ -61,34 +60,37 @@ export function TimerControls() {
   }, [running, start, pause, reset, completeSession]);
 
   return (
-    <div className="flex items-center gap-3">
-      <button
-        onClick={reset}
-        className="grid h-12 w-12 place-items-center rounded-2xl border border-white/[0.08] bg-white/[0.04] text-text-dim transition-colors hover:bg-white/[0.08] hover:text-text"
-        title="Reset (R)"
-      >
-        <RotateCcw className="h-[18px] w-[18px]" />
+    <div className="flex items-center gap-2">
+      <button onClick={reset} className="btn95 h-9" title="Reset (R)">
+        <RotateCcw className="h-3.5 w-3.5" />
+        Reset
       </button>
 
-      <motion.button
-        whileTap={{ scale: 0.96 }}
+      <button
         onClick={() => (running ? pause() : start())}
-        className="grid h-16 w-16 place-items-center rounded-[18px] bg-[linear-gradient(135deg,hsl(var(--accent)),hsl(var(--accent-alt)))] text-bg-0 shadow-glow transition-transform hover:-translate-y-0.5"
+        className="btn95 btn95-primary h-11 min-w-[130px] px-6 text-[13px]"
         title="Start / Pause (Space)"
       >
         {running ? (
-          <Pause className="h-[22px] w-[22px]" fill="currentColor" />
+          <>
+            <Pause className="h-4 w-4" fill="currentColor" />
+            Pause
+          </>
         ) : (
-          <Play className="h-[22px] w-[22px]" fill="currentColor" />
+          <>
+            <Play className="h-4 w-4" fill="currentColor" />
+            Start
+          </>
         )}
-      </motion.button>
+      </button>
 
       <button
         onClick={() => completeSession("skip")}
-        className="grid h-12 w-12 place-items-center rounded-2xl border border-white/[0.08] bg-white/[0.04] text-text-dim transition-colors hover:bg-white/[0.08] hover:text-text"
+        className="btn95 h-9"
         title="Skip (S)"
       >
-        <SkipForward className="h-[18px] w-[18px]" />
+        <SkipForward className="h-3.5 w-3.5" />
+        Skip
       </button>
     </div>
   );

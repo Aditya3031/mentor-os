@@ -61,9 +61,9 @@ function formatHours(hours: number) {
 function Stat({ label, value, sub }: { label: string; value: string; sub: string }) {
   return (
     <div className="panel min-w-0">
-      <div className="text-[11px] uppercase tracking-wide text-text-dim">{label}</div>
-      <div className="mt-1.5 truncate text-2xl font-medium tracking-tight">{value}</div>
-      <div className="mt-0.5 truncate text-[11px] text-text-faint">{sub}</div>
+      <div className="font-pixel text-[8px] uppercase tracking-wide text-text-dim">{label}</div>
+      <div className="mt-1.5 truncate font-digits text-3xl leading-none text-[var(--accent-deep)]">{value}</div>
+      <div className="mt-1 truncate text-[11px] text-text-faint">{sub}</div>
     </div>
   );
 }

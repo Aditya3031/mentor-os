@@ -23,6 +23,7 @@ import { CSS } from "@dnd-kit/utilities";
 
 import { useStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
+import { Window } from "@/components/retro/window";
 
 import type { Task } from "@/lib/store";
 
@@ -61,35 +62,41 @@ export function TasksPanel() {
     setDraft("");
   };
 
+  const remaining = tasks.filter((t) => !t.done).length;
+
   return (
-    <div className="panel flex min-h-0 flex-1 flex-col">
-      <div className="panel-h">
-        <h3>Tasks</h3>
+    <Window
+      title="TASKS.SYS"
+      draggable
+      className="min-h-0 flex-1"
+      bodyClassName="flex min-h-0 flex-col"
+      statusBar={
+        <>
+          <span className="status-cell flex-1">
+            {tasks.length} object(s)
+          </span>
+          <span className="status-cell">{remaining} pending</span>
+        </>
+      }
+    >
+      <div className="mb-2 flex gap-1.5">
+        <div className="well flex flex-1 items-center px-2 py-1.5">
+          <input
+            value={draft}
+            onChange={(e) => setDraft(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && submit()}
+            maxLength={80}
+            placeholder="new task…"
+            className="w-full bg-transparent text-[12px] outline-none placeholder:text-text-faint"
+          />
+        </div>
 
-        <span className="font-mono text-xs text-text-dim">
-          ⌘N
-        </span>
-      </div>
-
-      <div className="mb-3 flex gap-2 rounded-xl border border-white/[0.08] bg-white/[0.03] p-2.5 transition-colors focus-within:border-white/[0.14]">
-        <input
-          value={draft}
-          onChange={(e) => setDraft(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && submit()}
-          maxLength={80}
-          placeholder="Add a focus task…"
-          className="flex-1 bg-transparent text-[13px] outline-none placeholder:text-text-faint"
-        />
-
-        <button
-          onClick={submit}
-          className="grid h-7 w-7 place-items-center rounded-lg bg-[linear-gradient(135deg,hsl(var(--accent)),hsl(var(--accent-alt)))] text-bg-0 transition-transform hover:scale-105"
-        >
+        <button onClick={submit} className="btn95 h-auto px-2.5" aria-label="Add task">
           <Plus className="h-3.5 w-3.5" strokeWidth={3} />
         </button>
       </div>
 
-      <div className="flex flex-1 flex-col gap-1.5 overflow-y-auto pr-1">
+      <div className="well flex flex-1 flex-col gap-[2px] overflow-y-auto p-1">
         {mounted && (
           <DndContext
             sensors={sensors}
@@ -137,12 +144,14 @@ export function TasksPanel() {
         )}
 
         {tasks.length === 0 && (
-          <div className="py-8 text-center text-xs text-text-faint">
-            No tasks yet. Add one to get started.
+          <div className="py-8 text-center font-digits text-sm text-text-faint">
+            C:\TASKS&gt; dir
+            <br />
+            File not found. Add one above.
           </div>
         )}
       </div>
-    </div>
+    </Window>
   );
 }
 
@@ -167,9 +176,9 @@ function TaskRow({
   });
 
   const priColors: Record<Task["priority"], string> = {
-    high: "bg-[#FFB8A2]/12 text-[#FFB8A2]",
-    med: "bg-[#FFCB6B]/12 text-[#FFCB6B]",
-    low: "bg-[#7CC6FF]/12 text-[#7CC6FF]",
+    high: "bg-[#9e2a1e] text-white",
+    med: "bg-[#b07a1e] text-white",
+    low: "bg-[#1e5f7d] text-white",
   };
 
   return (
@@ -195,31 +204,26 @@ function TaskRow({
       {...attributes}
       {...listeners}
       className={cn(
-        "group flex cursor-grab items-center gap-2.5 rounded-xl border border-transparent p-2.5 transition-all hover:border-white/[0.08] hover:bg-white/[0.03] active:cursor-grabbing",
+        "group flex cursor-grab items-center gap-2 px-1.5 py-1.5 hover:bg-[var(--accent-deep)] hover:text-white active:cursor-grabbing",
         task.done && "opacity-60"
       )}
     >
       <button
         onClick={onToggle}
         className={cn(
-          "grid h-[18px] w-[18px] flex-shrink-0 place-items-center rounded-md border-[1.5px] border-white/[0.14] transition-all",
-          task.done &&
-            "border-transparent bg-[linear-gradient(135deg,#7DE0B6,#B6EFD3)]"
+          "bevel-in grid h-[15px] w-[15px] flex-shrink-0 place-items-center bg-white"
         )}
+        aria-label={task.done ? "Mark incomplete" : "Mark complete"}
       >
         {task.done && (
-          <Check
-            className="h-3 w-3 text-bg-0"
-            strokeWidth={3}
-          />
+          <Check className="h-3 w-3 text-black" strokeWidth={4} />
         )}
       </button>
 
       <span
         className={cn(
-          "flex-1 text-[13px]",
-          task.done &&
-            "text-text-faint line-through"
+          "flex-1 truncate text-[12px]",
+          task.done && "line-through opacity-70"
         )}
       >
         {task.text}
@@ -227,7 +231,7 @@ function TaskRow({
 
       <span
         className={cn(
-          "rounded-md px-1.5 py-0.5 text-[10px] uppercase tracking-wide",
+          "px-1.5 py-0.5 font-pixel text-[8px] uppercase",
           priColors[task.priority]
         )}
       >
@@ -240,7 +244,8 @@ function TaskRow({
 
           onDelete();
         }}
-        className="grid h-6 w-6 place-items-center rounded-md text-text-faint opacity-0 transition-all hover:bg-[#FF8A8A]/10 hover:text-[#FF8A8A] group-hover:opacity-100"
+        className="grid h-5 w-5 place-items-center opacity-0 group-hover:opacity-100"
+        aria-label="Delete task"
       >
         <Trash2 className="h-3 w-3" />
       </button>

@@ -35,8 +35,8 @@ export default function SettingsPage() {
 
       <main className="relative z-[5] mx-auto w-full max-w-2xl flex-1 overflow-y-auto px-4 pb-20 sm:px-7 sm:pb-28">
         <header className="mb-8 mt-2">
-          <p className="text-xs uppercase tracking-[0.2em] text-text-dim">Preferences</p>
-          <h1 className="mt-2 text-balance text-3xl font-light tracking-tight">Settings</h1>
+          <p className="font-pixel text-[9px] uppercase tracking-[0.2em] text-white/70 [text-shadow:1px_1px_0_rgba(0,0,0,0.6)]">Preferences</p>
+          <h1 className="mt-2 text-balance font-pixel text-xl text-white [text-shadow:2px_2px_0_rgba(0,0,0,0.55)] sm:text-2xl">Settings</h1>
         </header>
 
         <div className="space-y-3.5">
@@ -182,7 +182,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 
 function Row({ label, desc, children }: { label: string; desc: string; children: React.ReactNode }) {
   return (
-    <div className="flex items-center justify-between rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-3.5">
+    <div className="flex items-center justify-between rounded-xl border border-black/25 bg-black/[0.05] px-4 py-3.5">
       <div>
         <div className="text-sm">{label}</div>
         <div className="mt-0.5 text-xs text-text-dim">{desc}</div>
@@ -207,12 +207,12 @@ function NumRow({
 }) {
   return (
     <Row label={label} desc={desc}>
-      <div className="flex items-center gap-1.5 rounded-lg bg-white/[0.06] p-1">
-        <button onClick={onMinus} className="grid h-6 w-6 place-items-center rounded-md text-text-dim hover:bg-white/[0.08] hover:text-text">
+      <div className="flex items-center gap-1.5 rounded-lg bg-black/[0.05] p-1">
+        <button onClick={onMinus} className="grid h-6 w-6 place-items-center rounded-md text-text-dim hover:bg-black/[0.08] hover:text-text">
           <Minus className="h-3 w-3" strokeWidth={2.5} />
         </button>
         <span className="min-w-[42px] text-center text-[13px] tabular-nums">{value}</span>
-        <button onClick={onPlus} className="grid h-6 w-6 place-items-center rounded-md text-text-dim hover:bg-white/[0.08] hover:text-text">
+        <button onClick={onPlus} className="grid h-6 w-6 place-items-center rounded-md text-text-dim hover:bg-black/[0.08] hover:text-text">
           <Plus className="h-3 w-3" strokeWidth={2.5} />
         </button>
       </div>
@@ -230,7 +230,7 @@ function SoundRow({
   onPreview: () => void;
 }) {
   return (
-    <div className="rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-3.5">
+    <div className="rounded-xl border border-black/25 bg-black/[0.05] px-4 py-3.5">
       <div className="flex items-center justify-between gap-3">
         <div>
           <div className="text-sm">Completion sound</div>
@@ -238,7 +238,7 @@ function SoundRow({
         </div>
         <button
           onClick={onPreview}
-          className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-white/[0.1] bg-white/[0.05] px-3 py-2 text-xs font-medium text-text-dim transition-colors hover:bg-white/[0.08] hover:text-text"
+          className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-black/25 bg-black/[0.05] px-3 py-2 text-xs font-medium text-text-dim transition-colors hover:bg-black/[0.08] hover:text-text"
         >
           <Play className="h-3.5 w-3.5" fill="currentColor" />
           Preview
@@ -255,7 +255,7 @@ function SoundRow({
               className={`rounded-lg border px-3 py-2 text-left transition-colors ${
                 active
                   ? "border-[hsl(var(--accent)/0.55)] bg-[hsl(var(--accent)/0.13)] text-text"
-                  : "border-white/[0.08] bg-white/[0.03] text-text-dim hover:bg-white/[0.06] hover:text-text"
+                  : "border-black/25 bg-black/[0.05] text-text-dim hover:bg-black/[0.08] hover:text-text"
               }`}
             >
               <span className="block text-xs font-medium">{sound.name}</span>
@@ -284,7 +284,7 @@ function ToggleRow({
       <button
         onClick={() => onChange(!value)}
         className={`relative h-[22px] w-10 rounded-full transition-colors ${
-          value ? "bg-[linear-gradient(90deg,hsl(var(--accent)),hsl(var(--accent-alt)))]" : "bg-white/[0.1]"
+          value ? "bg-[linear-gradient(90deg,hsl(var(--accent)),hsl(var(--accent-alt)))]" : "bg-black/[0.05]"
         }`}
       >
         <span

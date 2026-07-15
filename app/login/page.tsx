@@ -59,68 +59,51 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="relative grid min-h-screen place-items-center overflow-hidden bg-stage-base px-6 py-10">
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -top-1/3 left-1/2 h-[600px] w-[600px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,hsl(var(--accent)/0.18),transparent_60%)] blur-3xl" />
-      </div>
-
+    <main className="relative grid min-h-screen place-items-center overflow-hidden bg-stage-base px-4 py-10">
       <div className="relative z-10 w-full max-w-md">
-        {/* Brand */}
-        <Link href="/" className="mb-10 flex items-center justify-center gap-2.5">
-          <div className="grid h-10 w-10 place-items-center rounded-xl bg-[linear-gradient(135deg,hsl(var(--accent)),hsl(var(--accent-alt)))] shadow-glow">
-            <svg
-              viewBox="0 0 24 24"
-              className="h-5 w-5 text-bg-0"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={2.5}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <circle cx="12" cy="12" r="9" />
-              <path d="M12 7v5l3 2" />
-            </svg>
+        <div className="win95 flex flex-col p-[3px] shadow-deep">
+          <div className="title-bar justify-between">
+            <span className="flex items-center gap-1.5">
+              <span className="grid h-3.5 w-3.5 place-items-center bg-white/20 text-[8px]">
+                ▞
+              </span>
+              Log On to FOCUSFLOW·95
+            </span>
+            <Link href="/" className="tb-btn" aria-label="Close">
+              ✕
+            </Link>
           </div>
-          <span className="text-base font-semibold tracking-tight">
-            focus<span className="text-[hsl(var(--accent))]">.</span>flow
-          </span>
-        </Link>
 
-        {/* Mode tabs */}
-        <div className="mx-auto mb-6 flex w-fit gap-1 rounded-xl border border-white/[0.08] bg-white/[0.04] p-1">
-          {(["signin", "signup"] as Mode[]).map((m) => {
-            const active = mode === m;
-            return (
-              <button
-                key={m}
-                onClick={() => {
-                  setMode(m);
-                  setError(null);
-                }}
-                className="relative px-5 py-1.5 text-xs font-medium text-text-dim transition-colors hover:text-text"
-              >
-                {active && (
-                  <motion.span
-                    layoutId="loginTabActive"
-                    className="absolute inset-0 rounded-lg bg-white/[0.08] shadow-soft"
-                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                  />
-                )}
-                <span className={cn("relative", active && "text-text")}>
-                  {m === "signin" ? "Sign in" : "Create account"}
-                </span>
-              </button>
-            );
-          })}
-        </div>
+          <div className="p-5">
+            {/* Mode tabs */}
+            <div className="mb-4 flex gap-1">
+              {(["signin", "signup"] as Mode[]).map((m) => {
+                const active = mode === m;
+                return (
+                  <button
+                    key={m}
+                    onClick={() => {
+                      setMode(m);
+                      setError(null);
+                    }}
+                    className={cn(
+                      "btn95 h-8 flex-1 text-[10px]",
+                      active &&
+                        "bevel-in font-bold [background-image:radial-gradient(rgba(255,255,255,0.5)_1px,transparent_1px)] [background-size:3px_3px]"
+                    )}
+                  >
+                    {m === "signin" ? "Sign in" : "New user"}
+                  </button>
+                );
+              })}
+            </div>
 
-        <div className="panel">
-          <h1 className="text-balance text-2xl font-semibold tracking-tight">
-            {mode === "signin" ? "Welcome back" : "Start focusing today"}
+          <h1 className="font-pixel text-sm uppercase tracking-wide">
+            {mode === "signin" ? "Welcome back" : "Register new user"}
           </h1>
-          <p className="mt-1.5 text-sm text-text-dim">
+          <p className="mt-1.5 text-[12px] text-text-dim">
             {mode === "signin"
-              ? "Sign in to sync your sessions across devices."
+              ? "Type your credentials to log on and sync sessions."
               : "Free forever. No card required."}
           </p>
 
@@ -175,7 +158,7 @@ export default function LoginPage() {
                   initial={{ opacity: 0, y: -4 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -4 }}
-                  className="flex items-start gap-2 rounded-lg border border-[#FF8A8A]/[0.18] bg-[#FF8A8A]/[0.06] p-3 text-xs text-[#FFA8A8]"
+                  className="bevel-in flex items-start gap-2 bg-[var(--paper)] p-3 text-xs text-[#9e2a1e]"
                 >
                   <AlertCircle className="mt-0.5 h-3.5 w-3.5 flex-shrink-0" />
                   <span>{error}</span>
@@ -186,7 +169,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={busy !== null}
-              className="group inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[linear-gradient(135deg,hsl(var(--accent)),hsl(var(--accent-alt)))] px-6 py-3 text-sm font-semibold text-bg-0 shadow-glow transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0"
+              className="btn95 btn95-primary h-11 w-full text-[12px] disabled:cursor-not-allowed disabled:opacity-60"
             >
               {busy === "submit" ? (
                 <>
@@ -203,15 +186,15 @@ export default function LoginPage() {
           </form>
 
           <div className="mt-5 flex items-center gap-3 text-xs text-text-faint">
-            <span className="h-px flex-1 bg-white/[0.08]" />
+            <span className="bevel-thin-in h-[2px] flex-1" />
             or
-            <span className="h-px flex-1 bg-white/[0.08]" />
+            <span className="bevel-thin-in h-[2px] flex-1" />
           </div>
 
           <button
             onClick={handleGoogle}
             disabled={busy !== null}
-            className="mt-4 inline-flex w-full items-center justify-center gap-2.5 rounded-xl border border-white/[0.14] px-6 py-3 text-sm font-medium text-text transition-colors hover:bg-white/[0.04] disabled:cursor-not-allowed disabled:opacity-60"
+            className="btn95 mt-4 h-10 w-full text-[11px] normal-case disabled:cursor-not-allowed disabled:opacity-60"
           >
             {busy === "google" ? (
               <Loader2 className="h-4 w-4 animate-spin" />
@@ -224,7 +207,7 @@ export default function LoginPage() {
           <button
             onClick={handleGithub}
             disabled={busy !== null}
-            className="mt-3 inline-flex w-full items-center justify-center gap-2.5 rounded-xl border border-white/[0.14] px-6 py-3 text-sm font-medium text-text transition-colors hover:bg-white/[0.04] disabled:cursor-not-allowed disabled:opacity-60"
+            className="btn95 mt-2 h-10 w-full text-[11px] normal-case disabled:cursor-not-allowed disabled:opacity-60"
           >
             {busy === "github" ? (
               <Loader2 className="h-4 w-4 animate-spin" />
@@ -267,9 +250,11 @@ export default function LoginPage() {
           </p>
         </div>
 
-        <p className="mt-6 text-center text-xs text-text-faint">
-          <Link href="/focus" className="hover:text-text-dim">
-            Skip — try without an account →
+        </div>
+
+        <p className="mt-6 text-center font-pixel text-[9px] uppercase tracking-wider text-white/80 [text-shadow:1px_1px_0_rgba(0,0,0,0.6)]">
+          <Link href="/focus" className="hover:underline">
+            Skip — run as guest →
           </Link>
         </p>
       </div>
@@ -310,7 +295,7 @@ function Field({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         autoFocus={autoFocus}
-        className="w-full rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-3 text-sm transition-colors placeholder:text-text-faint focus:border-white/[0.2] focus:outline-none"
+        className="well w-full px-3 py-2.5 text-sm outline-none placeholder:text-text-faint"
       />
     </label>
   );

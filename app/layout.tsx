@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Instrument_Serif, JetBrains_Mono } from "next/font/google";
+import { IBM_Plex_Mono, VT323, Silkscreen } from "next/font/google";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { SyncProvider } from "@/components/providers/sync-provider";
 import { AudioEngine } from "@/components/audio-engine";
@@ -11,23 +11,24 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Toaster } from "sonner";
 import "./globals.css";
 
-const inter = Inter({
+const plexMono = IBM_Plex_Mono({
   subsets: ["latin"],
-  variable: "--font-inter",
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-body",
   display: "swap",
 });
 
-const instrument = Instrument_Serif({
+const vt323 = VT323({
   subsets: ["latin"],
   weight: "400",
-  style: ["normal", "italic"],
-  variable: "--font-instrument",
+  variable: "--font-digits",
   display: "swap",
 });
 
-const jetbrains = JetBrains_Mono({
+const silkscreen = Silkscreen({
   subsets: ["latin"],
-  variable: "--font-jetbrains",
+  weight: ["400", "700"],
+  variable: "--font-pixel",
   display: "swap",
 });
 
@@ -94,7 +95,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#07070b",
+  themeColor: "#0c4844",
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
@@ -107,9 +108,9 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${inter.variable} ${instrument.variable} ${jetbrains.variable}`}
+      className={`${plexMono.variable} ${vt323.variable} ${silkscreen.variable}`}
     >
-      <body className="bg-bg-0 text-text antialiased">
+      <body className="font-sans text-text">
         <ThemeProvider>
           {children}
           <SyncProvider />
@@ -121,15 +122,21 @@ export default function RootLayout({
           {/* First-run welcome modal, gated by localStorage flag. */}
           <Onboarding />
         </ThemeProvider>
+        {/* Subtle CRT scanlines over everything */}
+        <div className="crt-overlay" aria-hidden />
         <Toaster
           position="top-right"
-          theme="dark"
+          theme="light"
           toastOptions={{
             style: {
-              background: "rgba(20,20,29,0.92)",
-              backdropFilter: "blur(20px)",
-              border: "1px solid rgba(255,255,255,0.14)",
-              color: "#ECECF2",
+              background: "hsl(var(--chrome))",
+              border: "none",
+              borderRadius: 0,
+              boxShadow:
+                "inset -1px -1px 0 var(--edge-black), inset 1px 1px 0 var(--edge-white), inset -2px -2px 0 var(--edge-dark), inset 2px 2px 0 var(--edge-light), 4px 4px 0 rgba(0,0,0,0.45)",
+              color: "hsl(var(--text))",
+              fontFamily: "var(--font-body), monospace",
+              fontSize: "12px",
             },
           }}
         />
