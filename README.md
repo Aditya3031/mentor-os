@@ -114,8 +114,16 @@ Live-switching is instant — accent CSS variables update on `<body data-theme="
 - Levels (next-level cost = `(level + 1) * 300`)
 - Achievements with unlocked / locked states
 
-### 10. UI / UX details — FOCUSFLOW·95
-The entire UI is a retro operating system:
+### 10. UI / UX details — interface modes
+On first visit a boot-manager screen asks which interface to load, and the
+**entire design language** changes (switchable any time via View → Interface
+or THEMES.CPL):
+
+- **FOCUSFLOW·95** — retro OS: beveled gray chrome, pixel fonts, defrag bars
+- **NETRUNNER** — cyberpunk: black glass, neon edges, grid desktop, Orbitron
+- **SHOSAI** — old Japan: washi paper, sumi ink frames, indigo title bars, mincho serifs
+
+All 12 color schemes compose with every interface. The default retro OS look:
 - Draggable, beveled windows with gradient title bars (FOCUS.EXE, TASKS.SYS, MIXER.EXE…)
 - Taskbar with Start menu, quick-launch programs, live pomodoro readout and tray clock
 - BIOS boot sequence on the landing page (once per browser session)

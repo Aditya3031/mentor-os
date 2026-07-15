@@ -49,6 +49,11 @@
 
     /* Paper = white input wells / list surfaces */
     --paper: #fbfaf3;
+
+    /* Font indirection — skins remap these (defaults = retro95) */
+    --ui-display: var(--font-pixel), monospace;
+    --ui-digits: var(--font-digits), monospace;
+    --ui-body: var(--font-body), monospace;
   }
 
   /* Theme variants — set on <body data-theme="..."> */
@@ -189,7 +194,7 @@
   .title-bar {
     background: var(--title-grad);
     @apply flex select-none items-center gap-2 px-2 py-1 text-[11px] uppercase tracking-wider text-white;
-    font-family: var(--font-pixel), monospace;
+    font-family: var(--ui-display);
     text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.45);
   }
   .title-bar-inactive {
@@ -210,7 +215,7 @@
   .btn95 {
     background: hsl(var(--chrome));
     color: hsl(var(--text));
-    font-family: var(--font-pixel), monospace;
+    font-family: var(--ui-display);
     @apply bevel-out inline-flex select-none items-center justify-center gap-2 rounded-none px-4 py-1.5 text-[11px] uppercase tracking-wide;
   }
   .btn95:active {
@@ -244,7 +249,7 @@
     @apply mb-3 flex items-center justify-between;
   }
   .panel-h h3 {
-    font-family: var(--font-pixel), monospace;
+    font-family: var(--ui-display);
     @apply text-[10px] font-normal uppercase tracking-wider;
   }
   .glass {
@@ -273,10 +278,10 @@
   }
 
   .font-pixel {
-    font-family: var(--font-pixel), monospace;
+    font-family: var(--ui-display);
   }
   .font-digits {
-    font-family: var(--font-digits), monospace;
+    font-family: var(--ui-digits);
   }
 
   /* Desktop wallpaper: flat theme color + faint dither grid */
@@ -324,4 +329,221 @@
     padding-bottom: 0 !important;
     padding-top: 0 !important;
   }
+}
+
+/* ============================================================
+   INTERFACE SKINS
+   :root defaults = retro95. Each scope below re-derives the
+   entire design layer: variables, bevels, chrome, fonts,
+   desktop, scanlines. Placed after the layers so they win.
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   NETRUNNER — cyberpunk neon terminal
+   ------------------------------------------------------------ */
+body[data-skin="cyberpunk"] {
+  --chrome: 258 32% 9%;
+  --chrome-hi: 258 30% 14%;
+  --chrome-lo: 260 34% 5%;
+  --bg-1: 258 32% 9%;
+  --bg-2: 260 34% 6%;
+  --surface: 258 32% 9%;
+  --border: 280 40% 30%;
+
+  --text: 180 45% 88%;
+  --text-dim: 190 22% 64%;
+  --text-faint: 200 14% 44%;
+
+  /* On dark glass the "deep" accent is the BRIGHT one */
+  --accent-deep: color-mix(in oklch, hsl(var(--accent)), white 12%);
+  --accent-mid: hsl(var(--accent));
+  --desktop: color-mix(in oklch, hsl(var(--accent)), #060309 90%);
+  --title-grad: linear-gradient(
+    90deg,
+    color-mix(in oklch, hsl(var(--accent)), black 30%),
+    color-mix(in oklch, hsl(var(--accent-alt)), black 15%)
+  );
+
+  --edge-black: #010103;
+  --edge-dark: color-mix(in oklch, hsl(var(--accent)), #0a0714 72%);
+  --edge-light: color-mix(in oklch, hsl(var(--accent)), #221a38 35%);
+  --edge-white: color-mix(in oklch, hsl(var(--accent)), white 25%);
+
+  --paper: #08050f;
+
+  --ui-display: var(--font-orbitron), monospace;
+  --ui-digits: var(--font-sharetech), monospace;
+  --ui-body: var(--font-sharetech), monospace;
+
+  image-rendering: auto;
+}
+body[data-skin="cyberpunk"] ::selection {
+  background: hsl(var(--accent));
+  color: #000;
+}
+body[data-skin="cyberpunk"] .win95,
+body[data-skin="cyberpunk"] .panel {
+  box-shadow:
+    inset 0 0 0 1px hsl(var(--accent) / 0.55),
+    0 0 16px hsl(var(--accent) / 0.14),
+    0 6px 28px rgba(0, 0, 0, 0.65);
+}
+body[data-skin="cyberpunk"] .bevel-out {
+  box-shadow:
+    inset 0 0 0 1px hsl(var(--accent) / 0.5),
+    0 0 10px hsl(var(--accent) / 0.1);
+}
+body[data-skin="cyberpunk"] .bevel-in,
+body[data-skin="cyberpunk"] .bevel-thin-in {
+  box-shadow:
+    inset 0 0 0 1px hsl(var(--accent) / 0.35),
+    inset 0 2px 8px rgba(0, 0, 0, 0.6);
+}
+body[data-skin="cyberpunk"] .bevel-thin {
+  box-shadow: inset 0 0 0 1px hsl(var(--accent) / 0.3);
+}
+body[data-skin="cyberpunk"] .title-bar {
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.55);
+  box-shadow: 0 1px 0 hsl(var(--accent) / 0.7);
+  letter-spacing: 0.18em;
+}
+body[data-skin="cyberpunk"] .btn95 {
+  text-shadow: 0 0 6px hsl(var(--accent) / 0.5);
+}
+body[data-skin="cyberpunk"] .btn95:hover {
+  background: color-mix(in oklch, hsl(var(--accent)), #0c0618 78%);
+}
+body[data-skin="cyberpunk"] .btn95-primary {
+  box-shadow:
+    inset 0 0 0 1px hsl(var(--accent) / 0.9),
+    0 0 14px hsl(var(--accent) / 0.35);
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.7);
+}
+body[data-skin="cyberpunk"] .bg-stage-base {
+  background-color: var(--desktop);
+  background-image:
+    linear-gradient(hsl(var(--accent) / 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, hsl(var(--accent) / 0.07) 1px, transparent 1px),
+    radial-gradient(ellipse at 50% 120%, hsl(var(--accent) / 0.14), transparent 60%);
+  background-size: 44px 44px, 44px 44px, 100% 100%;
+}
+body[data-skin="cyberpunk"] .crt-overlay {
+  background:
+    repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.14) 0 1px, transparent 1px 3px),
+    radial-gradient(ellipse at center, transparent 60%, rgba(0, 0, 0, 0.28) 100%);
+  mix-blend-mode: multiply;
+}
+body[data-skin="cyberpunk"] .title-bar-inactive {
+  background: linear-gradient(90deg, #1e1b2b, #2a2440);
+}
+
+/* ------------------------------------------------------------
+   SHOSAI — old Japan study house (washi, ink, indigo)
+   ------------------------------------------------------------ */
+body[data-skin="edo"] {
+  --chrome: 42 42% 88%;
+  --chrome-hi: 45 48% 94%;
+  --chrome-lo: 40 30% 74%;
+  --bg-1: 42 42% 88%;
+  --bg-2: 41 36% 80%;
+  --surface: 42 42% 88%;
+  --border: 30 22% 40%;
+
+  --text: 25 28% 12%;
+  --text-dim: 25 16% 32%;
+  --text-faint: 28 12% 48%;
+
+  /* Ink-warmed accent for text and seals */
+  --accent-deep: color-mix(in oklch, hsl(var(--accent)), #47201a 45%);
+  --accent-mid: color-mix(in oklch, hsl(var(--accent)), #47201a 25%);
+  --desktop: color-mix(in oklch, hsl(var(--accent)), #1b2340 82%);
+  --title-grad: linear-gradient(
+    90deg,
+    #232d4f,
+    color-mix(in oklch, hsl(var(--accent)), #2c3760 60%)
+  );
+
+  --edge-black: #33291c;
+  --edge-dark: #b6a887;
+  --edge-light: #fff9ea;
+  --edge-white: #fffdf5;
+
+  --paper: #f8f1df;
+
+  --ui-display: var(--font-shippori), serif;
+  --ui-digits: var(--font-zenmincho), serif;
+  --ui-body: var(--font-zenmincho), serif;
+
+  image-rendering: auto;
+  letter-spacing: 0.01em;
+}
+body[data-skin="edo"] .win95,
+body[data-skin="edo"] .panel {
+  box-shadow:
+    inset 0 0 0 1px rgba(51, 41, 28, 0.85),
+    inset 0 0 0 2px var(--paper),
+    inset 0 0 0 3px rgba(51, 41, 28, 0.25),
+    4px 4px 0 rgba(30, 22, 12, 0.3);
+}
+body[data-skin="edo"] .bevel-out {
+  box-shadow:
+    inset 0 0 0 1px rgba(51, 41, 28, 0.75),
+    2px 2px 0 rgba(30, 22, 12, 0.22);
+}
+body[data-skin="edo"] .bevel-in,
+body[data-skin="edo"] .bevel-thin-in {
+  box-shadow:
+    inset 0 0 0 1px rgba(51, 41, 28, 0.55),
+    inset 0 2px 5px rgba(80, 60, 30, 0.15);
+}
+body[data-skin="edo"] .bevel-thin {
+  box-shadow: inset 0 0 0 1px rgba(51, 41, 28, 0.4);
+}
+body[data-skin="edo"] .title-bar {
+  text-shadow: none;
+  letter-spacing: 0.22em;
+  box-shadow: inset 0 -1px 0 #c9a86a;
+  text-transform: uppercase;
+}
+body[data-skin="edo"] .btn95 {
+  letter-spacing: 0.14em;
+}
+body[data-skin="edo"] .btn95:hover {
+  background: color-mix(in oklch, hsl(var(--accent)), var(--paper) 88%);
+}
+body[data-skin="edo"] .btn95-primary {
+  background: var(--accent-deep);
+  text-shadow: none;
+  box-shadow:
+    inset 0 0 0 1px rgba(51, 41, 28, 0.9),
+    2px 2px 0 rgba(30, 22, 12, 0.3);
+}
+body[data-skin="edo"] .bg-stage-base {
+  background-color: var(--desktop);
+  /* Seigaiha-ish overlapping wave rings */
+  background-image:
+    radial-gradient(circle at 50% 130%, transparent 38%, rgba(255, 248, 230, 0.05) 39% 41%, transparent 42%, transparent 56%, rgba(255, 248, 230, 0.05) 57% 59%, transparent 60%),
+    radial-gradient(circle at 0% 130%, transparent 38%, rgba(255, 248, 230, 0.05) 39% 41%, transparent 42%, transparent 56%, rgba(255, 248, 230, 0.05) 57% 59%, transparent 60%),
+    radial-gradient(circle at 100% 130%, transparent 38%, rgba(255, 248, 230, 0.05) 39% 41%, transparent 42%, transparent 56%, rgba(255, 248, 230, 0.05) 57% 59%, transparent 60%);
+  background-size: 90px 45px;
+  background-position: 0 0, 45px 22px, -45px 22px;
+}
+body[data-skin="edo"] .crt-overlay {
+  /* Washi fibers instead of scanlines — barely there */
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(120, 90, 40, 0.025) 0 1px,
+    transparent 1px 4px
+  );
+  mix-blend-mode: multiply;
+}
+body[data-skin="edo"] .title-bar-inactive {
+  background: linear-gradient(90deg, #5a5344, #6e6552);
+}
+body[data-skin="edo"] ::-webkit-scrollbar-track {
+  background: var(--paper);
+}
+body[data-skin="edo"] ::-webkit-scrollbar-thumb {
+  background: hsl(var(--chrome-lo));
+  box-shadow: inset 0 0 0 1px rgba(51, 41, 28, 0.6);
 }

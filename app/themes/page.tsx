@@ -6,6 +6,7 @@ import { Dock } from "@/components/dock";
 import { Desktop, Window } from "@/components/retro/window";
 import { useStore } from "@/lib/store";
 import { THEMES } from "@/lib/themes";
+import { SKINS } from "@/lib/skins";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
@@ -17,6 +18,8 @@ import { toast } from "sonner";
 export default function ThemesPage() {
   const theme = useStore((s) => s.theme);
   const setTheme = useStore((s) => s.setTheme);
+  const skin = useStore((s) => s.skin);
+  const setSkin = useStore((s) => s.setSkin);
   const active = THEMES.find((t) => t.id === theme);
 
   return (
@@ -39,6 +42,55 @@ export default function ThemesPage() {
               </>
             }
           >
+            {/* Interface modes — full design languages */}
+            <p className="mb-2 font-pixel text-[10px] uppercase tracking-wider text-text-dim">
+              Interface
+            </p>
+            <div className="mb-5 grid gap-2 sm:grid-cols-3">
+              {SKINS.map((s) => {
+                const isActive = skin === s.id;
+                return (
+                  <button
+                    key={s.id}
+                    onClick={() => {
+                      setSkin(s.id);
+                      toast(`${s.name} interface loaded`, {
+                        description: s.tagline,
+                      });
+                    }}
+                    className={cn(
+                      "flex flex-col gap-1.5 p-2 text-left",
+                      isActive ? "bevel-in bg-[var(--paper)]" : "bevel-thin"
+                    )}
+                  >
+                    <span
+                      className="bevel-thin block h-10 w-full"
+                      style={{ background: s.preview.desktop }}
+                    >
+                      <span
+                        className="ml-2 mt-2 block h-5 w-16"
+                        style={{ background: s.preview.chrome }}
+                      >
+                        <span
+                          className="block h-1.5 w-full"
+                          style={{ background: s.preview.titleBar }}
+                        />
+                      </span>
+                    </span>
+                    <span className={cn("text-[11px]", isActive && "font-bold")}>
+                      {s.name}
+                    </span>
+                    <span className="text-[10px] text-text-faint">
+                      {s.tagline}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+
+            <p className="mb-2 font-pixel text-[10px] uppercase tracking-wider text-text-dim">
+              Color scheme
+            </p>
             <p className="mb-4 text-[12px] text-text-dim">
               Select a scheme. Wallpaper, title bars and the ambience preset
               apply immediately — no restart required.

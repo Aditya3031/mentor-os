@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { useStore } from "@/lib/store";
 import { THEMES } from "@/lib/themes";
+import { getSkin } from "@/lib/skins";
 import { BackgroundStage } from "@/components/bg/background-stage";
 import { Desktop, Window } from "@/components/retro/window";
 import { Taskbar } from "@/components/retro/taskbar";
@@ -27,16 +28,9 @@ import { cn } from "@/lib/utils";
    Plays once per browser session; click anywhere to skip.
    ============================================================ */
 
-const BOOT_LINES = [
-  "FOCUSFLOW BIOS v9.5 — (C) DEEP WORK SYSTEMS",
-  "CPU: HUMAN BRAIN @ 40 Hz ......... OK",
-  "MEMORY TEST: 640K FOCUS ......... OK",
-  "DETECTING DISTRACTIONS .......... 0 FOUND",
-  "MOUNTING C:\\DEEPWORK ............ OK",
-  "STARTING FOCUSFLOW.95 ...",
-];
-
 function BootScreen({ onDone }: { onDone: () => void }) {
+  const skin = useStore((s) => s.skin);
+  const { bootLines: BOOT_LINES, bootColor } = getSkin(skin);
   const [lines, setLines] = useState(0);
   const [bar, setBar] = useState(0);
 
@@ -82,7 +76,8 @@ function BootScreen({ onDone }: { onDone: () => void }) {
     <button
       onClick={skip}
       aria-label="Skip boot screen"
-      className="fixed inset-0 z-[100] block w-full cursor-pointer bg-black p-6 text-left font-digits text-lg leading-relaxed text-[#9ee89e] sm:p-10 sm:text-xl"
+      className="fixed inset-0 z-[100] block w-full cursor-pointer bg-black p-6 text-left font-digits text-lg leading-relaxed sm:p-10 sm:text-xl"
+      style={{ color: bootColor }}
     >
       {BOOT_LINES.slice(0, lines).map((l) => (
         <div key={l}>{l}</div>
@@ -92,15 +87,17 @@ function BootScreen({ onDone }: { onDone: () => void }) {
           {Array.from({ length: 20 }, (_, i) => (
             <span
               key={i}
-              className={cn(
-                "h-4 w-3",
-                i < bar ? "bg-[#9ee89e]" : "border border-[#9ee89e]/40"
-              )}
+              className="h-4 w-3"
+              style={
+                i < bar
+                  ? { background: bootColor }
+                  : { border: `1px solid ${bootColor}66` }
+              }
             />
           ))}
         </div>
       )}
-      <span className="mt-6 block animate-blink text-sm text-[#9ee89e]/70">
+      <span className="mt-6 block animate-blink text-sm opacity-70">
         ▌ press any key (or click) to skip
       </span>
     </button>

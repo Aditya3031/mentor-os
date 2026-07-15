@@ -14,6 +14,7 @@ import { getTheme } from "@/lib/themes";
  */
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const themeId = useStore((s) => s.theme);
+  const skin = useStore((s) => s.skin);
 
   useEffect(() => {
     const t = getTheme(themeId);
@@ -21,6 +22,10 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     document.documentElement.style.setProperty("--accent", t.accent);
     document.documentElement.style.setProperty("--accent-alt", t.accentAlt);
   }, [themeId]);
+
+  useEffect(() => {
+    document.body.dataset.skin = skin;
+  }, [skin]);
 
   return <>{children}</>;
 }

@@ -7,6 +7,7 @@ import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { toast } from "sonner";
 import { LogOut, UserRound } from "lucide-react";
 import { signOut, useUser } from "@/lib/auth";
+import { useStore } from "@/lib/store";
 
 /**
  * OS menu bar: brand block + File / View / Help menus (all real),
@@ -15,6 +16,7 @@ import { signOut, useUser } from "@/lib/auth";
 export function TopBar() {
   const user = useUser();
   const router = useRouter();
+  const openSkinChooser = useStore((s) => s.openSkinChooser);
 
   /** Zen mode = hide chrome + request browser fullscreen. */
   const toggleZen = async () => {
@@ -71,6 +73,7 @@ export function TopBar() {
           Zen mode
           <MenuHint>Z</MenuHint>
         </MenuItem>
+        <MenuItem onSelect={openSkinChooser}>Interface…</MenuItem>
         <MenuItem onSelect={() => router.push("/themes")}>
           Color schemes…
         </MenuItem>

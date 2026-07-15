@@ -3,6 +3,7 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { getTheme, type ThemeId, type AmbienceId } from "./themes";
+import type { SkinId } from "./skins";
 
 /* ============================================================
    Types
@@ -78,6 +79,12 @@ interface FocusFlowState {
 
   /* User */
   theme: ThemeId;
+  /** Interface skin — full design language (retro95 / cyberpunk / edo). */
+  skin: SkinId;
+  /** True once the user has picked a skin on the startup chooser. */
+  skinChosen: boolean;
+  /** Transient: startup chooser visibility (reopenable from View menu). */
+  skinChooserOpen: boolean;
   tasks: Task[];
   history: Session[];
   ambience: AmbienceTrack[];
@@ -96,6 +103,9 @@ interface FocusFlowState {
   setCurrentSubject: (s: string) => void;
 
   setTheme: (t: ThemeId) => void;
+  setSkin: (s: SkinId) => void;
+  openSkinChooser: () => void;
+  closeSkinChooser: () => void;
   toggleAmbience: (id: AmbienceId) => void;
   setAmbienceVolume: (id: AmbienceId, v: number) => void;
 
@@ -221,6 +231,9 @@ function persistedSnapshot(s: FocusFlowState) {
     remaining: s.remaining,
     running: s.running,
     timerEndsAt: s.timerEndsAt,
+    // Interface skin is device-local (not cloud-synced) by design.
+    skin: s.skin,
+    skinChosen: s.skinChosen,
   };
 }
 
@@ -253,6 +266,9 @@ export const useStore = create<FocusFlowState>()(
       timerCompletedAt: null,
 
       theme: "aurora",
+      skin: "retro95",
+      skinChosen: false,
+      skinChooserOpen: false,
       // Start with no tasks — empty state is welcoming and honest.
       tasks: [],
       history: [],
@@ -435,6 +451,11 @@ export const useStore = create<FocusFlowState>()(
           theme: t,
           ambience: applyAmbiencePreset(s.ambience, getTheme(t).ambiencePreset),
         })),
+
+      setSkin: (skin) => set({ skin, skinChosen: true }),
+      openSkinChooser: () => set({ skinChooserOpen: true }),
+      closeSkinChooser: () =>
+        set({ skinChooserOpen: false, skinChosen: true }),
 
       toggleAmbience: (id) =>
         set((s) => ({

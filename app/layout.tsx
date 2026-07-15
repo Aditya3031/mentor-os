@@ -1,5 +1,14 @@
 import type { Metadata, Viewport } from "next";
-import { IBM_Plex_Mono, VT323, Silkscreen } from "next/font/google";
+import {
+  IBM_Plex_Mono,
+  VT323,
+  Silkscreen,
+  Orbitron,
+  Share_Tech_Mono,
+  Shippori_Mincho,
+  Zen_Old_Mincho,
+} from "next/font/google";
+import { SkinChooser } from "@/components/skin-chooser";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { SyncProvider } from "@/components/providers/sync-provider";
 import { AudioEngine } from "@/components/audio-engine";
@@ -29,6 +38,36 @@ const silkscreen = Silkscreen({
   subsets: ["latin"],
   weight: ["400", "700"],
   variable: "--font-pixel",
+  display: "swap",
+});
+
+/* Cyberpunk skin fonts */
+const orbitron = Orbitron({
+  subsets: ["latin"],
+  weight: ["400", "700", "900"],
+  variable: "--font-orbitron",
+  display: "swap",
+});
+
+const shareTech = Share_Tech_Mono({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-sharetech",
+  display: "swap",
+});
+
+/* Edo skin fonts */
+const shippori = Shippori_Mincho({
+  subsets: ["latin"],
+  weight: ["400", "600", "800"],
+  variable: "--font-shippori",
+  display: "swap",
+});
+
+const zenMincho = Zen_Old_Mincho({
+  subsets: ["latin"],
+  weight: ["400", "700", "900"],
+  variable: "--font-zenmincho",
   display: "swap",
 });
 
@@ -108,9 +147,16 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${plexMono.variable} ${vt323.variable} ${silkscreen.variable}`}
+      className={`${plexMono.variable} ${vt323.variable} ${silkscreen.variable} ${orbitron.variable} ${shareTech.variable} ${shippori.variable} ${zenMincho.variable}`}
     >
-      <body className="font-sans text-text">
+      <body className="font-sans text-text" suppressHydrationWarning>
+        {/* Apply persisted skin + theme before first paint to avoid a flash
+            of the default look. Reads the zustand persist blob directly. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{var s=JSON.parse(localStorage.getItem("focusflow.v1")).state;if(s.skin)document.body.dataset.skin=s.skin;if(s.theme)document.body.dataset.theme=s.theme;}catch(e){}`,
+          }}
+        />
         <ThemeProvider>
           {children}
           <SyncProvider />
@@ -121,6 +167,9 @@ export default function RootLayout({
           <ReflectionModal />
           {/* First-run welcome modal, gated by localStorage flag. */}
           <Onboarding />
+          {/* Startup interface chooser — shows before anything on first
+              visit, reopenable from the View menu. */}
+          <SkinChooser />
         </ThemeProvider>
         {/* Subtle CRT scanlines over everything */}
         <div className="crt-overlay" aria-hidden />

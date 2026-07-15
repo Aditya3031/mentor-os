@@ -26,11 +26,12 @@ const config: Config = {
     },
     extend: {
       fontFamily: {
-        sans: ["var(--font-body)", "Courier New", "monospace"],
-        serif: ["var(--font-digits)", "monospace"],
-        mono: ["var(--font-body)", "monospace"],
-        pixel: ["var(--font-pixel)", "monospace"],
-        digits: ["var(--font-digits)", "monospace"],
+        /* All routed through --ui-* so interface skins can swap families */
+        sans: ["var(--ui-body)"],
+        serif: ["var(--ui-digits)"],
+        mono: ["var(--ui-body)"],
+        pixel: ["var(--ui-display)"],
+        digits: ["var(--ui-digits)"],
       },
       colors: {
         bg: {
