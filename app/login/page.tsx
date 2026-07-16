@@ -7,11 +7,14 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, Loader2, AlertCircle } from "lucide-react";
 import { signIn, signUp, signInWithGithub, signInWithGoogle } from "@/lib/auth";
 import { cn } from "@/lib/utils";
+import { useStore } from "@/lib/store";
+import { getSkin } from "@/lib/skins";
 
 type Mode = "signin" | "signup";
 
 export default function LoginPage() {
   const router = useRouter();
+  const brand = getSkin(useStore((s) => s.skin)).name;
   const [mode, setMode] = useState<Mode>("signin");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -67,7 +70,7 @@ export default function LoginPage() {
               <span className="grid h-3.5 w-3.5 place-items-center bg-white/20 text-[8px]">
                 ▞
               </span>
-              Log On to FOCUSFLOW·95
+              Log On to {brand}
             </span>
             <Link href="/" className="tb-btn" aria-label="Close">
               ✕

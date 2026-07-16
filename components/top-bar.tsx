@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { LogOut, UserRound } from "lucide-react";
 import { signOut, useUser } from "@/lib/auth";
 import { useStore } from "@/lib/store";
+import { getSkin } from "@/lib/skins";
 
 /**
  * OS menu bar: brand block + File / View / Help menus (all real),
@@ -17,6 +18,8 @@ export function TopBar() {
   const user = useUser();
   const router = useRouter();
   const openSkinChooser = useStore((s) => s.openSkinChooser);
+  const skinId = useStore((s) => s.skin);
+  const brand = getSkin(skinId).name;
 
   /** Zen mode = hide chrome + request browser fullscreen. */
   const toggleZen = async () => {
@@ -55,7 +58,7 @@ export function TopBar() {
         <span className="grid h-4 w-4 place-items-center bg-[var(--title-grad)] text-[8px] text-white">
           ▞
         </span>
-        FOCUSFLOW·95
+        {brand}
       </Link>
 
       <MenuBarMenu label="File">

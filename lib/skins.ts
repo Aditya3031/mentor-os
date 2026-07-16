@@ -14,6 +14,19 @@ export type SkinId =
   | "outrun"
   | "blueprint";
 
+/**
+ * Chrome paradigm — how windows and navigation render. This is what
+ * makes each skin a standalone design language instead of a recolored
+ * OS: only "os" skins get title-bar buttons, Start menus and .EXE names.
+ */
+export type ChromeStyle =
+  | "os" /* retro95, mono — title bars, — □ ✕, Start menu */
+  | "hud" /* cyberpunk — angular HUD frames, corner brackets, SYS nav */
+  | "tty" /* terminal — tmux-style panes, status-line nav */
+  | "paper" /* edo — washi cards with fabric header + hanko seal */
+  | "deck" /* outrun — dashboard strips, LED header */
+  | "sheet"; /* blueprint — drafting frames with title tabs */
+
 export interface Skin {
   id: SkinId;
   name: string;
@@ -22,6 +35,8 @@ export interface Skin {
   description: string;
   /** Boot-menu entry label, keeps the OS fiction */
   bootLabel: string;
+  /** Window + navigation paradigm */
+  chrome: ChromeStyle;
   /** Colors for the chooser preview card (independent of active skin) */
   preview: {
     desktop: string;
@@ -39,6 +54,7 @@ export interface Skin {
 export const SKINS: Skin[] = [
   {
     id: "retro95",
+    chrome: "os",
     name: "FOCUSFLOW·95",
     tagline: "Retro operating system",
     description:
@@ -63,6 +79,7 @@ export const SKINS: Skin[] = [
   },
   {
     id: "cyberpunk",
+    chrome: "hud",
     name: "NETRUNNER",
     tagline: "Neon terminal HUD",
     description:
@@ -87,6 +104,7 @@ export const SKINS: Skin[] = [
   },
   {
     id: "edo",
+    chrome: "paper",
     name: "SHOSAI",
     tagline: "Old Japan study house",
     description:
@@ -111,6 +129,7 @@ export const SKINS: Skin[] = [
   },
   {
     id: "terminal",
+    chrome: "tty",
     name: "MAINFRAME",
     tagline: "Phosphor terminal",
     description:
@@ -135,6 +154,7 @@ export const SKINS: Skin[] = [
   },
   {
     id: "mono",
+    chrome: "os",
     name: "SYSTEM·1",
     tagline: "1-bit monochrome",
     description:
@@ -159,6 +179,7 @@ export const SKINS: Skin[] = [
   },
   {
     id: "outrun",
+    chrome: "deck",
     name: "OUTRUN",
     tagline: "Synthwave sunset",
     description:
@@ -183,6 +204,7 @@ export const SKINS: Skin[] = [
   },
   {
     id: "blueprint",
+    chrome: "sheet",
     name: "BLUEPRINT",
     tagline: "Drafting table",
     description:
@@ -209,4 +231,95 @@ export const SKINS: Skin[] = [
 
 export function getSkin(id: SkinId): Skin {
   return SKINS.find((s) => s.id === id) ?? SKINS[0];
+}
+
+/* ============================================================
+   Window / program naming per paradigm.
+   Call sites keep passing the canonical retro name ("FOCUS.EXE",
+   "GOALS.TXT"); each skin derives its own language from it so
+   nothing outside retro95 ever shows a DOS extension.
+   ============================================================ */
+
+/** Curated Japanese labels for the edo skin (base name → kanji). */
+const EDO_NAMES: Record<string, string> = {
+  FOCUS: "集中の間",
+  TASKS: "務め",
+  GOALS: "目標",
+  STATS: "記録",
+  SNAPSHOT: "今日",
+  DEFRAG: "整頓",
+  MIXER: "音の間",
+  HEATMAP: "九十日",
+  LOG: "日誌",
+  HISTORY: "日誌",
+  TROPHY: "誉れ",
+  THEMES: "装い",
+  DISPLAY: "装い",
+  SETUP: "設え",
+  TIMER: "刻",
+  BEHAVIOR: "作法",
+  AI: "師範",
+  ROOM: "共作",
+  ROOMS: "座敷",
+  LIVE: "同席",
+  WELCOME: "ようこそ",
+  README: "はじめに",
+  LOGIN: "入室",
+  FORMAT: "始末",
+};
+
+/** Cyberpunk suffix per DOS extension family. */
+const HUD_SUFFIX: Record<string, string> = {
+  EXE: "RUN",
+  SYS: "SYS",
+  TXT: "DAT",
+  LOG: "LOG",
+  INI: "CFG",
+  CPL: "CFG",
+  CAB: "VLT",
+  NFO: "NFO",
+  HLP: "AI",
+  NET: "NET",
+  CAM: "CAM",
+  COM: "RUN",
+  DLL: "LIB",
+  DWG: "DWG",
+  IMG: "IMG",
+  TTY: "TTY",
+  MODE: "SYS",
+  DRV: "DRV",
+};
+
+/**
+ * Transform a canonical retro window title into the active skin's
+ * naming language. Unknown/odd titles pass through sensibly.
+ */
+export function windowTitle(retroName: string, skin: SkinId): string {
+  const m = retroName.match(/^([A-Z0-9_·-]+)\.([A-Z]+)$/i);
+  if (!m) return retroName; // free-form titles pass through
+  const base = m[1].toUpperCase();
+  const ext = m[2].toUpperCase();
+  const pretty = base.charAt(0) + base.slice(1).toLowerCase();
+
+  switch (skin) {
+    case "retro95":
+      return retroName;
+    case "mono":
+      return pretty; // classic Mac windows: plain names, no extensions
+    case "cyberpunk":
+      return `${base}//${HUD_SUFFIX[ext] ?? ext}`;
+    case "terminal":
+      // processes lowercase, documents keep their file look
+      return ext === "TXT" || ext === "LOG"
+        ? `${base.toLowerCase()}.${ext.toLowerCase()}`
+        : `${base.toLowerCase()}`;
+    case "edo":
+      return EDO_NAMES[base] ?? pretty;
+    case "outrun":
+      return base; // big chrome letters, no file fiction
+    case "blueprint":
+      return base; // stencil caps; the sheet-tab chrome carries the look
+    default:
+      return retroName;
+  }
 }

@@ -933,3 +933,221 @@ body[data-skin="blueprint"] .bg-stage-base {
 body[data-skin="blueprint"] .crt-overlay {
   background: none;
 }
+
+/* ============================================================
+   PARADIGM CHROME SHELLS
+   Each skin's Window renders one of these instead of the OS
+   title bar. Defined once — they only appear under their skin,
+   so they read that skin's variables.
+   ============================================================ */
+
+@keyframes chromeblink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.25; }
+}
+
+/* ---- HUD (cyberpunk): bracket corners, LED header ---- */
+.hud-shell {
+  position: relative;
+  background: hsl(var(--chrome) / 0.94);
+  box-shadow:
+    inset 0 0 0 1px hsl(var(--accent) / 0.4),
+    0 0 18px hsl(var(--accent) / 0.12),
+    0 6px 28px rgba(0, 0, 0, 0.6);
+}
+.hud-shell::before,
+.hud-shell::after {
+  content: "";
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  pointer-events: none;
+  border-color: hsl(var(--accent) / 0.95);
+  z-index: 1;
+}
+.hud-shell::before {
+  top: -2px;
+  left: -2px;
+  border-top: 2px solid hsl(var(--accent) / 0.95);
+  border-left: 2px solid hsl(var(--accent) / 0.95);
+}
+.hud-shell::after {
+  bottom: -2px;
+  right: -2px;
+  border-bottom: 2px solid hsl(var(--accent) / 0.95);
+  border-right: 2px solid hsl(var(--accent) / 0.95);
+}
+.hud-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  font-family: var(--ui-display);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.24em;
+  color: var(--accent-deep);
+  border-bottom: 1px solid hsl(var(--accent) / 0.3);
+  background: linear-gradient(90deg, hsl(var(--accent) / 0.16), transparent 65%);
+  user-select: none;
+}
+.hud-led {
+  width: 6px;
+  height: 6px;
+  flex-shrink: 0;
+  background: var(--accent-deep);
+  box-shadow: 0 0 7px var(--accent-deep);
+  animation: chromeblink 2.6s ease-in-out infinite;
+}
+.hud-toggle {
+  color: var(--accent-deep);
+  font-size: 10px;
+  line-height: 1;
+}
+.hud-nav {
+  font-family: var(--ui-display);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: hsl(var(--text-dim));
+  clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%);
+  background: hsl(var(--chrome-hi) / 0.6);
+}
+.hud-nav:hover {
+  color: hsl(var(--text));
+}
+.hud-nav-active {
+  background: hsl(var(--accent) / 0.22);
+  color: var(--accent-deep);
+  text-shadow: 0 0 8px hsl(var(--accent) / 0.6);
+}
+
+/* ---- TTY (terminal): tmux pane, title breaks the border ---- */
+.tty-shell {
+  position: relative;
+  margin-top: 9px;
+  background: hsl(var(--chrome));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent-deep), transparent 45%);
+}
+.tty-title {
+  position: absolute;
+  top: -9px;
+  left: 10px;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  background: hsl(var(--chrome));
+  padding: 0 4px;
+  color: var(--accent-deep);
+  font-family: var(--ui-body);
+  font-size: 13px;
+  line-height: 18px;
+  user-select: none;
+}
+
+/* ---- PAPER (edo): ink-framed card, fabric header, hanko seal ---- */
+.paper-shell {
+  background: hsl(var(--chrome));
+  box-shadow:
+    inset 0 0 0 1px rgba(51, 41, 28, 0.85),
+    inset 0 0 0 2px var(--paper),
+    inset 0 0 0 3px rgba(51, 41, 28, 0.25),
+    4px 4px 0 rgba(30, 22, 12, 0.3);
+  padding: 3px;
+}
+.paper-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 10px;
+  background: var(--title-grad);
+  color: #fff;
+  font-family: var(--ui-display);
+  font-size: 12px;
+  letter-spacing: 0.28em;
+  box-shadow: inset 0 -1px 0 #c9a86a;
+  user-select: none;
+}
+.paper-seal {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  background: #b3402a;
+  color: #fff;
+  font-family: var(--ui-display);
+  font-size: 11px;
+  line-height: 20px;
+  text-align: center;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.35);
+}
+
+/* ---- DECK (outrun): sunset strip with a power LED ---- */
+.deck-shell {
+  background: hsl(var(--chrome));
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--accent-deep), transparent 30%),
+    0 0 20px color-mix(in srgb, var(--accent-deep), transparent 82%),
+    0 8px 30px rgba(0, 0, 0, 0.55);
+  padding: 3px;
+}
+.deck-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  background: var(--title-grad);
+  color: #fff;
+  font-family: var(--ui-display);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5), 0 0 10px rgba(255, 120, 180, 0.5);
+  user-select: none;
+}
+.deck-led {
+  width: 7px;
+  height: 7px;
+  flex-shrink: 0;
+  background: #3aff9e;
+  box-shadow: 0 0 8px #3aff9e;
+  animation: chromeblink 3.2s ease-in-out infinite;
+}
+.deck-toggle {
+  color: #fff;
+  font-size: 10px;
+}
+
+/* ---- SHEET (blueprint): drafting frame with a title tab ---- */
+.sheet-shell {
+  background: hsl(var(--chrome));
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.9),
+    inset 0 0 0 4px hsl(var(--chrome)),
+    inset 0 0 0 5px rgba(255, 255, 255, 0.35),
+    3px 3px 0 rgba(4, 16, 34, 0.5);
+}
+.sheet-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 10px 0;
+  font-family: var(--ui-display);
+  font-size: 9px;
+  letter-spacing: 0.24em;
+  color: #fff;
+  user-select: none;
+}
+.sheet-tab {
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-bottom-width: 2px;
+  padding: 2px 8px;
+  background: rgba(255, 255, 255, 0.08);
+  text-transform: uppercase;
+}
+.sheet-toggle {
+  width: 16px;
+  height: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  color: #fff;
+  font-size: 10px;
+  line-height: 14px;
+}

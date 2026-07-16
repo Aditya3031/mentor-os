@@ -10,6 +10,7 @@ import {
   Sparkles,
   CheckCircle2,
 } from "lucide-react";
+import { Window } from "@/components/retro/window";
 
 const STORAGE_KEY = "ff_onboarded_v2";
 
@@ -101,16 +102,23 @@ export function Onboarding() {
             initial={{ y: 12, scale: 0.97 }}
             animate={{ y: 0, scale: 1 }}
             transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-            className="win95 w-full max-w-lg p-[3px] shadow-deep"
+            className="w-full max-w-lg shadow-deep"
           >
-            <div className="title-bar justify-between">
-              <span>FOCUSFLOW 95 SETUP — step {step + 1} of {STEPS.length}</span>
-              <button onClick={dismiss} className="tb-btn" aria-label="Skip intro">
-                ✕
-              </button>
-            </div>
-
-            <div className="p-6">
+            <Window
+              title="SETUP.EXE"
+              noControls
+              titleExtra={
+                <span className="flex items-center gap-2">
+                  <span className="text-[9px] opacity-80">
+                    {step + 1} / {STEPS.length}
+                  </span>
+                  <button onClick={dismiss} className="tb-btn" aria-label="Skip intro">
+                    ✕
+                  </button>
+                </span>
+              }
+              bodyClassName="p-6"
+            >
               {/* Progress blocks */}
               <div className="well mb-6 flex gap-[3px] p-[4px]">
                 {STEPS.map((_, i) => (
@@ -165,7 +173,7 @@ export function Onboarding() {
                   <ArrowRight className="h-3.5 w-3.5" />
                 </button>
               </div>
-            </div>
+            </Window>
           </motion.div>
         </motion.div>
       )}

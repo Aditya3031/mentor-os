@@ -73,17 +73,29 @@ const michroma = Michroma({
   display: "swap",
 });
 
-/* Edo skin fonts */
+/* Edo skin fonts.
+   CJK families ship hundreds of unicode-range subsets; the full css2
+   response is ~230KB and can outlast next/font's 3s fetch timeout on
+   slow paths. `text` requests only the glyphs we actually render —
+   ASCII for body copy plus the curated kanji/kana used by the edo
+   skin (EDO_NAMES in lib/skins.ts, seal/menu glyphs, boot lines).
+   Add new Japanese UI strings to this set. Glyphs outside it fall
+   back to the system serif. */
 const shippori = Shippori_Mincho({
-  subsets: ["latin"],
-  weight: ["400", "600", "800"],
+  weight: ["400", "700"],
+  // next/font requires literal option values — keep in sync with zenMincho below.
+  // @ts-expect-error — `text` is a valid next/font/google option missing from the generated typings
+  text: " ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.,:;()+-=_·—…→集中の間務め目標記録今日整頓音九十日誌誉れ装い設え刻作法師範座敷共作同席入室始末書斎印品ようこそはじめに",
+  preload: false,
   variable: "--font-shippori",
   display: "swap",
 });
 
 const zenMincho = Zen_Old_Mincho({
-  subsets: ["latin"],
-  weight: ["400", "700", "900"],
+  weight: ["400", "700"],
+  // @ts-expect-error — `text` is a valid next/font/google option missing from the generated typings
+  text: " ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.,:;()+-=_·—…→集中の間務め目標記録今日整頓音九十日誌誉れ装い設え刻作法師範座敷共作同席入室始末書斎印品ようこそはじめに",
+  preload: false,
   variable: "--font-zenmincho",
   display: "swap",
 });
