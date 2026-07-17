@@ -278,7 +278,7 @@ const HUD_SUFFIX: Record<string, string> = {
   CPL: "CFG",
   CAB: "VLT",
   NFO: "NFO",
-  HLP: "AI",
+  HLP: "HLP",
   NET: "NET",
   CAM: "CAM",
   COM: "RUN",
