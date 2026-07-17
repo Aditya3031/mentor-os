@@ -79,7 +79,7 @@ interface FocusFlowState {
 
   /* User */
   theme: ThemeId;
-  /** Interface skin — full design language (retro95 / cyberpunk / edo). */
+  /** Interface skin — full design language (retro95 / cyberpunk / holo / …). */
   skin: SkinId;
   /** True once the user has picked a skin on the startup chooser. */
   skinChosen: boolean;
