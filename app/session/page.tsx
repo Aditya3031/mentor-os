@@ -94,8 +94,8 @@ function Lobby() {
 
       <main className="relative z-[5] mx-auto flex w-full max-w-2xl flex-1 flex-col px-4 pb-28 sm:px-7">
         <header className="mb-8 mt-2">
-          <p className="font-pixel text-[9px] uppercase tracking-[0.2em] text-white/70 [text-shadow:1px_1px_0_rgba(0,0,0,0.6)]">Live session</p>
-          <h1 className="mt-2 text-balance font-pixel text-xl text-white [text-shadow:2px_2px_0_rgba(0,0,0,0.55)] sm:text-2xl">
+          <p className="font-pixel text-[9px] uppercase tracking-[0.2em] desk-ink-dim">Live session</p>
+          <h1 className="mt-2 text-balance font-pixel text-xl desk-ink sm:text-2xl">
             Study together in a private room.
           </h1>
           <p className="mt-3 max-w-lg text-sm leading-relaxed text-text-dim">
@@ -327,7 +327,7 @@ function Room({ roomId }: { roomId: string }) {
       <main className="relative z-[5] mx-auto flex w-full max-w-7xl flex-1 flex-col overflow-y-auto px-4 pb-28 sm:px-7">
         <header className="mb-5 mt-2 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
-            <div className="flex items-center gap-2 font-pixel text-[9px] uppercase tracking-[0.2em] text-white/70 [text-shadow:1px_1px_0_rgba(0,0,0,0.6)]">
+            <div className="flex items-center gap-2 font-pixel text-[9px] uppercase tracking-[0.2em] desk-ink-dim">
               Live session
               <span
                 className={cn(
@@ -340,7 +340,7 @@ function Room({ roomId }: { roomId: string }) {
                 {connected ? "Connected" : "Connecting…"}
               </span>
             </div>
-            <h1 className="mt-2 flex items-center gap-3 text-balance font-pixel text-xl text-white [text-shadow:2px_2px_0_rgba(0,0,0,0.55)] sm:text-2xl">
+            <h1 className="mt-2 flex items-center gap-3 text-balance font-pixel text-xl desk-ink sm:text-2xl">
               Room
               <button
                 onClick={copyCode}

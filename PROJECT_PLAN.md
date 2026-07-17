@@ -2,16 +2,24 @@
 
 > Pick this up anytime. This file is the source of truth for what's done, what's next, and every decision you'll need to make to ship a real product.
 
-**Last updated:** May 13, 2026
-**Current state:** Deployed on Vercel with real Supabase auth, AI features (chat + reflection + planning), live video rooms (signaling works, peer streams need debugging), cloud sync, PWA install, analytics, and a collaborative whiteboard. Daily-use ready for solo features; multi-user video has one known bug.
+**Last updated:** July 17, 2026
+**Current state:** Complete UI replatform on the `retro-os-revamp` branch ([PR #1](https://github.com/Aditya3031/FOCUSFLOW/pull/1), unmerged — merging deploys it): the app is an **interface-skin system**. A startup boot chooser picks between 7 full design languages — FOCUSFLOW·95 (the sole retro), NETRUNNER, HOLODECK, STARSHIP, GHOST, VOID, OUTRUN — each with its own window chrome, navigation and program naming, composing with the 12 accent color schemes. New **study rooms** (`/rooms`): live presence + Discord-style voice (WebRTC mesh, mute/deafen/speaking rings, listen-only fallback; Supabase Realtime in prod, BroadcastChannel LAN mode without env vars). Everything under § Current State below still applies functionally.
+
+### Working on the UI? Rules of the skin system
+
+- All chrome goes through shared primitives — `<Window>` / `<Taskbar>` (components/retro/) plus token classes (`panel`, `well`, `btn95`, `bevel-*`, `status-cell`) and CSS vars. **Never hardcode colors or fonts in components**; skins override the whole layer via `body[data-skin=…]` scopes in app/globals.css.
+- Window titles: pass the canonical retro name (`"FOCUS.EXE"`); `windowTitle()` in lib/skins.ts derives every skin's naming from it.
+- Text sitting directly on the desktop uses `.desk-ink` / `.desk-ink-dim` so light skins (GHOST) stay readable.
+- Never write `-webkit-backdrop-filter` alongside the standard property — Lightning CSS dedupes away the unprefixed one and blur silently dies.
+- Local prod builds may need `NODE_OPTIONS=--dns-result-order=ipv4first` (broken IPv6 route to Google Fonts on this machine). Never run `next build` while `next dev` is running — they share `.next` and corrupt it.
 
 ---
 
 ## When you come back, start here
 
 1. Re-read **§ Current State** to remember where you left off.
-2. `cd C:\Users\adity\OneDrive\Desktop\DEV\focusflow` and run `npm run dev` (or just visit the deployed Vercel URL).
-3. The TOP priority right now is **debugging the WebRTC video stream** (see "Known bugs" below). After that, **friend testing** is the highest-leverage thing.
+2. `cd C:\Users\adity\Desktop\FOCUSFLOW` and run `npm run dev` (or just visit the deployed Vercel URL).
+3. The TOP priority right now is **reviewing + merging PR #1** (the entire skin-system UI + study rooms live there). After that: friend testing, and the `/session` WebRTC stream bug below.
 4. Update the "Last updated" date and the checkboxes when you make changes.
 
 ---

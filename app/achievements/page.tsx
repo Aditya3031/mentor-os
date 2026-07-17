@@ -23,10 +23,10 @@ export default function AchievementsPage() {
       <main className="relative z-[5] mx-auto w-full max-w-3xl flex-1 overflow-y-auto px-4 pb-20 sm:px-7 sm:pb-28">
         <header className="mb-8 mt-2 flex items-end justify-between">
           <div>
-            <p className="font-pixel text-[9px] uppercase tracking-[0.2em] text-white/70 [text-shadow:1px_1px_0_rgba(0,0,0,0.6)]">
+            <p className="font-pixel text-[9px] uppercase tracking-[0.2em] desk-ink-dim">
               Milestones
             </p>
-            <h1 className="mt-2 text-balance font-pixel text-xl text-white [text-shadow:2px_2px_0_rgba(0,0,0,0.55)] sm:text-2xl">
+            <h1 className="mt-2 text-balance font-pixel text-xl desk-ink sm:text-2xl">
               Achievements
             </h1>
           </div>

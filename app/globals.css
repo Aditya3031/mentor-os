@@ -1264,3 +1264,33 @@ body[data-skin="outrun"] .crt-overlay {
 .void-toggle:hover {
   color: var(--accent-deep);
 }
+
+/* ------------------------------------------------------------
+   Text placed directly on the desktop (page headings/kickers).
+   White with a hard pixel shadow by default; light skins flip
+   to ink, soft skins soften the shadow.
+   ------------------------------------------------------------ */
+.desk-ink {
+  color: #fff;
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.55);
+}
+.desk-ink-dim {
+  color: rgba(255, 255, 255, 0.7);
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.6);
+}
+body[data-skin="ghost"] .desk-ink {
+  color: hsl(var(--text));
+  text-shadow: none;
+}
+body[data-skin="ghost"] .desk-ink-dim {
+  color: hsl(var(--text-dim));
+  text-shadow: none;
+}
+body[data-skin="holo"] .desk-ink,
+body[data-skin="void"] .desk-ink {
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.7);
+}
+body[data-skin="holo"] .desk-ink-dim,
+body[data-skin="void"] .desk-ink-dim {
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.7);
+}

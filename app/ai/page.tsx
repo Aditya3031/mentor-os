@@ -119,7 +119,7 @@ export default function AIPage() {
       <main className="relative z-[5] mx-auto flex w-full max-w-3xl flex-1 flex-col px-4 pb-20 sm:px-7 sm:pb-24 min-h-0">
         <header className="mb-4 mt-2 flex items-end justify-between gap-3">
           <div>
-            <p className="flex items-center gap-1.5 font-pixel text-[9px] uppercase tracking-[0.2em] text-white/70 [text-shadow:1px_1px_0_rgba(0,0,0,0.6)]">
+            <p className="flex items-center gap-1.5 font-pixel text-[9px] uppercase tracking-[0.2em] desk-ink-dim">
               <Sparkles className="h-3 w-3" />
               Powered by Gemini
             </p>

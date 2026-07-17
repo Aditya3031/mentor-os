@@ -66,7 +66,7 @@ export default function PrivacyPage() {
         </Link>
 
         <header className="pb-8 pt-12">
-          <p className="font-pixel text-[9px] uppercase tracking-[0.2em] text-white/70 [text-shadow:1px_1px_0_rgba(0,0,0,0.6)]">
+          <p className="font-pixel text-[9px] uppercase tracking-[0.2em] desk-ink-dim">
             Legal
           </p>
           <h1 className="mt-4 text-4xl font-light tracking-tight sm:text-5xl">

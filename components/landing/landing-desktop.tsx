@@ -129,7 +129,7 @@ function DesktopIcons() {
           <span className="grid h-10 w-10 place-items-center bg-chrome bevel-out text-text group-hover:marching-ants">
             <Icon className="h-5 w-5" />
           </span>
-          <span className="bg-[var(--desktop)] px-1 text-center font-pixel text-[8px] leading-tight text-white [text-shadow:1px_1px_0_rgba(0,0,0,0.7)] group-hover:bg-[var(--accent-deep)]">
+          <span className="bg-[var(--desktop)] px-1 text-center font-pixel text-[8px] leading-tight desk-ink group-hover:bg-[var(--accent-deep)]">
             {label}
           </span>
         </Link>
