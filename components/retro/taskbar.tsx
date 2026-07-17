@@ -81,18 +81,35 @@ const NAV: Record<
     menuLabel: "SYS",
     showIcons: false,
   },
-  tty: {
-    bar: "h-8 gap-0 bg-chrome px-2 shadow-[inset_0_1px_0_color-mix(in_srgb,var(--accent-deep),transparent_45%)] font-mono",
-    item: "h-6 px-1.5 text-[13px] lowercase text-text-dim hover:text-[var(--accent-deep)]",
-    active: "text-[var(--accent-deep)] font-bold",
-    menuLabel: "[menu]",
+  holo: {
+    bar: "h-10 gap-1 bg-chrome/70 px-2 backdrop-blur-md shadow-[inset_0_1px_0_hsl(var(--accent)/0.45),0_0_24px_hsl(var(--accent)/0.1)]",
+    item: "h-7 max-w-[150px] px-2.5 font-pixel text-[9px] uppercase tracking-[0.18em] text-text-dim hover:text-[var(--accent-deep)]",
+    active:
+      "text-[var(--accent-deep)] shadow-[inset_0_-1px_0_hsl(var(--accent)/0.8)] [text-shadow:0_0_10px_hsl(var(--accent)/0.5)]",
+    menuLabel: "◇ MENU",
     showIcons: false,
   },
-  paper: {
-    bar: "h-10 gap-1 bg-chrome px-2 shadow-[inset_0_2px_0_rgba(51,41,28,0.6)]",
-    item: "h-7 max-w-[150px] px-2.5 text-[12px] text-text-dim hover:text-text",
-    active: "font-bold text-[var(--accent-deep)] underline underline-offset-4",
-    menuLabel: "品 Menu",
+  cockpit: {
+    bar: "h-10 gap-1 bg-chrome px-2 shadow-[inset_0_2px_0_rgba(0,0,0,0.5),inset_0_-1px_0_rgba(255,255,255,0.06),0_-2px_10px_rgba(0,0,0,0.4)]",
+    item: "h-7 max-w-[150px] px-2.5 font-pixel text-[8px] uppercase tracking-[0.16em] text-text-dim hover:text-text",
+    active:
+      "bg-black/40 text-[var(--accent-deep)] shadow-[inset_0_0_0_1px_hsl(var(--accent)/0.4)]",
+    menuLabel: "CTL",
+    showIcons: false,
+  },
+  ghost: {
+    bar: "h-10 gap-1 bg-chrome px-2 shadow-[inset_0_1px_0_rgba(0,0,0,0.08)]",
+    item: "h-7 max-w-[150px] px-2.5 text-[11px] text-text-dim hover:text-text",
+    active:
+      "font-semibold text-[var(--accent-deep)] shadow-[inset_0_-2px_0_var(--accent-deep)]",
+    menuLabel: "Menu",
+    showIcons: false,
+  },
+  void: {
+    bar: "h-9 gap-1 bg-chrome px-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]",
+    item: "h-7 max-w-[150px] px-2 text-[11px] lowercase tracking-[0.08em] text-text-faint hover:text-text",
+    active: "text-[var(--accent-deep)]",
+    menuLabel: "menu",
     showIcons: false,
   },
   deck: {
@@ -100,13 +117,6 @@ const NAV: Record<
     item: "h-7 max-w-[150px] gap-1.5 px-2.5 font-pixel text-[8px] uppercase tracking-wider text-text-dim hover:text-text",
     active: "text-[var(--accent-deep)] [text-shadow:0_0_8px_currentColor]",
     menuLabel: "▶ MENU",
-    showIcons: false,
-  },
-  sheet: {
-    bar: "h-9 gap-1 bg-chrome px-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]",
-    item: "h-7 max-w-[150px] px-2.5 font-pixel text-[8px] uppercase tracking-[0.2em] text-text-dim hover:text-text",
-    active: "text-white shadow-[inset_0_-2px_0_#fff]",
-    menuLabel: "INDEX",
     showIcons: false,
   },
 };
@@ -131,14 +141,9 @@ export function Taskbar() {
     >
       <NavMenu chrome={chrome} skinId={skinId} />
       {chrome === "os" && <span className="mx-0.5 h-7 w-[2px] flex-shrink-0 bevel-thin-in" />}
-      {chrome === "tty" && (
-        <span className="mr-2 hidden flex-shrink-0 text-[13px] text-text-faint sm:inline">
-          deepwork@focusflow:~$
-        </span>
-      )}
 
       <div className="flex min-w-0 flex-1 items-center gap-1 overflow-hidden">
-        {PROGRAMS.map((p, i) => {
+        {PROGRAMS.map((p) => {
           const active = pathname?.startsWith(p.href) ?? false;
           const Icon = p.icon;
           const label = windowTitle(p.label, skinId);
@@ -155,7 +160,7 @@ export function Taskbar() {
             >
               {nav.showIcons && <Icon className="h-3.5 w-3.5 flex-shrink-0" />}
               <span className={cn("truncate", nav.showIcons && "hidden sm:inline")}>
-                {chrome === "tty" ? `[${i}:${label}]` : label}
+                {label}
               </span>
             </Link>
           );
@@ -184,12 +189,16 @@ function NavMenu({ chrome, skinId }: { chrome: ChromeStyle; skinId: ReturnType<t
         className={cn(
           "flex-shrink-0",
           chrome === "hud" && "hud-nav hud-nav-active h-7 px-3 text-[9px]",
-          chrome === "tty" && "h-6 px-1.5 text-[13px] lowercase text-[var(--accent-deep)]",
-          chrome === "paper" && "h-7 px-2.5 text-[12px] font-bold text-[var(--accent-deep)]",
+          chrome === "holo" &&
+            "h-7 px-2.5 font-pixel text-[9px] uppercase tracking-[0.18em] text-[var(--accent-deep)] [text-shadow:0_0_10px_hsl(var(--accent)/0.5)]",
+          chrome === "cockpit" &&
+            "h-7 bg-black/40 px-3 font-pixel text-[8px] uppercase tracking-[0.16em] text-[var(--accent-deep)] shadow-[inset_0_0_0_1px_hsl(var(--accent)/0.4)]",
+          chrome === "ghost" &&
+            "h-7 px-2.5 text-[11px] font-semibold text-[var(--accent-deep)]",
+          chrome === "void" &&
+            "h-7 px-2 text-[11px] lowercase tracking-[0.08em] text-[var(--accent-deep)]",
           chrome === "deck" &&
-            "h-7 px-2.5 font-pixel text-[8px] uppercase tracking-wider text-[var(--accent-deep)] [text-shadow:0_0_8px_currentColor]",
-          chrome === "sheet" &&
-            "h-7 border border-white/70 px-2.5 font-pixel text-[8px] uppercase tracking-[0.2em] text-white"
+            "h-7 px-2.5 font-pixel text-[8px] uppercase tracking-wider text-[var(--accent-deep)] [text-shadow:0_0_8px_currentColor]"
         )}
       >
         {NAV[chrome].menuLabel}

@@ -67,10 +67,11 @@ interface WindowProps {
 const SHELL: Record<ChromeStyle, { shell: string; body: string }> = {
   os: { shell: "win95 p-[3px]", body: "p-2.5" },
   hud: { shell: "hud-shell", body: "p-3" },
-  tty: { shell: "tty-shell", body: "p-3 pt-4" },
-  paper: { shell: "paper-shell", body: "p-3" },
+  holo: { shell: "holo-shell", body: "p-3" },
+  cockpit: { shell: "cockpit-shell", body: "p-3" },
+  ghost: { shell: "ghost-shell", body: "p-3.5" },
+  void: { shell: "void-shell", body: "p-3.5" },
   deck: { shell: "deck-shell", body: "p-3" },
-  sheet: { shell: "sheet-shell", body: "p-3" },
 };
 
 /**
@@ -182,30 +183,59 @@ export function Window({
         </div>
       )}
 
-      {chrome === "tty" && (
-        <div className={cn("tty-title", dragCls)} {...headerProps}>
-          <button
-            className="lowercase outline-none"
-            aria-label={shaded ? "Expand pane" : "Collapse pane"}
-            onClick={() => setShaded((s) => !s)}
-          >
-            ┤ {label} ├
-          </button>
-          {titleExtra && <span className="ml-2">{titleExtra}</span>}
-        </div>
-      )}
-
-      {chrome === "paper" && (
-        <div className={cn("paper-head", dragCls)} {...headerProps}>
+      {chrome === "holo" && (
+        <div className={cn("holo-head", dragCls)} {...headerProps}>
           <span className="min-w-0 flex-1 truncate">{label}</span>
           {titleExtra}
           <button
-            className="paper-seal"
-            aria-label={shaded ? "Open" : "Fold"}
+            className="holo-toggle"
+            aria-label={shaded ? "Project" : "Dim"}
             onClick={() => setShaded((s) => !s)}
-            title={shaded ? "open" : "fold"}
           >
-            印
+            {shaded ? "▢" : "▣"}
+          </button>
+        </div>
+      )}
+
+      {chrome === "cockpit" && (
+        <div className={cn("cockpit-head", dragCls)} {...headerProps}>
+          <span className="cockpit-stripe" aria-hidden />
+          <span className="min-w-0 flex-1 truncate">{label}</span>
+          {titleExtra}
+          <button
+            className="cockpit-toggle"
+            aria-label={shaded ? "Deploy panel" : "Stow panel"}
+            onClick={() => setShaded((s) => !s)}
+          >
+            {shaded ? "▲" : "▼"}
+          </button>
+        </div>
+      )}
+
+      {chrome === "ghost" && (
+        <div className={cn("ghost-head", dragCls)} {...headerProps}>
+          <span className="min-w-0 flex-1 truncate">{label}</span>
+          {titleExtra}
+          <button
+            className="ghost-toggle"
+            aria-label={shaded ? "Expand" : "Collapse"}
+            onClick={() => setShaded((s) => !s)}
+          >
+            {shaded ? "+" : "−"}
+          </button>
+        </div>
+      )}
+
+      {chrome === "void" && (
+        <div className={cn("void-head", dragCls)} {...headerProps}>
+          <span className="min-w-0 flex-1 truncate">{label}</span>
+          {titleExtra}
+          <button
+            className="void-toggle"
+            aria-label={shaded ? "Expand" : "Collapse"}
+            onClick={() => setShaded((s) => !s)}
+          >
+            {shaded ? "○" : "●"}
           </button>
         </div>
       )}
@@ -221,21 +251,6 @@ export function Window({
             onClick={() => setShaded((s) => !s)}
           >
             {shaded ? "▸" : "▾"}
-          </button>
-        </div>
-      )}
-
-      {chrome === "sheet" && (
-        <div className={cn("sheet-head", dragCls)} {...headerProps}>
-          <span className="sheet-tab">{label}</span>
-          <span className="flex-1" />
-          {titleExtra}
-          <button
-            className="sheet-toggle"
-            aria-label={shaded ? "Unroll sheet" : "Roll sheet"}
-            onClick={() => setShaded((s) => !s)}
-          >
-            {shaded ? "＋" : "−"}
           </button>
         </div>
       )}

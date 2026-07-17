@@ -119,13 +119,15 @@ On first visit a boot-manager screen asks which interface to load, and the
 **entire design language** changes (switchable any time via View → Interface
 or THEMES.CPL):
 
-- **FOCUSFLOW·95** — retro OS: beveled gray chrome, pixel fonts, defrag bars
-- **NETRUNNER** — cyberpunk: black glass, neon edges, grid desktop, Orbitron
-- **SHOSAI** — old Japan: washi paper, sumi ink frames, indigo title bars, mincho serifs
-- **MAINFRAME** — phosphor terminal: inverse-video title bars; the color scheme picks your phosphor (forest = green CRT, ember = amber)
-- **SYSTEM·1** — strict 1-bit monochrome: pinstriped title bars, checkerboard desktop, two colors total
-- **OUTRUN** — synthwave: sunset title bars, striped sun and horizon grid, Audiowide chrome
-- **BLUEPRINT** — cyanotype drafting table: white double-line frames, graph-paper desktop, stencil caps
+One retro museum piece, six futuristic siblings:
+
+- **FOCUSFLOW·95** — the retro one: beveled gray chrome, pixel fonts, defrag bars, Start menu
+- **NETRUNNER** — cyberpunk HUD: black glass, corner-bracket modules, neon edges, `FOCUS//RUN` naming
+- **HOLODECK** — augmented hologram: translucent light-field panels, corner ticks, glow hairlines over a dark grid
+- **STARSHIP** — deep-space freighter: gunmetal instrument panels, amber readouts, caution stripes, starfield
+- **GHOST** — sterile white future: hairline edges, one quiet accent, rounded clean-room surfaces
+- **VOID** — OLED black minimal: true-black panels, hairline rings, lowercase type, zero ornament
+- **OUTRUN** — synthwave: sunset title bars, striped sun and horizon grid floor, Audiowide chrome
 
 All 12 color schemes compose with every interface. The default retro OS look:
 - Draggable, beveled windows with gradient title bars (FOCUS.EXE, TASKS.SYS, MIXER.EXE…)

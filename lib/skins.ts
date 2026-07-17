@@ -1,31 +1,36 @@
 /**
  * Interface skins — full design languages, not just accent colors.
- * A skin swaps the entire UI chrome (fonts, bevels, windows, desktop)
+ * A skin swaps the entire UI chrome (fonts, frames, windows, desktop)
  * via `body[data-skin="…"]` scopes in globals.css. The 12 accent
  * themes (lib/themes.ts) compose with every skin.
+ *
+ * Lineup philosophy: ONE retro museum piece (FOCUSFLOW·95), the rest
+ * are futuristic siblings — neon, hologram, deep space, sterile lab,
+ * OLED void, synthwave.
  */
 
 export type SkinId =
   | "retro95"
   | "cyberpunk"
-  | "edo"
-  | "terminal"
-  | "mono"
-  | "outrun"
-  | "blueprint";
+  | "holo"
+  | "starship"
+  | "ghost"
+  | "void"
+  | "outrun";
 
 /**
- * Chrome paradigm — how windows and navigation render. This is what
- * makes each skin a standalone design language instead of a recolored
- * OS: only "os" skins get title-bar buttons, Start menus and .EXE names.
+ * Chrome paradigm — how windows and navigation render. Only the "os"
+ * skin gets title-bar buttons, a Start menu and .EXE names; every
+ * other paradigm has its own frame + nav language.
  */
 export type ChromeStyle =
-  | "os" /* retro95, mono — title bars, — □ ✕, Start menu */
-  | "hud" /* cyberpunk — angular HUD frames, corner brackets, SYS nav */
-  | "tty" /* terminal — tmux-style panes, status-line nav */
-  | "paper" /* edo — washi cards with fabric header + hanko seal */
-  | "deck" /* outrun — dashboard strips, LED header */
-  | "sheet"; /* blueprint — drafting frames with title tabs */
+  | "os" /* retro95 — title bars, — □ ✕, Start menu */
+  | "hud" /* cyberpunk — angular HUD frames, corner brackets */
+  | "holo" /* holodeck — translucent AR glass, corner ticks */
+  | "cockpit" /* starship — steel panels, caution stripes, rivets */
+  | "ghost" /* ghost — white lab minimal, hairline accents */
+  | "void" /* void — black OLED, hairline edges, pure type */
+  | "deck"; /* outrun — dashboard strips, LED header */
 
 export interface Skin {
   id: SkinId;
@@ -56,10 +61,10 @@ export const SKINS: Skin[] = [
     id: "retro95",
     chrome: "os",
     name: "FOCUSFLOW·95",
-    tagline: "Retro operating system",
+    tagline: "The retro one",
     description:
-      "Beveled gray chrome, pixel fonts, defrag bars. The desktop that shipped on a floppy.",
-    bootLabel: "FOCUSFLOW.95 [default]",
+      "Beveled gray chrome, pixel fonts, defrag bars. The desktop that shipped on a floppy — kept exactly as it was.",
+    bootLabel: "FOCUSFLOW.95 [retro]",
     preview: {
       desktop: "#0f5852",
       chrome: "#c9c6bc",
@@ -103,79 +108,104 @@ export const SKINS: Skin[] = [
     bootColor: "#67e8f9",
   },
   {
-    id: "edo",
-    chrome: "paper",
-    name: "SHOSAI",
-    tagline: "Old Japan study house",
+    id: "holo",
+    chrome: "holo",
+    name: "HOLODECK",
+    tagline: "Augmented hologram",
     description:
-      "Washi paper, sumi ink, indigo and vermillion. A quiet Edo-period writing room.",
-    bootLabel: "SHOSAI.MODE [washi]",
+      "Translucent light-field panels projected over a dark grid. Corner ticks, soft glow, interface as apparition.",
+    bootLabel: "HOLODECK.PRJ [hologram]",
     preview: {
-      desktop: "#1d2742",
-      chrome: "#efe6d0",
-      titleBar: "linear-gradient(90deg,#232d4f,#3a466e)",
-      text: "#2a2118",
-      accent: "#b3402a",
+      desktop: "#03070f",
+      chrome: "#0a1626",
+      titleBar: "linear-gradient(90deg,rgba(80,200,255,0.65),rgba(80,200,255,0.15))",
+      text: "#c9e9ff",
+      accent: "#54c8ff",
     },
     bootLines: [
-      "書斎 SHOSAI — DEEP WORK SYSTEMS",
-      "GRINDING INK .................... OK",
-      "UNROLLING WASHI ................. OK",
-      "SWEEPING THE STUDY .............. SPOTLESS",
-      "LIGHTING THE LANTERN ............ LIT",
-      "OPENING THE SHOJI ...",
+      "HOLODECK PROJECTOR — DEEP WORK SYSTEMS",
+      "EMITTERS ........................ WARM",
+      "LIGHT FIELD ..................... COHERENT",
+      "PHOTON BUDGET ................... UNLIMITED",
+      "RENDERING WORKSPACE ............. 100%",
+      "PROJECTION ON.",
     ],
-    bootColor: "#e8d5a3",
+    bootColor: "#8fd8ff",
   },
   {
-    id: "terminal",
-    chrome: "tty",
-    name: "MAINFRAME",
-    tagline: "Phosphor terminal",
+    id: "starship",
+    chrome: "cockpit",
+    name: "STARSHIP",
+    tagline: "Deep-space freighter",
     description:
-      "A bare CRT terminal. Inverse-video title bars, glowing phosphor — the color scheme picks your phosphor.",
-    bootLabel: "MAINFRAME.TTY [phosphor]",
+      "Gunmetal instrument panels, amber readouts, caution stripes. Long haul, no distractions for 4.3 light-years.",
+    bootLabel: "STARSHIP.CTL [deepspace]",
     preview: {
-      desktop: "#010402",
-      chrome: "#041007",
-      titleBar: "linear-gradient(90deg,#63ff8f,#63ff8f)",
-      text: "#b8ffcb",
-      accent: "#63ff8f",
+      desktop: "#101318",
+      chrome: "#1a1e25",
+      titleBar: "linear-gradient(90deg,#2a2f38,#1f242c)",
+      text: "#ffd9a0",
+      accent: "#ffb454",
     },
     bootLines: [
-      "MAINFRAME TTY — DEEP WORK SYSTEMS",
-      "CONNECT 9600 BAUD ............... CARRIER OK",
-      "LOGIN: deepworker ............... AUTHENTICATED",
-      "MOTD: NO NEWS. ONLY WORK.",
-      "MOUNTING /dev/focus ............. OK",
-      "READY.",
+      "STARSHIP CONTROL — DEEP WORK SYSTEMS",
+      "REACTOR ......................... NOMINAL",
+      "LIFE SUPPORT .................... NOMINAL",
+      "COFFEE .......................... CRITICAL (OK)",
+      "COURSE: DEEP WORK ............... LAID IN",
+      "ALL HANDS, FOCUS STATIONS.",
     ],
-    bootColor: "#7dffa0",
+    bootColor: "#ffc97e",
   },
   {
-    id: "mono",
-    chrome: "os",
-    name: "SYSTEM·1",
-    tagline: "1-bit monochrome",
+    id: "ghost",
+    chrome: "ghost",
+    name: "GHOST",
+    tagline: "Sterile white future",
     description:
-      "Strict black on white. Pinstriped title bars, checkerboard desktop, not a single color anywhere.",
-    bootLabel: "SYSTEM1.IMG [1-bit]",
+      "A clean-room interface: white surfaces, hairline edges, one quiet accent. The future where everything works.",
+    bootLabel: "GHOST.SHL [sterile]",
     preview: {
-      desktop: "repeating-conic-gradient(#8a8a8a 0% 25%, #a8a8a8 0% 50%) 0 0 / 4px 4px",
+      desktop: "#e8ecf0",
       chrome: "#ffffff",
-      titleBar: "repeating-linear-gradient(0deg,#000 0 1px,#fff 1px 3px)",
-      text: "#000000",
-      accent: "#000000",
+      titleBar: "linear-gradient(90deg,#dfe5ea,#f2f5f8)",
+      text: "#16181c",
+      accent: "#0f8a8a",
     },
     bootLines: [
-      "SYSTEM 1 — DEEP WORK SYSTEMS",
-      "CHECKING DISK ................... OK",
-      "COLORS FOUND .................... 2 (PLENTY)",
-      "LOADING FINDER .................. OK",
-      "EMPTYING TRASH .................. DONE",
-      "WELCOME.",
+      "GHOST SHELL — DEEP WORK SYSTEMS",
+      "STERILIZING WORKSPACE ........... 99.97%",
+      "NOISE ........................... REMOVED",
+      "SURFACES ........................ POLISHED",
+      "THOUGHTS ........................ ALIGNED",
+      "BEGIN.",
     ],
-    bootColor: "#ffffff",
+    bootColor: "#dfe5ea",
+  },
+  {
+    id: "void",
+    chrome: "void",
+    name: "VOID",
+    tagline: "OLED black minimal",
+    description:
+      "Nothing but type on true black. Hairline edges, zero ornament — the interface disappears, the work remains.",
+    bootLabel: "VOID.NIL [black]",
+    preview: {
+      desktop: "#000000",
+      chrome: "#0a0a0a",
+      titleBar: "linear-gradient(90deg,#151515,#0a0a0a)",
+      text: "#e8e8e8",
+      accent: "#9a7cff",
+    },
+    bootLines: [
+      "VOID — DEEP WORK SYSTEMS",
+      "SCANNING FOR CLUTTER ............ NONE",
+      "SCANNING FOR NOISE .............. NONE",
+      "SCANNING FOR EXCUSES ............ NONE",
+      "NOTHING FOUND. GOOD.",
+      "ENTER THE VOID.",
+    ],
+    bootColor: "#bfaefc",
   },
   {
     id: "outrun",
@@ -202,34 +232,9 @@ export const SKINS: Skin[] = [
     ],
     bootColor: "#ff6ea9",
   },
-  {
-    id: "blueprint",
-    chrome: "sheet",
-    name: "BLUEPRINT",
-    tagline: "Drafting table",
-    description:
-      "Cyanotype paper and white line-work. Every window drawn with a T-square, labels in stencil caps.",
-    bootLabel: "BLUEPRINT.DWG [cyanotype]",
-    preview: {
-      desktop: "#123a6d",
-      chrome: "#1e4a80",
-      titleBar: "rgba(255,255,255,0.28)",
-      text: "#dbe9ff",
-      accent: "#ffffff",
-    },
-    bootLines: [
-      "DRAFTING TABLE v1.0 — DEEP WORK SYSTEMS",
-      "T-SQUARE ........................ ALIGNED",
-      "PAPER: A0 CYANOTYPE ............. PINNED",
-      "PENCILS ......................... SHARPENED",
-      "SCALE 1:1 (YOUR ACTUAL LIFE)",
-      "BEGIN DRAWING ...",
-    ],
-    bootColor: "#cfe4ff",
-  },
 ];
 
-export function getSkin(id: SkinId): Skin {
+export function getSkin(id: SkinId | string): Skin {
   return SKINS.find((s) => s.id === id) ?? SKINS[0];
 }
 
@@ -239,34 +244,6 @@ export function getSkin(id: SkinId): Skin {
    "GOALS.TXT"); each skin derives its own language from it so
    nothing outside retro95 ever shows a DOS extension.
    ============================================================ */
-
-/** Curated Japanese labels for the edo skin (base name → kanji). */
-const EDO_NAMES: Record<string, string> = {
-  FOCUS: "集中の間",
-  TASKS: "務め",
-  GOALS: "目標",
-  STATS: "記録",
-  SNAPSHOT: "今日",
-  DEFRAG: "整頓",
-  MIXER: "音の間",
-  HEATMAP: "九十日",
-  LOG: "日誌",
-  HISTORY: "日誌",
-  TROPHY: "誉れ",
-  THEMES: "装い",
-  DISPLAY: "装い",
-  SETUP: "設え",
-  TIMER: "刻",
-  BEHAVIOR: "作法",
-  AI: "師範",
-  ROOM: "共作",
-  ROOMS: "座敷",
-  LIVE: "同席",
-  WELCOME: "ようこそ",
-  README: "はじめに",
-  LOGIN: "入室",
-  FORMAT: "始末",
-};
 
 /** Cyberpunk suffix per DOS extension family. */
 const HUD_SUFFIX: Record<string, string> = {
@@ -283,18 +260,13 @@ const HUD_SUFFIX: Record<string, string> = {
   CAM: "CAM",
   COM: "RUN",
   DLL: "LIB",
-  DWG: "DWG",
-  IMG: "IMG",
-  TTY: "TTY",
-  MODE: "SYS",
-  DRV: "DRV",
 };
 
 /**
  * Transform a canonical retro window title into the active skin's
  * naming language. Unknown/odd titles pass through sensibly.
  */
-export function windowTitle(retroName: string, skin: SkinId): string {
+export function windowTitle(retroName: string, skin: SkinId | string): string {
   const m = retroName.match(/^([A-Z0-9_·-]+)\.([A-Z]+)$/i);
   if (!m) return retroName; // free-form titles pass through
   const base = m[1].toUpperCase();
@@ -302,23 +274,19 @@ export function windowTitle(retroName: string, skin: SkinId): string {
   const pretty = base.charAt(0) + base.slice(1).toLowerCase();
 
   switch (skin) {
-    case "retro95":
-      return retroName;
-    case "mono":
-      return pretty; // classic Mac windows: plain names, no extensions
     case "cyberpunk":
       return `${base}//${HUD_SUFFIX[ext] ?? ext}`;
-    case "terminal":
-      // processes lowercase, documents keep their file look
-      return ext === "TXT" || ext === "LOG"
-        ? `${base.toLowerCase()}.${ext.toLowerCase()}`
-        : `${base.toLowerCase()}`;
-    case "edo":
-      return EDO_NAMES[base] ?? pretty;
+    case "holo":
+      return `◇ ${base}`;
+    case "starship":
+      return `${base}/CTL`;
+    case "ghost":
+      return pretty; // clean-room: plain names, no fiction
+    case "void":
+      return base.toLowerCase();
     case "outrun":
-      return base; // big chrome letters, no file fiction
-    case "blueprint":
-      return base; // stencil caps; the sheet-tab chrome carries the look
+      return base; // big chrome letters
+    case "retro95":
     default:
       return retroName;
   }

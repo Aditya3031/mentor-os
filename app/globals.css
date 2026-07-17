@@ -437,302 +437,448 @@ body[data-skin="cyberpunk"] .title-bar-inactive {
   background: linear-gradient(90deg, #1e1b2b, #2a2440);
 }
 
-/* ------------------------------------------------------------
-   SHOSAI — old Japan study house (washi, ink, indigo)
-   ------------------------------------------------------------ */
-body[data-skin="edo"] {
-  --chrome: 42 42% 88%;
-  --chrome-hi: 45 48% 94%;
-  --chrome-lo: 40 30% 74%;
-  --bg-1: 42 42% 88%;
-  --bg-2: 41 36% 80%;
-  --surface: 42 42% 88%;
-  --border: 30 22% 40%;
-
-  --text: 25 28% 12%;
-  --text-dim: 25 16% 32%;
-  --text-faint: 28 12% 48%;
-
-  /* Ink-warmed accent for text and seals */
-  --accent-deep: color-mix(in oklch, hsl(var(--accent)), #47201a 45%);
-  --accent-mid: color-mix(in oklch, hsl(var(--accent)), #47201a 25%);
-  --desktop: color-mix(in oklch, hsl(var(--accent)), #1b2340 82%);
-  --title-grad: linear-gradient(
-    90deg,
-    #232d4f,
-    color-mix(in oklch, hsl(var(--accent)), #2c3760 60%)
-  );
-
-  --edge-black: #33291c;
-  --edge-dark: #b6a887;
-  --edge-light: #fff9ea;
-  --edge-white: #fffdf5;
-
-  --paper: #f8f1df;
-
-  --ui-display: var(--font-shippori), serif;
-  --ui-digits: var(--font-zenmincho), serif;
-  --ui-body: var(--font-zenmincho), serif;
-
-  image-rendering: auto;
-  letter-spacing: 0.01em;
-}
-body[data-skin="edo"] .win95,
-body[data-skin="edo"] .panel {
-  box-shadow:
-    inset 0 0 0 1px rgba(51, 41, 28, 0.85),
-    inset 0 0 0 2px var(--paper),
-    inset 0 0 0 3px rgba(51, 41, 28, 0.25),
-    4px 4px 0 rgba(30, 22, 12, 0.3);
-}
-body[data-skin="edo"] .bevel-out {
-  box-shadow:
-    inset 0 0 0 1px rgba(51, 41, 28, 0.75),
-    2px 2px 0 rgba(30, 22, 12, 0.22);
-}
-body[data-skin="edo"] .bevel-in,
-body[data-skin="edo"] .bevel-thin-in {
-  box-shadow:
-    inset 0 0 0 1px rgba(51, 41, 28, 0.55),
-    inset 0 2px 5px rgba(80, 60, 30, 0.15);
-}
-body[data-skin="edo"] .bevel-thin {
-  box-shadow: inset 0 0 0 1px rgba(51, 41, 28, 0.4);
-}
-body[data-skin="edo"] .title-bar {
-  text-shadow: none;
-  letter-spacing: 0.22em;
-  box-shadow: inset 0 -1px 0 #c9a86a;
-  text-transform: uppercase;
-}
-body[data-skin="edo"] .btn95 {
-  letter-spacing: 0.14em;
-}
-body[data-skin="edo"] .btn95:hover {
-  background: color-mix(in oklch, hsl(var(--accent)), var(--paper) 88%);
-}
-body[data-skin="edo"] .btn95-primary {
-  background: var(--accent-deep);
-  text-shadow: none;
-  box-shadow:
-    inset 0 0 0 1px rgba(51, 41, 28, 0.9),
-    2px 2px 0 rgba(30, 22, 12, 0.3);
-}
-body[data-skin="edo"] .bg-stage-base {
-  background-color: var(--desktop);
-  /* Seigaiha-ish overlapping wave rings */
-  background-image:
-    radial-gradient(circle at 50% 130%, transparent 38%, rgba(255, 248, 230, 0.05) 39% 41%, transparent 42%, transparent 56%, rgba(255, 248, 230, 0.05) 57% 59%, transparent 60%),
-    radial-gradient(circle at 0% 130%, transparent 38%, rgba(255, 248, 230, 0.05) 39% 41%, transparent 42%, transparent 56%, rgba(255, 248, 230, 0.05) 57% 59%, transparent 60%),
-    radial-gradient(circle at 100% 130%, transparent 38%, rgba(255, 248, 230, 0.05) 39% 41%, transparent 42%, transparent 56%, rgba(255, 248, 230, 0.05) 57% 59%, transparent 60%);
-  background-size: 90px 45px;
-  background-position: 0 0, 45px 22px, -45px 22px;
-}
-body[data-skin="edo"] .crt-overlay {
-  /* Washi fibers instead of scanlines — barely there */
-  background: repeating-linear-gradient(
-    0deg,
-    rgba(120, 90, 40, 0.025) 0 1px,
-    transparent 1px 4px
-  );
-  mix-blend-mode: multiply;
-}
-body[data-skin="edo"] .title-bar-inactive {
-  background: linear-gradient(90deg, #5a5344, #6e6552);
-}
-body[data-skin="edo"] ::-webkit-scrollbar-track {
-  background: var(--paper);
-}
-body[data-skin="edo"] ::-webkit-scrollbar-thumb {
-  background: hsl(var(--chrome-lo));
-  box-shadow: inset 0 0 0 1px rgba(51, 41, 28, 0.6);
-}
 
 /* ------------------------------------------------------------
-   MAINFRAME — phosphor terminal. The color scheme picks the
-   phosphor: forest = classic green, ember = amber, etc.
+   HOLODECK — translucent AR light-field panels over a dark grid
    ------------------------------------------------------------ */
-body[data-skin="terminal"] {
-  --chrome: 150 25% 4%;
-  --chrome-hi: 150 20% 8%;
-  --chrome-lo: 150 30% 2%;
-  --bg-1: 150 25% 4%;
-  --bg-2: 150 30% 2%;
-  --surface: 150 25% 4%;
-  --border: 150 20% 25%;
+body[data-skin="holo"] {
+  --chrome: 211 55% 9%;
+  --chrome-hi: 210 50% 14%;
+  --chrome-lo: 212 60% 5%;
+  --bg-1: 211 55% 9%;
+  --bg-2: 212 60% 6%;
+  --surface: 211 55% 9%;
+  --border: 205 60% 40%;
 
-  --text: 145 18% 82%;
-  --text-dim: 148 12% 58%;
-  --text-faint: 150 8% 38%;
+  --text: 205 60% 90%;
+  --text-dim: 207 35% 68%;
+  --text-faint: 209 22% 48%;
 
-  /* Phosphor = brightened accent */
-  --accent-deep: color-mix(in oklch, hsl(var(--accent)), white 22%);
+  --accent-deep: color-mix(in oklch, hsl(var(--accent)), white 18%);
   --accent-mid: hsl(var(--accent));
-  --desktop: #010302;
+  --desktop: color-mix(in oklch, hsl(var(--accent)), #020610 92%);
   --title-grad: linear-gradient(
     90deg,
-    var(--accent-deep),
-    var(--accent-deep)
+    hsl(var(--accent) / 0.45),
+    hsl(var(--accent) / 0.08)
   );
 
-  --edge-black: #000;
-  --edge-dark: color-mix(in oklch, hsl(var(--accent)), #020503 70%);
-  --edge-light: color-mix(in oklch, hsl(var(--accent)), #041008 45%);
+  --edge-black: #010409;
+  --edge-dark: hsl(var(--accent) / 0.18);
+  --edge-light: hsl(var(--accent) / 0.35);
   --edge-white: var(--accent-deep);
 
-  --paper: #010502;
+  --paper: #050b16;
+  --radius: 6px;
 
-  --ui-display: var(--font-digits), monospace;
-  --ui-digits: var(--font-digits), monospace;
+  --ui-display: var(--font-rajdhani), sans-serif;
+  --ui-digits: var(--font-chakra), sans-serif;
+  --ui-body: var(--font-chakra), sans-serif;
+
+  image-rendering: auto;
+}
+body[data-skin="holo"] ::selection {
+  background: hsl(var(--accent));
+  color: #000;
+}
+body[data-skin="holo"] :focus-visible {
+  outline: 1px dotted var(--accent-deep);
+}
+body[data-skin="holo"] .win95,
+body[data-skin="holo"] .panel {
+  background: hsl(var(--chrome) / 0.72);
+  backdrop-filter: blur(12px);
+  border-radius: var(--radius);
+  box-shadow:
+    inset 0 0 0 1px hsl(var(--accent) / 0.35),
+    inset 0 1px 0 hsl(var(--accent) / 0.5),
+    0 0 24px hsl(var(--accent) / 0.12),
+    0 10px 34px rgba(0, 0, 0, 0.5);
+}
+body[data-skin="holo"] .bevel-out {
+  box-shadow: inset 0 0 0 1px hsl(var(--accent) / 0.35);
+  border-radius: var(--radius);
+}
+body[data-skin="holo"] .bevel-in,
+body[data-skin="holo"] .bevel-thin-in {
+  box-shadow:
+    inset 0 0 0 1px hsl(var(--accent) / 0.25),
+    inset 0 2px 8px rgba(0, 0, 0, 0.45);
+  border-radius: var(--radius);
+}
+body[data-skin="holo"] .bevel-thin {
+  box-shadow: inset 0 0 0 1px hsl(var(--accent) / 0.22);
+  border-radius: var(--radius);
+}
+body[data-skin="holo"] .title-bar {
+  text-shadow: 0 0 12px hsl(var(--accent) / 0.6);
+  letter-spacing: 0.2em;
+}
+body[data-skin="holo"] .btn95 {
+  background: hsl(var(--chrome-hi) / 0.5);
+  border-radius: var(--radius);
+  letter-spacing: 0.14em;
+}
+body[data-skin="holo"] .btn95:hover {
+  background: hsl(var(--accent) / 0.16);
+}
+body[data-skin="holo"] .btn95-primary {
+  background: hsl(var(--accent) / 0.3);
+  box-shadow:
+    inset 0 0 0 1px hsl(var(--accent) / 0.85),
+    0 0 16px hsl(var(--accent) / 0.3);
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+}
+body[data-skin="holo"] .bg-stage-base {
+  background-color: var(--desktop);
+  background-image:
+    linear-gradient(hsl(var(--accent) / 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, hsl(var(--accent) / 0.05) 1px, transparent 1px),
+    radial-gradient(ellipse at 20% 0%, hsl(var(--accent) / 0.12), transparent 55%),
+    radial-gradient(ellipse at 85% 100%, hsl(var(--accent-alt) / 0.1), transparent 55%);
+  background-size: 48px 48px, 48px 48px, 100% 100%, 100% 100%;
+}
+body[data-skin="holo"] .crt-overlay {
+  background:
+    repeating-linear-gradient(0deg, rgba(140, 200, 255, 0.025) 0 1px, transparent 1px 4px),
+    radial-gradient(ellipse at center, transparent 65%, rgba(0, 5, 15, 0.3) 100%);
+  mix-blend-mode: screen;
+}
+body[data-skin="holo"] .title-bar-inactive {
+  background: linear-gradient(90deg, rgba(120, 140, 170, 0.25), rgba(120, 140, 170, 0.08));
+}
+
+/* ------------------------------------------------------------
+   STARSHIP — deep-space freighter cockpit: gunmetal + amber
+   ------------------------------------------------------------ */
+body[data-skin="starship"] {
+  --chrome: 219 13% 13%;
+  --chrome-hi: 219 11% 18%;
+  --chrome-lo: 220 15% 8%;
+  --bg-1: 219 13% 13%;
+  --bg-2: 220 15% 9%;
+  --surface: 219 13% 13%;
+  --border: 219 10% 34%;
+
+  --text: 36 32% 88%;
+  --text-dim: 33 15% 64%;
+  --text-faint: 30 8% 44%;
+
+  /* Instrument amber, tinted by the color scheme */
+  --accent-deep: color-mix(in oklch, hsl(var(--accent)), #ffb454 55%);
+  --accent-mid: color-mix(in oklch, hsl(var(--accent)), #ffb454 30%);
+  --desktop: #0b0d12;
+  --title-grad: linear-gradient(90deg, #272c35, #1c212a);
+
+  --edge-black: #05070a;
+  --edge-dark: #31363f;
+  --edge-light: rgba(255, 255, 255, 0.09);
+  --edge-white: rgba(255, 255, 255, 0.16);
+
+  --paper: #0b0d11;
+  --radius: 3px;
+
+  --ui-display: var(--font-michroma), sans-serif;
+  --ui-digits: var(--font-sharetech), monospace;
   --ui-body: var(--font-body), monospace;
 
   image-rendering: auto;
-  text-shadow: 0 0 4px color-mix(in srgb, var(--accent-deep), transparent 72%);
 }
-body[data-skin="terminal"] ::selection {
+body[data-skin="starship"] ::selection {
   background: var(--accent-deep);
-  color: #000;
+  color: #14161a;
 }
-body[data-skin="terminal"] :focus-visible {
+body[data-skin="starship"] :focus-visible {
   outline: 1px dotted var(--accent-deep);
 }
-body[data-skin="terminal"] .win95,
-body[data-skin="terminal"] .panel {
+body[data-skin="starship"] .win95,
+body[data-skin="starship"] .panel {
+  border-radius: var(--radius);
   box-shadow:
-    inset 0 0 0 1px color-mix(in srgb, var(--accent-deep), transparent 25%),
-    0 0 18px color-mix(in srgb, var(--accent-deep), transparent 88%);
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    inset 0 0 0 1px #05070a,
+    inset 0 0 0 2px rgba(255, 255, 255, 0.05),
+    0 6px 20px rgba(0, 0, 0, 0.55);
 }
-body[data-skin="terminal"] .bevel-out {
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent-deep), transparent 35%);
+body[data-skin="starship"] .bevel-out {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    inset 0 0 0 1px #05070a;
+  border-radius: var(--radius);
 }
-body[data-skin="terminal"] .bevel-in,
-body[data-skin="terminal"] .bevel-thin-in {
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent-deep), transparent 55%);
+body[data-skin="starship"] .bevel-in,
+body[data-skin="starship"] .bevel-thin-in {
+  box-shadow:
+    inset 0 0 0 1px #05070a,
+    inset 0 2px 6px rgba(0, 0, 0, 0.6);
+  border-radius: var(--radius);
 }
-body[data-skin="terminal"] .bevel-thin {
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent-deep), transparent 62%);
+body[data-skin="starship"] .bevel-thin {
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius);
 }
-/* Inverse video title bars — the authentic terminal move */
-body[data-skin="terminal"] .title-bar {
-  color: #000;
-  text-shadow: none;
-  letter-spacing: 0.14em;
-  font-size: 13px;
-  text-transform: uppercase;
-}
-body[data-skin="terminal"] .tb-btn {
-  background: #000;
+body[data-skin="starship"] .title-bar {
   color: var(--accent-deep);
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent-deep), transparent 40%);
+  text-shadow: none;
+  letter-spacing: 0.2em;
+  font-size: 10px;
+  box-shadow: inset 0 -1px 0 #05070a;
 }
-body[data-skin="terminal"] .btn95 {
-  letter-spacing: 0.12em;
-  font-size: 13px;
+body[data-skin="starship"] .btn95 {
+  background: hsl(var(--chrome-hi));
+  letter-spacing: 0.14em;
+  border-radius: var(--radius);
 }
-body[data-skin="terminal"] .btn95:hover {
-  background: color-mix(in srgb, var(--accent-deep), transparent 88%);
+body[data-skin="starship"] .btn95:hover {
+  box-shadow:
+    inset 0 0 0 1px var(--accent-deep),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07);
 }
-body[data-skin="terminal"] .btn95-primary {
+body[data-skin="starship"] .btn95-primary {
   background: var(--accent-deep);
-  color: #000;
+  color: #14161a;
   text-shadow: none;
 }
-body[data-skin="terminal"] .bg-stage-base {
-  background-color: var(--desktop);
-  background-image: radial-gradient(
-    ellipse at 50% 45%,
-    color-mix(in srgb, var(--accent-deep), transparent 94%),
-    transparent 70%
-  );
+body[data-skin="starship"] .well {
+  color: var(--accent-deep);
 }
-body[data-skin="terminal"] .crt-overlay {
+body[data-skin="starship"] .bg-stage-base {
+  background-color: var(--desktop);
+  background-image:
+    radial-gradient(1px 1px at 22% 18%, rgba(255, 255, 255, 0.5), transparent 100%),
+    radial-gradient(1px 1px at 68% 62%, rgba(255, 255, 255, 0.35), transparent 100%),
+    radial-gradient(1.5px 1.5px at 84% 28%, rgba(255, 255, 255, 0.4), transparent 100%),
+    radial-gradient(1px 1px at 40% 82%, rgba(255, 255, 255, 0.3), transparent 100%),
+    repeating-linear-gradient(0deg, transparent 0 179px, rgba(255, 255, 255, 0.03) 179px 180px);
+  background-size: 420px 420px, 520px 520px, 640px 640px, 380px 380px, 100% 100%;
+}
+body[data-skin="starship"] .crt-overlay {
   background:
-    repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.22) 0 1px, transparent 1px 3px),
-    radial-gradient(ellipse at center, transparent 55%, rgba(0, 0, 0, 0.4) 100%);
+    repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.1) 0 1px, transparent 1px 3px),
+    radial-gradient(ellipse at center, transparent 60%, rgba(0, 0, 0, 0.35) 100%);
   mix-blend-mode: multiply;
+}
+body[data-skin="starship"] .title-bar-inactive {
+  background: linear-gradient(90deg, #1d2026, #171a20);
 }
 
 /* ------------------------------------------------------------
-   SYSTEM·1 — strict 1-bit monochrome. Pinstripe title bars,
-   checkerboard desktop, zero color anywhere.
+   GHOST — sterile white future lab: hairlines, one quiet accent
    ------------------------------------------------------------ */
-body[data-skin="mono"] {
-  --chrome: 0 0% 100%;
+body[data-skin="ghost"] {
+  --chrome: 210 25% 99%;
   --chrome-hi: 0 0% 100%;
-  --chrome-lo: 0 0% 88%;
-  --bg-1: 0 0% 100%;
-  --bg-2: 0 0% 94%;
-  --surface: 0 0% 100%;
-  --border: 0 0% 0%;
+  --chrome-lo: 210 18% 93%;
+  --bg-1: 210 25% 99%;
+  --bg-2: 210 20% 95%;
+  --surface: 210 25% 99%;
+  --border: 214 12% 78%;
 
-  --text: 0 0% 0%;
-  --text-dim: 0 0% 25%;
-  --text-faint: 0 0% 45%;
+  --text: 216 18% 10%;
+  --text-dim: 216 9% 38%;
+  --text-faint: 214 7% 56%;
 
-  --accent-deep: #000;
-  --accent-mid: #000;
-  --desktop: #9a9a9a;
-  --title-grad: repeating-linear-gradient(0deg, #000 0 1px, #fff 1px 3px);
+  --accent-deep: color-mix(in oklch, hsl(var(--accent)), black 22%);
+  --accent-mid: hsl(var(--accent));
+  --desktop: color-mix(in oklch, hsl(var(--accent)), #e9edf1 90%);
+  --title-grad: linear-gradient(90deg, #eef1f4, #f9fbfc);
 
-  --edge-black: #000;
-  --edge-dark: #000;
-  --edge-light: #fff;
-  --edge-white: #fff;
+  --edge-black: #c8cdd3;
+  --edge-dark: #dde2e7;
+  --edge-light: #ffffff;
+  --edge-white: #ffffff;
 
-  --paper: #fff;
+  --paper: #ffffff;
+  --radius: 10px;
+
+  --ui-display: var(--font-rajdhani), sans-serif;
+  --ui-digits: var(--font-rajdhani), sans-serif;
+  --ui-body: var(--font-body), monospace;
 
   image-rendering: auto;
 }
-body[data-skin="mono"] ::selection {
-  background: #000;
+body[data-skin="ghost"] ::selection {
+  background: var(--accent-deep);
   color: #fff;
 }
-body[data-skin="mono"] .win95,
-body[data-skin="mono"] .panel {
+body[data-skin="ghost"] :focus-visible {
+  outline: 1px dotted var(--accent-deep);
+}
+body[data-skin="ghost"] .win95,
+body[data-skin="ghost"] .panel {
+  border-radius: var(--radius);
   box-shadow:
-    inset 0 0 0 1px #000,
-    2px 2px 0 #000;
+    inset 0 0 0 1px rgba(18, 24, 32, 0.1),
+    0 10px 28px rgba(24, 34, 44, 0.09);
 }
-body[data-skin="mono"] .bevel-out {
-  box-shadow: inset 0 0 0 1px #000;
+body[data-skin="ghost"] .bevel-out {
+  box-shadow: inset 0 0 0 1px rgba(18, 24, 32, 0.1);
+  border-radius: var(--radius);
 }
-body[data-skin="mono"] .bevel-in,
-body[data-skin="mono"] .bevel-thin-in {
-  box-shadow: inset 0 0 0 1px #000;
+body[data-skin="ghost"] .bevel-in,
+body[data-skin="ghost"] .bevel-thin-in {
+  box-shadow:
+    inset 0 0 0 1px rgba(18, 24, 32, 0.12),
+    inset 0 1px 3px rgba(18, 24, 32, 0.06);
+  border-radius: var(--radius);
 }
-body[data-skin="mono"] .bevel-thin {
-  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.55);
+body[data-skin="ghost"] .bevel-thin {
+  box-shadow: inset 0 0 0 1px rgba(18, 24, 32, 0.08);
+  border-radius: var(--radius);
 }
-/* Classic pinstriped title bar with the name on a white plug */
-body[data-skin="mono"] .title-bar {
-  color: #000;
+body[data-skin="ghost"] .title-bar {
+  color: hsl(var(--text-dim));
   text-shadow: none;
-  box-shadow: inset 0 0 0 1px #000;
+  letter-spacing: 0.16em;
+  box-shadow:
+    inset 3px 0 0 var(--accent-deep),
+    inset 0 -1px 0 rgba(18, 24, 32, 0.07);
 }
-body[data-skin="mono"] .title-bar > span:first-child {
+body[data-skin="ghost"] .btn95 {
   background: #fff;
-  padding: 0 8px;
+  color: hsl(var(--text-dim));
+  letter-spacing: 0.12em;
+  border-radius: calc(var(--radius) - 3px);
+  box-shadow: inset 0 0 0 1px rgba(18, 24, 32, 0.14);
 }
-body[data-skin="mono"] .tb-btn {
-  background: #fff;
-  box-shadow: inset 0 0 0 1px #000;
+body[data-skin="ghost"] .btn95:hover {
+  background: #f1f4f7;
+  color: hsl(var(--text));
 }
-body[data-skin="mono"] .btn95:hover,
-body[data-skin="mono"] .btn95-primary {
-  background: #000;
+body[data-skin="ghost"] .btn95-primary {
+  background: var(--accent-deep);
   color: #fff;
   text-shadow: none;
+  box-shadow: none;
 }
-body[data-skin="mono"] .bg-stage-base {
-  background: repeating-conic-gradient(#8e8e8e 0% 25%, #a6a6a6 0% 50%) 0 0 / 4px 4px;
+body[data-skin="ghost"] .bg-stage-base {
+  background-color: var(--desktop);
+  background-image:
+    radial-gradient(ellipse 60% 45% at 70% 8%, hsl(var(--accent) / 0.14), transparent 70%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.7), transparent 40%);
 }
-body[data-skin="mono"] .crt-overlay {
+body[data-skin="ghost"] .crt-overlay {
   background: none;
+}
+body[data-skin="ghost"] .title-bar-inactive {
+  background: linear-gradient(90deg, #f2f4f6, #f8fafb);
+}
+body[data-skin="ghost"] ::-webkit-scrollbar-track {
+  background: #f0f3f5;
+}
+body[data-skin="ghost"] ::-webkit-scrollbar-thumb {
+  background: #d3d9df;
+  box-shadow: none;
+  border-radius: 8px;
 }
 
 /* ------------------------------------------------------------
-   OUTRUN — synthwave sunset. Horizon grid, pink chrome.
+   VOID — true-black OLED minimal: hairlines and type, nothing else
    ------------------------------------------------------------ */
+body[data-skin="void"] {
+  --chrome: 0 0% 4%;
+  --chrome-hi: 0 0% 8%;
+  --chrome-lo: 0 0% 2%;
+  --bg-1: 0 0% 4%;
+  --bg-2: 0 0% 2%;
+  --surface: 0 0% 4%;
+  --border: 0 0% 22%;
+
+  --text: 0 0% 91%;
+  --text-dim: 0 0% 60%;
+  --text-faint: 0 0% 38%;
+
+  --accent-deep: color-mix(in oklch, hsl(var(--accent)), white 20%);
+  --accent-mid: hsl(var(--accent));
+  --desktop: #000;
+  --title-grad: linear-gradient(90deg, #131313, #0a0a0a);
+
+  --edge-black: #000;
+  --edge-dark: #1c1c1c;
+  --edge-light: rgba(255, 255, 255, 0.1);
+  --edge-white: rgba(255, 255, 255, 0.18);
+
+  --paper: #0a0a0a;
+  --radius: 8px;
+
+  --ui-display: var(--font-body), monospace;
+  --ui-digits: var(--font-rajdhani), sans-serif;
+  --ui-body: var(--font-body), monospace;
+
+  image-rendering: auto;
+}
+body[data-skin="void"] ::selection {
+  background: var(--accent-deep);
+  color: #000;
+}
+body[data-skin="void"] :focus-visible {
+  outline: 1px dotted var(--accent-deep);
+}
+body[data-skin="void"] .win95,
+body[data-skin="void"] .panel {
+  background: #050505;
+  border-radius: var(--radius);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.09);
+}
+body[data-skin="void"] .bevel-out {
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.09);
+  border-radius: var(--radius);
+}
+body[data-skin="void"] .bevel-in,
+body[data-skin="void"] .bevel-thin-in {
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.07);
+  border-radius: var(--radius);
+}
+body[data-skin="void"] .bevel-thin {
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius);
+}
+body[data-skin="void"] .title-bar {
+  color: hsl(var(--text-faint));
+  text-shadow: none;
+  letter-spacing: 0.3em;
+  text-transform: lowercase;
+  font-size: 10px;
+  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.07);
+}
+body[data-skin="void"] .btn95 {
+  background: transparent;
+  letter-spacing: 0.18em;
+  border-radius: calc(var(--radius) - 3px);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14);
+}
+body[data-skin="void"] .btn95:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+body[data-skin="void"] .btn95-primary {
+  background: var(--accent-deep);
+  color: #000;
+  text-shadow: none;
+  box-shadow: none;
+}
+body[data-skin="void"] .bg-stage-base {
+  background-color: #000;
+  background-image: radial-gradient(
+    ellipse 80% 50% at 50% 115%,
+    hsl(var(--accent) / 0.1),
+    transparent 70%
+  );
+}
+body[data-skin="void"] .crt-overlay {
+  background: none;
+}
+body[data-skin="void"] .title-bar-inactive {
+  background: #0c0c0c;
+}
+body[data-skin="void"] ::-webkit-scrollbar-track {
+  background: #000;
+}
+body[data-skin="void"] ::-webkit-scrollbar-thumb {
+  background: #202020;
+  box-shadow: none;
+  border-radius: 8px;
+}
+
 body[data-skin="outrun"] {
   --chrome: 262 48% 12%;
   --chrome-hi: 262 42% 18%;
@@ -834,105 +980,6 @@ body[data-skin="outrun"] .crt-overlay {
   mix-blend-mode: multiply;
 }
 
-/* ------------------------------------------------------------
-   BLUEPRINT — cyanotype drafting table. White line-work on blue.
-   ------------------------------------------------------------ */
-body[data-skin="blueprint"] {
-  --chrome: 214 55% 24%;
-  --chrome-hi: 214 50% 30%;
-  --chrome-lo: 216 58% 17%;
-  --bg-1: 214 55% 24%;
-  --bg-2: 216 58% 18%;
-  --surface: 214 55% 24%;
-  --border: 213 45% 60%;
-
-  --text: 212 45% 94%;
-  --text-dim: 212 30% 76%;
-  --text-faint: 212 20% 58%;
-
-  /* Annotation tint: accent lightened toward pencil yellow-white */
-  --accent-deep: color-mix(in oklch, hsl(var(--accent)), #ffe9a8 55%);
-  --accent-mid: color-mix(in oklch, hsl(var(--accent)), #ffffff 30%);
-  --desktop: color-mix(in oklch, hsl(var(--accent)), #10315c 88%);
-  --title-grad: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 0.16),
-    rgba(255, 255, 255, 0.08)
-  );
-
-  --edge-black: #071a33;
-  --edge-dark: rgba(255, 255, 255, 0.35);
-  --edge-light: rgba(255, 255, 255, 0.55);
-  --edge-white: #fff;
-
-  --paper: #16406e;
-
-  --ui-display: var(--font-michroma), sans-serif;
-  --ui-digits: var(--font-body), monospace;
-  --ui-body: var(--font-body), monospace;
-
-  image-rendering: auto;
-}
-body[data-skin="blueprint"] ::selection {
-  background: #fff;
-  color: #123a6d;
-}
-body[data-skin="blueprint"] :focus-visible {
-  outline: 1px dotted #fff;
-}
-/* Double-line technical frames */
-body[data-skin="blueprint"] .win95,
-body[data-skin="blueprint"] .panel {
-  box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.9),
-    inset 0 0 0 4px hsl(var(--chrome)),
-    inset 0 0 0 5px rgba(255, 255, 255, 0.35),
-    3px 3px 0 rgba(4, 16, 34, 0.5);
-}
-body[data-skin="blueprint"] .bevel-out {
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.75);
-}
-body[data-skin="blueprint"] .bevel-in,
-body[data-skin="blueprint"] .bevel-thin-in {
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.45);
-}
-body[data-skin="blueprint"] .bevel-thin {
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35);
-}
-body[data-skin="blueprint"] .title-bar {
-  text-shadow: none;
-  letter-spacing: 0.24em;
-  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.8);
-  font-size: 10px;
-}
-body[data-skin="blueprint"] .tb-btn {
-  background: transparent;
-  color: #fff;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.6);
-}
-body[data-skin="blueprint"] .btn95 {
-  background: transparent;
-  letter-spacing: 0.18em;
-}
-body[data-skin="blueprint"] .btn95:hover,
-body[data-skin="blueprint"] .btn95-primary {
-  background: #eef4ff;
-  color: #123a6d;
-  text-shadow: none;
-}
-/* Graph-paper desktop: fine grid + heavy grid */
-body[data-skin="blueprint"] .bg-stage-base {
-  background-color: var(--desktop);
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-    linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
-  background-size: 10px 10px, 10px 10px, 50px 50px, 50px 50px;
-}
-body[data-skin="blueprint"] .crt-overlay {
-  background: none;
-}
 
 /* ============================================================
    PARADIGM CHROME SHELLS
@@ -1021,64 +1068,6 @@ body[data-skin="blueprint"] .crt-overlay {
   text-shadow: 0 0 8px hsl(var(--accent) / 0.6);
 }
 
-/* ---- TTY (terminal): tmux pane, title breaks the border ---- */
-.tty-shell {
-  position: relative;
-  margin-top: 9px;
-  background: hsl(var(--chrome));
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent-deep), transparent 45%);
-}
-.tty-title {
-  position: absolute;
-  top: -9px;
-  left: 10px;
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  background: hsl(var(--chrome));
-  padding: 0 4px;
-  color: var(--accent-deep);
-  font-family: var(--ui-body);
-  font-size: 13px;
-  line-height: 18px;
-  user-select: none;
-}
-
-/* ---- PAPER (edo): ink-framed card, fabric header, hanko seal ---- */
-.paper-shell {
-  background: hsl(var(--chrome));
-  box-shadow:
-    inset 0 0 0 1px rgba(51, 41, 28, 0.85),
-    inset 0 0 0 2px var(--paper),
-    inset 0 0 0 3px rgba(51, 41, 28, 0.25),
-    4px 4px 0 rgba(30, 22, 12, 0.3);
-  padding: 3px;
-}
-.paper-head {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 5px 10px;
-  background: var(--title-grad);
-  color: #fff;
-  font-family: var(--ui-display);
-  font-size: 12px;
-  letter-spacing: 0.28em;
-  box-shadow: inset 0 -1px 0 #c9a86a;
-  user-select: none;
-}
-.paper-seal {
-  width: 20px;
-  height: 20px;
-  flex-shrink: 0;
-  background: #b3402a;
-  color: #fff;
-  font-family: var(--ui-display);
-  font-size: 11px;
-  line-height: 20px;
-  text-align: center;
-  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.35);
-}
 
 /* ---- DECK (outrun): sunset strip with a power LED ---- */
 .deck-shell {
@@ -1116,38 +1105,162 @@ body[data-skin="blueprint"] .crt-overlay {
   font-size: 10px;
 }
 
-/* ---- SHEET (blueprint): drafting frame with a title tab ---- */
-.sheet-shell {
-  background: hsl(var(--chrome));
+
+
+/* ---- HOLO (holodeck): translucent AR panel, corner ticks ---- */
+.holo-shell {
+  position: relative;
+  background: hsl(var(--chrome) / 0.72);
+  backdrop-filter: blur(12px);
+  border-radius: var(--radius);
   box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.9),
-    inset 0 0 0 4px hsl(var(--chrome)),
-    inset 0 0 0 5px rgba(255, 255, 255, 0.35),
-    3px 3px 0 rgba(4, 16, 34, 0.5);
+    inset 0 0 0 1px hsl(var(--accent) / 0.35),
+    inset 0 1px 0 hsl(var(--accent) / 0.5),
+    0 0 24px hsl(var(--accent) / 0.12),
+    0 10px 34px rgba(0, 0, 0, 0.5);
 }
-.sheet-head {
+.holo-shell::before,
+.holo-shell::after {
+  content: "";
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  pointer-events: none;
+  z-index: 1;
+}
+.holo-shell::before {
+  top: -3px;
+  left: -3px;
+  border-top: 1px solid var(--accent-deep);
+  border-left: 1px solid var(--accent-deep);
+}
+.holo-shell::after {
+  bottom: -3px;
+  right: -3px;
+  border-bottom: 1px solid var(--accent-deep);
+  border-right: 1px solid var(--accent-deep);
+}
+.holo-head {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 9px 10px 0;
+  padding: 7px 11px;
   font-family: var(--ui-display);
-  font-size: 9px;
+  font-weight: 600;
+  font-size: 10px;
+  text-transform: uppercase;
   letter-spacing: 0.24em;
-  color: #fff;
+  color: var(--accent-deep);
+  text-shadow: 0 0 12px hsl(var(--accent) / 0.5);
+  border-bottom: 1px solid hsl(var(--accent) / 0.22);
+  background: linear-gradient(90deg, hsl(var(--accent) / 0.14), transparent 70%);
   user-select: none;
 }
-.sheet-tab {
-  border: 1px solid rgba(255, 255, 255, 0.7);
-  border-bottom-width: 2px;
-  padding: 2px 8px;
-  background: rgba(255, 255, 255, 0.08);
-  text-transform: uppercase;
-}
-.sheet-toggle {
-  width: 16px;
-  height: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  color: #fff;
+.holo-toggle {
+  color: var(--accent-deep);
   font-size: 10px;
-  line-height: 14px;
+  line-height: 1;
+}
+
+/* ---- COCKPIT (starship): steel header with caution stripes ---- */
+.cockpit-shell {
+  background: hsl(var(--chrome));
+  border-radius: var(--radius);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    inset 0 0 0 1px #05070a,
+    inset 0 0 0 2px rgba(255, 255, 255, 0.05),
+    0 6px 20px rgba(0, 0, 0, 0.55);
+}
+.cockpit-head {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 6px 10px;
+  background: var(--title-grad);
+  color: var(--accent-deep);
+  font-family: var(--ui-display);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  box-shadow: inset 0 -1px 0 #05070a;
+  border-radius: var(--radius) var(--radius) 0 0;
+  user-select: none;
+}
+.cockpit-stripe {
+  width: 20px;
+  height: 10px;
+  flex-shrink: 0;
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--accent-deep) 0 4px,
+    #14161a 4px 8px
+  );
+  box-shadow: inset 0 0 0 1px #05070a;
+}
+.cockpit-toggle {
+  color: var(--accent-deep);
+  font-size: 8px;
+  line-height: 1;
+}
+
+/* ---- GHOST: hairline header with an accent side-bar ---- */
+.ghost-shell {
+  background: hsl(var(--chrome));
+  border-radius: var(--radius);
+  box-shadow:
+    inset 0 0 0 1px rgba(18, 24, 32, 0.1),
+    0 10px 28px rgba(24, 34, 44, 0.09);
+}
+.ghost-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 13px;
+  font-family: var(--ui-display);
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: hsl(var(--text-dim));
+  box-shadow:
+    inset 3px 0 0 var(--accent-deep),
+    inset 0 -1px 0 rgba(18, 24, 32, 0.07);
+  border-radius: var(--radius) var(--radius) 0 0;
+  user-select: none;
+}
+.ghost-toggle {
+  color: hsl(var(--text-faint));
+  font-size: 13px;
+  line-height: 1;
+}
+.ghost-toggle:hover {
+  color: hsl(var(--text));
+}
+
+/* ---- VOID: near-invisible header, pure type ---- */
+.void-shell {
+  background: #050505;
+  border-radius: var(--radius);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.09);
+}
+.void-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 13px;
+  font-family: var(--ui-body);
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  color: hsl(var(--text-faint));
+  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.07);
+  user-select: none;
+}
+.void-toggle {
+  color: hsl(var(--text-faint));
+  font-size: 8px;
+  line-height: 1;
+}
+.void-toggle:hover {
+  color: var(--accent-deep);
 }

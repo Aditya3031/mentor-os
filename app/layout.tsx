@@ -7,8 +7,9 @@ import {
   Share_Tech_Mono,
   Audiowide,
   Michroma,
+  Rajdhani,
+  Chakra_Petch,
 } from "next/font/google";
-import localFont from "next/font/local";
 import { SkinChooser } from "@/components/skin-chooser";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { SyncProvider } from "@/components/providers/sync-provider";
@@ -72,30 +73,18 @@ const michroma = Michroma({
   display: "swap",
 });
 
-/* Edo skin fonts — self-hosted subsets in app/fonts/.
-   Full CJK families from next/font/google are ~230KB of css and
-   hundreds of subset files; slow networks break the 3s build-time
-   fetch, and Turbopack chokes on non-ASCII `text` options. These
-   woff2 files were pre-subsetted by Google's css2 `text=` endpoint
-   to the exact glyphs the edo skin renders (ASCII + the curated
-   kanji/kana from EDO_NAMES in lib/skins.ts, seal/menu glyphs and
-   boot lines). If you add new Japanese UI strings, re-subset — see
-   the PR notes. Unknown glyphs fall back to the system serif. */
-const shippori = localFont({
-  src: [
-    { path: "./fonts/shippori-mincho-400.woff2", weight: "400" },
-    { path: "./fonts/shippori-mincho-700.woff2", weight: "700" },
-  ],
-  variable: "--font-shippori",
+/* Holodeck / Ghost / Void skin fonts */
+const rajdhani = Rajdhani({
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
+  variable: "--font-rajdhani",
   display: "swap",
 });
 
-const zenMincho = localFont({
-  src: [
-    { path: "./fonts/zen-old-mincho-400.woff2", weight: "400" },
-    { path: "./fonts/zen-old-mincho-700.woff2", weight: "700" },
-  ],
-  variable: "--font-zenmincho",
+const chakra = Chakra_Petch({
+  subsets: ["latin"],
+  weight: ["400", "600"],
+  variable: "--font-chakra",
   display: "swap",
 });
 
@@ -175,14 +164,14 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${plexMono.variable} ${vt323.variable} ${silkscreen.variable} ${orbitron.variable} ${shareTech.variable} ${shippori.variable} ${zenMincho.variable} ${audiowide.variable} ${michroma.variable}`}
+      className={`${plexMono.variable} ${vt323.variable} ${silkscreen.variable} ${orbitron.variable} ${shareTech.variable} ${audiowide.variable} ${michroma.variable} ${rajdhani.variable} ${chakra.variable}`}
     >
       <body className="font-sans text-text" suppressHydrationWarning>
         {/* Apply persisted skin + theme before first paint to avoid a flash
             of the default look. Reads the zustand persist blob directly. */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `try{var s=JSON.parse(localStorage.getItem("focusflow.v1")).state;if(s.skin)document.body.dataset.skin=s.skin;if(s.theme)document.body.dataset.theme=s.theme;}catch(e){}`,
+            __html: `try{var s=JSON.parse(localStorage.getItem("focusflow.v1")).state;var ok=["retro95","cyberpunk","holo","starship","ghost","void","outrun"];if(s.skin&&ok.indexOf(s.skin)>-1)document.body.dataset.skin=s.skin;if(s.theme)document.body.dataset.theme=s.theme;}catch(e){}`,
           }}
         />
         <ThemeProvider>

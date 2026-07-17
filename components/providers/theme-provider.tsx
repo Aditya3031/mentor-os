@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { useStore } from "@/lib/store";
 import { getTheme } from "@/lib/themes";
+import { getSkin } from "@/lib/skins";
 
 /**
  * Reads the current theme from the Zustand store and applies it
@@ -24,7 +25,10 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   }, [themeId]);
 
   useEffect(() => {
-    document.body.dataset.skin = skin;
+    // Sanitize retired/unknown persisted skin ids back to the default.
+    const valid = getSkin(skin).id;
+    if (valid !== skin) useStore.setState({ skin: valid });
+    document.body.dataset.skin = valid;
   }, [skin]);
 
   return <>{children}</>;
