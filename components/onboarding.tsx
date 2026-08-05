@@ -11,6 +11,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { Window } from "@/components/retro/window";
+import { useUser } from "@/lib/auth";
 
 const STORAGE_KEY = "ff_onboarded_v2";
 
@@ -60,6 +61,7 @@ const STEPS: Step[] = [
  * Users can skip at any step.
  */
 export function Onboarding() {
+  const user = useUser();
   const [show, setShow] = useState(false);
   const [step, setStep] = useState(0);
 
@@ -83,6 +85,10 @@ export function Onboarding() {
       setStep(step + 1);
     }
   };
+
+  // MENTOR·OS is login-walled — the setup tour belongs after logon,
+  // not floating over the logon screen.
+  if (!user) return null;
 
   const current = STEPS[step];
   const Icon = current.icon;

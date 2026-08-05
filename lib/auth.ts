@@ -27,7 +27,21 @@ const STORAGE_KEY = "focusflow.user";
 */
 
 export function useUser(): User | null {
-  const [user, setUser] = useState<User | null>(null);
+  return useAuthState().user;
+}
+
+/**
+ * Like useUser but with a `ready` flag that flips true after the first
+ * auth resolution — so route guards can tell "still checking" apart
+ * from "signed out" and never bounce a logged-in user to /login.
+ */
+export function useAuthState(): { user: User | null; ready: boolean } {
+  const [user, setUserRaw] = useState<User | null>(null);
+  const [ready, setReady] = useState(false);
+  const setUser = (u: User | null) => {
+    setUserRaw(u);
+    setReady(true);
+  };
 
   useEffect(() => {
     /* ---- Real Supabase mode ---- */
@@ -85,9 +99,10 @@ export function useUser(): User | null {
       window.removeEventListener("storage", onStorage);
       window.removeEventListener("focusflow:auth", load);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return user;
+  return { user, ready };
 }
 
 /* ============================================================

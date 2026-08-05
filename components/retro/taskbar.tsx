@@ -18,6 +18,7 @@ import {
   Flame,
   Power,
   DoorOpen,
+  GraduationCap,
 } from "lucide-react";
 import { useStore } from "@/lib/store";
 import { formatTime, cn } from "@/lib/utils";
@@ -37,6 +38,7 @@ interface Program {
 
 const PROGRAMS: Program[] = [
   { id: "focus", icon: Target, label: "FOCUS.EXE", href: "/focus" },
+  { id: "quiz", icon: GraduationCap, label: "QUIZ.EXE", href: "/quiz", minWidth: "md" },
   { id: "rooms", icon: DoorOpen, label: "ROOMS.NET", href: "/rooms", minWidth: "md" },
   { id: "tasks", icon: CheckSquare, label: "TASKS.SYS", href: "/tasks", minWidth: "md" },
   { id: "stats", icon: BarChart3, label: "STATS.EXE", href: "/dashboard", minWidth: "lg" },

@@ -256,9 +256,7 @@ export default function LoginPage() {
         </div>
 
         <p className="mt-6 text-center font-pixel text-[9px] uppercase tracking-wider text-white/80 [text-shadow:1px_1px_0_rgba(0,0,0,0.6)]">
-          <Link href="/focus" className="hover:underline">
-            Skip — run as guest →
-          </Link>
+          A logon session is required to use MENTOR·OS
         </p>
       </div>
     </main>

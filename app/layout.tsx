@@ -11,6 +11,7 @@ import {
   Chakra_Petch,
 } from "next/font/google";
 import { SkinChooser } from "@/components/skin-chooser";
+import { AuthGate } from "@/components/auth-gate";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { SyncProvider } from "@/components/providers/sync-provider";
 import { AudioEngine } from "@/components/audio-engine";
@@ -95,13 +96,13 @@ const siteUrl = new URL(
 export const metadata: Metadata = {
   metadataBase: siteUrl,
   title: {
-    default: "FocusFlow - Your Solo Deep-Work Sanctuary",
-    template: "%s | FocusFlow",
+    default: "MENTOR-OS — AI Learning Companion",
+    template: "%s | MENTOR-OS",
   },
   description:
-    "An immersive study platform with pomodoro timers, ambient focus rooms, AI planning, and analytics for deep work.",
+    "AI learning companion: quiz generation from your notes, focus sessions, study rooms with voice, streaks and analytics — in seven switchable interface skins.",
   manifest: "/manifest.json",
-  applicationName: "FocusFlow",
+  applicationName: "MENTOR-OS",
   keywords: [
     "focus timer",
     "pomodoro",
@@ -124,7 +125,7 @@ export const metadata: Metadata = {
     type: "website",
     url: siteUrl,
     siteName: "FocusFlow",
-    title: "FocusFlow - Your Solo Deep-Work Sanctuary",
+    title: "MENTOR-OS — AI Learning Companion",
     description:
       "Pomodoro timers, ambient focus rooms, AI planning, and progress analytics for serious study sessions.",
     images: [
@@ -138,7 +139,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "FocusFlow - Your Solo Deep-Work Sanctuary",
+    title: "MENTOR-OS — AI Learning Companion",
     description:
       "Pomodoro timers, ambient focus rooms, AI planning, and progress analytics for serious study sessions.",
     images: ["/og-image.png"],
@@ -175,7 +176,7 @@ export default function RootLayout({
           }}
         />
         <ThemeProvider>
-          {children}
+          <AuthGate>{children}</AuthGate>
           <SyncProvider />
           <PWARegister />
           {/* Mounted globally: drives ambience and tick sfx from store state. */}
