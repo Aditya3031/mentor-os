@@ -2,7 +2,7 @@
   "name": "mentor-os",
   "version": "0.1.0",
   "private": true,
-  "description": "FocusFlow — a solo deep-work study sanctuary built with Next.js 15.",
+  "description": "MENTOR-OS — an AI learning companion built with Next.js 15.",
   "scripts": {
     "dev": "next dev --turbo",
     "build": "next build",

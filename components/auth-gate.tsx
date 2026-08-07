@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuthState } from "@/lib/auth";
+import { AUTH_REQUIRED } from "@/lib/config";
 
 /**
  * MENTOR·OS is a logged-in product: every route requires a session
@@ -21,7 +22,8 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
 
-  const isPublic = PUBLIC_PATHS.some((p) => pathname?.startsWith(p));
+  const isPublic =
+    !AUTH_REQUIRED || PUBLIC_PATHS.some((p) => pathname?.startsWith(p));
 
   useEffect(() => {
     if (!ready || isPublic) return;

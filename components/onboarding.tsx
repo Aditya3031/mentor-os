@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { Window } from "@/components/retro/window";
 import { useUser } from "@/lib/auth";
+import { AUTH_REQUIRED } from "@/lib/config";
 
 const STORAGE_KEY = "ff_onboarded_v2";
 
@@ -86,9 +87,9 @@ export function Onboarding() {
     }
   };
 
-  // MENTOR·OS is login-walled — the setup tour belongs after logon,
-  // not floating over the logon screen.
-  if (!user) return null;
+  // When login-walled, the setup tour belongs after logon rather than
+  // floating over the logon screen. In demo mode it shows to everyone.
+  if (AUTH_REQUIRED && !user) return null;
 
   const current = STEPS[step];
   const Icon = current.icon;

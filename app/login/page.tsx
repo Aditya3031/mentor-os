@@ -9,6 +9,7 @@ import { signIn, signUp, signInWithGithub, signInWithGoogle } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 import { useStore } from "@/lib/store";
 import { getSkin } from "@/lib/skins";
+import { AUTH_REQUIRED } from "@/lib/config";
 
 type Mode = "signin" | "signup";
 
@@ -256,7 +257,13 @@ export default function LoginPage() {
         </div>
 
         <p className="mt-6 text-center font-pixel text-[9px] uppercase tracking-wider text-white/80 [text-shadow:1px_1px_0_rgba(0,0,0,0.6)]">
-          A logon session is required to use MENTOR·OS
+          {AUTH_REQUIRED ? (
+            "A logon session is required to use MENTOR·OS"
+          ) : (
+            <Link href="/focus" className="hover:underline">
+              Skip — continue without signing in →
+            </Link>
+          )}
         </p>
       </div>
     </main>
